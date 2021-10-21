@@ -1,0 +1,47 @@
+{
+  "name": "quill-react-commercial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/quill-react-commercial.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config ./webpack.config.js"
+  },
+  "author": "ludejun@live.cn",
+  "license": "ISC",
+  "dependencies": {
+    "highlight.js": "^10.7.2",
+    "quill": "^2.0.0-dev.4",
+    "quill-better-table": "^1.2.10",
+    "quill-image-drop-module": "^1.0.3",
+    "quill-magic-url": "^3.0.2"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0 || ^16.0.0 || ^0.14.0",
+    "react-dom": "^15.0.0 || ^16.0.0 || ^0.14.0"
+  },
+  "sideEffects": [
+    "*.less",
+    "*.css"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@babel/runtime": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.4.2",
+    "file-loader": "^5.0.2",
+    "less-loader": "^5.0.0",
+    "mini-css-extract-plugin": "^1.0.0",
+    "postcss-loader": "^3.0.0",
+    "style-loader": "^1.1.3",
+    "svg-inline-loader": "^0.8.2",
+    "typescript": "^3.7.5",
+    "webpack": "^4.0.0",
+    "webpack-cli": "^4.7.2"
+  }
+}

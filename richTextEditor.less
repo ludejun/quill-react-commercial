@@ -1,0 +1,61 @@
+#editor {
+  width: 100%;
+  height: 500px;
+}
+
+#toolbar {
+  width: 100%;
+}
+
+.ql-container {
+  font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", SimSun, sans-serif;
+  font-size: 14px;
+}
+
+/* Set dropdown font-families */
+#toolbar .ql-font span[data-label="微软雅黑"]::before {
+  font-family: "Microsoft YaHei", "微软雅黑";
+}
+#toolbar .ql-font span[data-label="宋体"]::before {
+  font-family: SimSun, "宋体";
+}
+#toolbar .ql-font span[data-label="arial"]::before {
+  font-family: arial;
+}
+
+/* Set content font-families */
+.ql-font-wsYaHei {
+  font-family: "Microsoft YaHei", "微软雅黑";
+}
+.ql-font-songTi {
+  font-family: SimSun, "宋体";
+}
+.ql-font-arial {
+  font-family: arial;
+}
+
+/* todo 测试使用，后续删除 */
+#quillContent {
+  width: 100%;
+  word-wrap: break-word;
+}
+
+.resize-box {
+  height: 8px;
+  width: 8px;
+  background-color: #000;
+  position: absolute;
+  cursor: nwse-resize;
+}
+.resize-left-top {
+  left: -4px;
+  top: -4px;
+}
+.resize-right-bottom {
+  bottom: -4px;
+  right: -4px;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  z-index: 100;
+}
