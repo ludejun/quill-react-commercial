@@ -44,17 +44,28 @@ import RichTextEditor from 'quill-react-commercial';
       text: '背景色', // 副标题文本，默认值为“背景色”
     },
     toolBarOptions: {
-      dialogRows: 3, // 点击后弹框中出现灰色格子行数，默认为3
+      dialogRows: 3, // toolbar中table点击后弹框中出现灰色格子行数，默认为3
       dialogColumns: 4, // 点击后弹框中出现灰色格子列数，默认为4
       rowLabel: '行数', // 点击后弹框左边输入框label，默认为“行数”
       columnLabel: '列数', // 点击后弹框右边输入框label，默认为“列数”
       okLabel: '确认', // 点击后弹框button上lable，默认为“确认”
     }, // 工具栏上table点击交互配置，默认就有
   }, // 是否需要支持table，默认没有
+  imageResize: true, // 是否需要图片调整大小，默认为true
+  imageDrop: true, // 是否需要图片拖动添加，默认为true
+  magicUrl: true, // 是否自动识别url、email等，添加超链接，默认为true
+  markdown: true, // 是否自动支持markdown，自动转换为富文本，默认为true
+  link: true, // toolbar是否需要超链接及处理函数，默认为true
+  imageHandler: {
+    imgUploadApi: (formData: FormData) => void; // 图片上传API
+    uploadSuccCB?: (data: unknown) => void; // 上传成功回调
+    uploadFailCB?: (error: unknown) => void; // 上传失败回调
+  }, // 点击toolbar上图片时的处理函数相关
+  toolbarOptions?: [][]; // 自定义需要的toolbar icons & 顺序
 }
 ```
 
-table的operationMenu的默认值，同quill-better-table配置
+modules.table的operationMenu的默认值如下，其他配置参考quill-better-table
 
 ```js
 {
@@ -88,21 +99,54 @@ table的operationMenu的默认值，同quill-better-table配置
 }
 ```
 
+modules.imageHandler 不定义则默认插入图片转为base64后存在Delta中
+
+modules.toolbarOptionse为Quill toolbar按数组进行定义的方式，当为列表项时默认选中第一个
+
+```javascript
+const toolbarOptions = [
+      ['undo', 'redo'],
+      [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', '14px', '18px', '36px'] }],
+      [{ color: [] }, { background: [] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
+      ['blockquote', 'code-block', 'link','image', { script: 'sub' }, { script: 'super' }, 'table', 'clean'],
+    ];
+```
+
+modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
+
+```javascript
+[
+  { key: 'plain', label: '文本' },
+  { key: 'javascript', label: 'Javascript' },
+  { key: 'java', label: 'Java' },
+  { key: 'python', label: 'Python' },
+  { key: 'clike', label: 'C++/C' },
+  { key: 'csharp', label: 'C#' },
+  { key: 'php', label: 'PHP' },
+  { key: 'sql', label: 'SQL' },
+  { key: 'json', label: 'JSON' },
+  { key: 'bash', label: 'Bash' },
+  { key: 'go', label: 'Go' },
+  { key: 'objectivec', label: 'Objective-C' },
+  { key: 'xml', label: 'HTML/XML' },
+  { key: 'css', label: 'CSS' },
+  { key: 'ruby', label: 'Ruby' },
+  { key: 'swift', label: 'Swift' },
+  { key: 'scala', label: 'Scala' },
+]
+```
+
 
 
 ##### placeholder：非必需，string；编辑器placeholder；默认值：“开始笔记（支持直接Markdown输入）...”
 
 
 
-##### autoSave：非必需，Object；是否需要自动保存，自动保存配置；
+**getQuill：非必需，函数；函数参数为当前Quill实例**
 
-```js
-{
-  gap: 300000, // 自动保存间隔（毫秒数），number，默认120000
-  textFn: (date) => `上一次保存时间${date}`, // 自动保存提示，编辑器右下脚，参数为保存时的new Date()值，可根据需要进行format
-  textStyle: {
-    color: '#333',
-  }, // 自动保存提示的样式
-}
-```
+
+
+**getQuillDonRef: 非必需，函数；函数参数为Quill编辑器的Dom实例**
 

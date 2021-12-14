@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { Ref, createRef } from 'react';
 import './modules/highlight';
 import Quill from 'quill';
-// window.Quill = Quill;
 import QuillBetterTable from 'quill-better-table';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
@@ -21,24 +20,97 @@ import './modules/index.less';
 
 const Delta = Quill.import('delta');
 
-class RichTextEditor extends React.Component {
-  constructor(props) {
+interface IBetterTable {
+  operationMenu?: {
+    insertColumnRight?: {
+      text: string;
+    },
+    insertColumnLeft?: {
+      text: string;
+    },
+    insertRowUp?: {
+      text: string;
+    },
+    insertRowDown?: {
+      text: string;
+    },
+    mergeCells?: {
+      text: string;
+    },
+    unmergeCells?: {
+      text: string;
+    },
+    deleteColumn?: {
+      text: string;
+    },
+    deleteRow?: {
+      text: string;
+    },
+    deleteTable?: {
+      text: string;
+    },
+  },
+  backgroundColor?: {
+    colors?: string[];
+    text?: string;
+  },
+  toolbarOptions?: boolean | {
+    dialogRows?: number;
+    dialogColumns?: number;
+    rowLabel?: string;
+    columnLabel?: string;
+    okLabel?: string;
+  };
+}
+interface IModules {
+  table?: boolean | IBetterTable;
+  codeHighlight?: boolean | { key: string, label: string }[];
+  imageResize?: boolean | {};
+  imageDrop?: boolean | {};
+  magicUrl?: boolean;
+  markdown?: boolean;
+  link?: boolean | {};
+}
+interface IEditorProps {
+  placeholder?: string;
+  modules?: {
+    imageHandler?: {
+      imgUploadApi: (formData: FormData) => void;
+      uploadSuccCB?: (data: unknown) => void;
+      uploadFailCB?: (error: unknown) => void;
+    },
+    toolbarOptions?: [][];
+  } & IModules;
+  getQuillDomRef?: (instance: Ref<HTMLDivElement>) => void;
+  getQuill?: (quill: Quill) => void;
+}
+
+class RichTextEditor extends React.Component<IEditorProps> {
+  quillModules: IModules & { 'better-table'?: any, toolbarTable?: any, syntax?: any, markdownShortcuts?: boolean, };
+
+  toolbarHandlers: Record<string, () => void>;
+
+  quill: Quill;
+
+  saveTimer: NodeJS.Timeout;
+
+  quillRef: React.RefObject<HTMLDivElement>;
+
+  constructor(props: IEditorProps) {
     super(props);
-    this.state = {
-      // readOnly: false,
-      autoSaveText: '',
-    };
+    const { modules = {} } = props;
+    this.quillModules = {};
+    this.toolbarHandlers = {};
+    this.quillRef = createRef();
 
     // 处理外部传入的modules
-    this.modules = {};
-    this.toolbarHandles = {};
-    const propsModules = props.modules || {};
-    if (propsModules && Object.keys(propsModules).length > 0) {
-      if (propsModules.table) {
-        this.modules.table = false;
-        this.modules['better-table'] = {
+    if (Object.keys(modules).length > 0) {
+      const { table, codeHighlight, imageResize = true, imageDrop, magicUrl = true, markdown = true, link = true, imageHandler } = modules;
+      if (table) {
+        this.quillModules.table = false;
+        this.quillModules['better-table'] = {
           operationMenu: {
-            items: propsModules.table.operationMenu || {
+            items: typeof table !== 'boolean' ? table.operationMenu : {
               insertColumnRight: {
                 text: '右侧插入列',
               },
@@ -68,19 +140,18 @@ class RichTextEditor extends React.Component {
               },
             },
             color: {
-              ...(propsModules.table.backgroundColor || {}),
               colors: ['#fff', '#ECF3FC', '#999'], // 背景色值, ['white', 'red', 'yellow', 'blue'] as default
               text: '背景色', // subtitle, 'Background Colors' as default
+              ...(typeof table !== 'boolean' ? table.backgroundColor : null),
             },
           },
-          ...propsModules.table,
         };
-        this.modules.toolbarTable = propsModules.table.toolBarOptions || true; // 添加table的工具栏处理函数，需要先registry，在DidMount中
+        this.quillModules.toolbarTable = typeof table !== 'boolean' && table.toolbarOptions !== undefined ? table.toolbarOptions : true; // 添加table的工具栏处理函数，需要先registry，在DidMount中
       }
 
-      if (propsModules.codeHighlight) {
-        this.modules.syntax = {
-          languages: [
+      if (codeHighlight) {
+        this.quillModules.syntax = {
+          languages: typeof codeHighlight !== 'boolean' ? codeHighlight : [
             { key: 'plain', label: '文本' },
             { key: 'javascript', label: 'Javascript' },
             { key: 'java', label: 'Java' },
@@ -103,37 +174,54 @@ class RichTextEditor extends React.Component {
       }
 
       // 默认添加图片缩放功能
-      if (propsModules.imageResize !== false) {
-        this.modules.imageResize = propsModules.imageResize instanceof Object ? { ...propsModules.imageResize } : {};
+      if (imageResize) {
+        this.quillModules.imageResize = typeof imageResize !== 'boolean' ? imageResize : {};
       }
       // 默认图片拖拽/复制到富文本
-      if (propsModules.imageDrop !== false) {
-        this.modules.imageDrop = propsModules.imageDrop instanceof Object ? { ...propsModules.imageDrop } : {};
+      if (imageDrop) {
+        this.quillModules.imageDrop = typeof imageDrop !== 'boolean' ? imageDrop : {};
       }
       // 默认支持自动识别URL
-      if (propsModules.magicUrl !== false) {
-        this.modules.magicUrl = true;
-      }
+      this.quillModules.magicUrl = magicUrl;
       // 默认支持自动识别markdown语法
-      if (propsModules.markdown !== false) {
-        this.modules.markdownShortcuts = propsModules.markdown instanceof Object ? { ...propsModules.markdown } : {};
-      }
+      this.quillModules.markdownShortcuts = markdown;
 
       // toolbar handler处理
-      this.toolbarHandles.link = linkHandler;
-      if (propsModules.imageHandler && propsModules.imageHandler.imgUploadApi) {
-        this.toolbarHandles.image = imageUpload.bind(this, propsModules.imageHandler.imgUploadApi);
+      this.toolbarHandlers.link = link && linkHandler;
+      if (imageHandler) {
+        const { imgUploadApi, uploadSuccCB, uploadFailCB } = imageHandler;
+        this.toolbarHandlers.image = imageUpload.bind(this, imgUploadApi, uploadSuccCB, uploadFailCB);
       }
-      this.toolbarHandles.undo = undoHandler;
-      this.toolbarHandles.redo = redoHandler;
+      this.toolbarHandlers.undo = undoHandler;
+      this.toolbarHandlers.redo = redoHandler;
     }
 
     // 设置自定义字体/大小
+    const { toolbarOptions } = modules;
+    let fontList = ['wsYaHei', 'songTi', 'serif', 'arial'];
+    // const fontMapping = { 微软雅黑: 'wsYaHei', 宋体: 'songTi', 楷体: 'kaiTi'};
+    let sizeList = ['12px', '14px', '18px', '36px'];
+    if (toolbarOptions) {
+      toolbarOptions.forEach(formats => {
+        if (Array.isArray(formats)) {
+          formats.forEach(format => {
+            if (typeof format === 'object') {
+              if (format.font && Array.isArray(format.font)) {
+                fontList = format.font;
+              }
+              if (format.size && Array.isArray(format.size)) {
+                sizeList = format.size;
+              }
+            }
+          });
+        }
+      });
+    }
     const SizeStyle = Quill.import('attributors/style/size');
-    SizeStyle.whitelist = ['10px', '12px', '18px', '36px'];
+    SizeStyle.whitelist = sizeList;
     Quill.register(SizeStyle, true);
     const FontStyle = Quill.import('formats/font');
-    FontStyle.whitelist = ['wsYaHei', 'songTi', 'serif', 'arial'];
+    FontStyle.whitelist = fontList;
     Quill.register(FontStyle, true);
 
     // 设置重做撤销Icon
@@ -143,15 +231,10 @@ class RichTextEditor extends React.Component {
   }
 
   componentDidMount() {
-    if (this.props.modules && this.props.modules.table) {
+    if (this.quillModules['better-table']) {
       Quill.register(
         {
           'modules/better-table': QuillBetterTable,
-          // 'modules/imageResize': ImageResize,
-          // 'modules/imageDrop': ImageDrop,
-          // 'modules/magicUrl': MagicUrl,
-          // 'modules/markdownShortcuts': MarkdownShortcuts,
-          // 'modules/toolbarTable': ToolbarTable,
         },
         true,
       );
@@ -174,21 +257,35 @@ class RichTextEditor extends React.Component {
       return newDelta;
     };
 
+    const toolbarOptions = [
+      // ['undo', 'redo'],
+      [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', false, '18px', '36px'] }],
+      [{ color: [] }, { background: [] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
+      [
+        'blockquote',
+        this.quillModules.syntax ? 'code-block' : null,
+        this.props.modules?.link !== false ? 'link' : null,
+        'image',
+        { script: 'sub' }, { script: 'super' },
+        this.quillModules['better-table'] ? 'table' : null,
+        'clean',
+      ],
+    ];
+
     this.quill = new Quill('#editor', {
       debug: process.env.NODE_ENV === 'development' ? '-' : false,
       modules: {
         // formula: true, // todo 公式，暂不支持
-        ...this.modules,
+        ...this.quillModules,
         toolbar: {
-          container: '#toolbar', // Selector for toolbar container
+          container: toolbarOptions, // Selector for toolbar container
           handlers: {
-            ...this.toolbarHandles,
-            // emoji() {},
+            ...this.toolbarHandlers,
             // image: quillImageHandler, // todo 处理图片先上传，再附链接。不处理默认保存base64
           },
         },
-        // 'emoji-toolbar': true,
-        // 'emoji-shortname': true,
         clipboard: {
           matchers: [['BR', lineBreakMatcher]],
         },
@@ -251,39 +348,20 @@ class RichTextEditor extends React.Component {
       }
     });
 
+    this.props.getQuillDomRef(this.quillRef);
+    this.props.getQuill(this.quill);
+
     // AutoSave
-    if (this.props.autoSave) {
-      const { gap = 120000, textFn } = this.props.autoSave;
-      let change = new Delta();
-      this.quill.on('text-change', delta => {
-        // console.log(444444, delta);
-        change = change.compose(delta);
-      });
-      this.saveTimer = setInterval(() => {
-        if (change.length() > 0) {
-          console.log('自动化保存中...', change);
-          // todo API请求回调
-          this.setState({ autoSaveText: textFn ? textFn(new Date()) : `上一次保存时间${new Date()}` });
-          change = new Delta();
-        }
-      }, gap); // 2分钟自动保存一次
-    }
   }
 
   componentWillUnmount() {
-    clearInterval(this.saveTimer);
-  }
-
-  saveContent() {
-    console.log('保存中...', this.quill.getContents());
-    // todo API请求
-    document.getElementById('quillContent').innerHTML = JSON.stringify(this.quill.getContents());
+    // clearInterval(this.saveTimer);
   }
 
   render() {
     return (
       <div className="content-container">
-        <div id="toolbar">
+        {/* <div id="toolbar">
           <span className="ql-formats">
             <button className="ql-undo" title="撤销(Ctr+Z)" />
             <button className="ql-redo" title="恢复(Ctr+B)" />
@@ -318,27 +396,22 @@ class RichTextEditor extends React.Component {
             <button className="ql-list" value="check" title="任务列表" />
             <button className="ql-indent" value="-1" title="清除缩进" />
             <button className="ql-indent" value="+1" title="缩进" />
-            {/* <button className="ql-direction" value="rtl"></button> */}
             <select className="ql-align" title="对齐方式" />
           </span>
           <span className="ql-formats">
             <button className="ql-blockquote" title="引用" />
-            {this.modules.codeHighlight ? <button className="ql-code-block" title="代码块" /> : null}
+            {this.props.modules.codeHighlight ? <button className="ql-code-block" title="代码块" /> : null}
             <button className="ql-link" title="超链接" />
             <button className="ql-image" title="图片" />
             <button className="ql-script" value="sub" title="右下标" />
             <button className="ql-script" value="super" title="右上标" />
-            {/* <button className="ql-emoji" /> */}
-            {this.modules.table ? <button className="ql-table" title="插入表格" /> : null}
+            {this.props.modules.table ? <button className="ql-table" title="插入表格" /> : null}
             <button className="ql-clean" />
-          </span>
-        </div>
-        <div id="editor" />
-        <div>
-          {this.props.autoSave ? <p style={this.props.autoSave.textStyle }>{this.state.autoSaveText}</p> :null}
-        </div>
-        {/* <button onClick={() => this.saveContent()}>保存</button> */}
-        <div id="quillContent" />
+          </span> */}
+        {/* <button className="ql-direction" value="rtl"></button> */}
+        {/* <button className="ql-emoji" /> */}
+        {/* </div> */}
+        <div id="editor" ref={this.quillRef} />
       </div>
     );
   }

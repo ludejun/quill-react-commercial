@@ -13,15 +13,31 @@
 }
 
 /* Set dropdown font-families */
-#toolbar .ql-font span[data-label="微软雅黑"]::before {
-  font-family: "Microsoft YaHei", "微软雅黑";
+.ql-toolbar .ql-font .ql-picker-label::before,
+.ql-toolbar .ql-font .ql-picker-item::before {
+  content: attr(data-value) !important;
 }
-#toolbar .ql-font span[data-label="宋体"]::before {
-  font-family: SimSun, "宋体";
+.ql-toolbar .ql-size .ql-picker-label::before,
+.ql-toolbar .ql-size .ql-picker-item::before {
+  content: '14px' !important;
 }
-#toolbar .ql-font span[data-label="arial"]::before {
-  font-family: arial;
+.ql-toolbar .ql-size .ql-picker-label[data-value]::before,
+.ql-toolbar .ql-size .ql-picker-item[data-value]::before {
+  content: attr(data-value) !important;
 }
+.ql-toolbar .ql-font .ql-picker-label[data-value=wsYaHei]::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value=wsYaHei]::before {
+  content: '微软雅黑' !important;
+}
+.ql-toolbar .ql-font .ql-picker-label[data-value=songTi]::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value=songTi]::before {
+  content: '宋体' !important;
+}
+.ql-toolbar .ql-font .ql-picker-label[data-value=kaiTi]::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value=kaiTi]::before {
+  content: '楷体' !important;
+}
+
 
 /* Set content font-families */
 .ql-font-wsYaHei {
@@ -30,16 +46,14 @@
 .ql-font-songTi {
   font-family: SimSun, "宋体";
 }
+.ql-font-kaiTi {
+  font-family: "楷体";
+}
 .ql-font-arial {
   font-family: arial;
 }
 
-/* todo 测试使用，后续删除 */
-#quillContent {
-  width: 100%;
-  word-wrap: break-word;
-}
-
+// 图片resize框
 .resize-box {
   height: 8px;
   width: 8px;

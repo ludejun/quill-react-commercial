@@ -12,7 +12,6 @@ const loaders = [
       loader: 'babel-loader',
       options: {
         presets: ['@babel/preset-env', '@babel/preset-react']
-        // plugins: [['import', { libraryName: 'antd', style: 'css' }]], // `style: true` 会加载 less 文件
       }
     }
   },
@@ -115,7 +114,6 @@ const config = {
     new webpack.optimize.AggressiveMergingPlugin()
   ],
 
-  // 当包体积过大时(超250kb)，将展示一条错误(警告)
   performance: {
     maxAssetSize: 1000000,
     hints: 'warning'
