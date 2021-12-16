@@ -231,6 +231,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
   }
 
   componentDidMount() {
+    const { modules = {}, placeholder, getQuillDomRef, getQuill, } = this.props;
     if (this.quillModules['better-table']) {
       Quill.register(
         {
@@ -258,18 +259,18 @@ class RichTextEditor extends React.Component<IEditorProps> {
     };
 
     const toolbarOptions = [
-      // ['undo', 'redo'],
+      ['undo', 'redo'],
       [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', false, '18px', '36px'] }],
       [{ color: [] }, { background: [] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
       [
         'blockquote',
-        this.quillModules.syntax ? 'code-block' : null,
-        this.props.modules?.link !== false ? 'link' : null,
+        modules.codeHighlight ? 'code-block' : undefined,
+        modules.link !== false ? 'link' : undefined,
         'image',
         { script: 'sub' }, { script: 'super' },
-        this.quillModules['better-table'] ? 'table' : null,
+        this.quillModules['better-table'] ? 'table' : undefined,
         'clean',
       ],
     ];
@@ -299,7 +300,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
           userOnly: true,
         },
       },
-      placeholder: this.props.placeholder || '开始笔记（支持直接Markdown输入）...',
+      placeholder: placeholder || '开始笔记（支持直接Markdown输入）...',
       readOnly: false,
       bounds: document.body,
       theme: 'snow',
@@ -348,8 +349,8 @@ class RichTextEditor extends React.Component<IEditorProps> {
       }
     });
 
-    this.props.getQuillDomRef(this.quillRef);
-    this.props.getQuill(this.quill);
+    getQuillDomRef && getQuillDomRef(this.quillRef);
+    getQuill && getQuill(this.quill);
 
     // AutoSave
   }
