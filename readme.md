@@ -19,6 +19,7 @@ yarn add quill-react-commercial
 ### 快速使用
 ```javascript
 import RichTextEditor from 'quill-react-commercial';
+import 'quill-react-commercial/dist/quill-react-commercial.min.css';
 
 <RichTextEditor modules={{ table: {}, codeHighlight: true }} />
 ```
@@ -150,3 +151,20 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 
 **getQuillDonRef: 非必需，函数；函数参数为Quill编辑器的Dom实例**
 
+
+
+**content：非必需，Delta或者string；富文本编辑器初始数据**
+
+当content变化时会重新渲染富文本编辑器
+
+```jsx
+// Delta格式的content
+<RichTextEditor modules={{ table: {}, codeHighlight: true }} getQuill={getQuill} content={JSON.parse("{\"ops\":[{\"insert\":\"Hello quill-react-commercial!\\n\"}]}")} />
+
+// html格式的content
+<RichTextEditor modules={{ table: {}, codeHighlight: true }} getQuill={getQuill} content={'<h1>Hello quill-react-commercial!</h1>'} />
+```
+
+
+
+**readOnly：非必需，boolean；编辑器是否只读；默认为false**

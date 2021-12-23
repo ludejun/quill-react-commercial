@@ -13,12 +13,14 @@ import {
 } from './modules/index';
 // import { MagicUrl } from './modules/magic-url';
 import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
+import { setContent } from './utils';
 import 'quill/dist/quill.snow.css';
 import 'quill-better-table/dist/quill-better-table.css';
 import './richTextEditor.less';
 import './modules/index.less';
 
-const Delta = Quill.import('delta');
+import Delta from 'quill-delta';
+// const Delta = Quill.import('delta');
 
 interface IBetterTable {
   operationMenu?: {
@@ -73,6 +75,7 @@ interface IModules {
 }
 interface IEditorProps {
   placeholder?: string;
+  readOnly?: boolean;
   modules?: {
     imageHandler?: {
       imgUploadApi: (formData: FormData) => void;
@@ -83,6 +86,7 @@ interface IEditorProps {
   } & IModules;
   getQuillDomRef?: (instance: Ref<HTMLDivElement>) => void;
   getQuill?: (quill: Quill) => void;
+  content?: Delta | string;
 }
 
 class RichTextEditor extends React.Component<IEditorProps> {
@@ -91,8 +95,6 @@ class RichTextEditor extends React.Component<IEditorProps> {
   toolbarHandlers: Record<string, () => void>;
 
   quill: Quill;
-
-  saveTimer: NodeJS.Timeout;
 
   quillRef: React.RefObject<HTMLDivElement>;
 
@@ -231,7 +233,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
   }
 
   componentDidMount() {
-    const { modules = {}, placeholder, getQuillDomRef, getQuill, } = this.props;
+    const { modules = {}, placeholder, getQuillDomRef, getQuill, content, readOnly = false } = this.props;
     if (this.quillModules['better-table']) {
       Quill.register(
         {
@@ -258,7 +260,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
       return newDelta;
     };
 
-    const toolbarOptions = [
+    const toolbarOptions = modules.toolbarOptions || [
       ['undo', 'redo'],
       [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', false, '18px', '36px'] }],
       [{ color: [] }, { background: [] }],
@@ -301,7 +303,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         },
       },
       placeholder: placeholder || '开始笔记（支持直接Markdown输入）...',
-      readOnly: false,
+      readOnly,
       bounds: document.body,
       theme: 'snow',
     });
@@ -349,10 +351,18 @@ class RichTextEditor extends React.Component<IEditorProps> {
       }
     });
 
+    setContent(content, this.quill); // 设置初始内容
+
     getQuillDomRef && getQuillDomRef(this.quillRef);
     getQuill && getQuill(this.quill);
+  }
 
-    // AutoSave
+  componentDidUpdate(preProps) {
+    const { content: preContent } = preProps;
+    const { content } = this.props;
+    if (preContent !== content) {
+      setContent(content, this.quill);
+    }
   }
 
   componentWillUnmount() {

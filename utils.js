@@ -23,7 +23,7 @@ export function saveLink(quill, isToolbar) {
     );
   }
 
-  this.quill.theme.tooltip.hide();
+  quill.theme.tooltip.hide();
 }
 
 // 是否移动端H5
@@ -40,4 +40,16 @@ export function isMobile() {
   }
 
   return false;
+}
+
+// 设置content
+export function setContent(content, quill) {
+  if (content) {
+    console.log(7777, content);
+    if (typeof content === 'object') {
+      quill.setContents(content);
+    } else {
+      quill.clipboard.dangerouslyPasteHTML(content);
+    }
+  }
 }
