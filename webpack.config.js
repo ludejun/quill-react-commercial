@@ -20,11 +20,7 @@ const loaders = [
     exclude: /node_modules/,
     loader: 'babel-loader',
     options: {
-      presets: [
-        '@babel/preset-env',
-        '@babel/preset-react',
-        '@babel/preset-typescript'
-      ]
+      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript']
     }
   }, // 先解析ts和tsx，rule规则从下往上
   {
@@ -39,12 +35,7 @@ const loaders = [
   },
   {
     test: /\.less$/,
-    use: [
-      MiniCssExtractPlugin.loader,
-      'css-loader',
-      'postcss-loader',
-      'less-loader'
-    ]
+    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader']
   },
   {
     test: /\.svg$/,

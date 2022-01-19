@@ -15,7 +15,7 @@ const DefaultOptions = {
   overlayStyles: {
     position: 'absolute',
     boxSizing: 'border-box',
-    border: '1px dashed #444',
+    border: '1px dashed #444'
   },
   handleStyles: {
     position: 'absolute',
@@ -24,7 +24,7 @@ const DefaultOptions = {
     backgroundColor: 'white',
     border: '1px solid #777',
     boxSizing: 'border-box',
-    opacity: '0.80',
+    opacity: '0.80'
   },
   displayStyles: {
     position: 'absolute',
@@ -36,7 +36,7 @@ const DefaultOptions = {
     border: '1px solid #777',
     boxSizing: 'border-box',
     opacity: '0.80',
-    cursor: 'default',
+    cursor: 'default'
   },
   toolbarStyles: {
     position: 'absolute',
@@ -49,7 +49,7 @@ const DefaultOptions = {
     textAlign: 'center',
     color: '#333',
     boxSizing: 'border-box',
-    cursor: 'default',
+    cursor: 'default'
   },
   toolbarButtonStyles: {
     display: 'inline-block',
@@ -57,13 +57,13 @@ const DefaultOptions = {
     height: '24px',
     background: 'white',
     border: '1px solid #999',
-    verticalAlign: 'middle',
+    verticalAlign: 'middle'
   },
   toolbarButtonSvgStyles: {
     fill: '#444',
     stroke: '#444',
-    strokeWidth: '2',
-  },
+    strokeWidth: '2'
+  }
 };
 
 class BaseModule {
@@ -114,7 +114,7 @@ class DisplaySize extends BaseModule {
 
     // Attach it
     this.overlay.appendChild(this.display);
-  }
+  };
 
   onDestroy() {}
 
@@ -130,7 +130,7 @@ class DisplaySize extends BaseModule {
       Object.assign(this.display.style, {
         right: '4px',
         bottom: '4px',
-        left: 'auto',
+        left: 'auto'
       });
     } else if (this.img.style.float === 'right') {
       // position off bottom left
@@ -138,7 +138,7 @@ class DisplaySize extends BaseModule {
       Object.assign(this.display.style, {
         right: 'auto',
         bottom: `-${dispRect.height + 4}px`,
-        left: `-${dispRect.width + 4}px`,
+        left: `-${dispRect.width + 4}px`
       });
     } else {
       // position off bottom right
@@ -146,17 +146,15 @@ class DisplaySize extends BaseModule {
       Object.assign(this.display.style, {
         right: `-${dispRect.width + 4}px`,
         bottom: `-${dispRect.height + 4}px`,
-        left: 'auto',
+        left: 'auto'
       });
     }
-  }
+  };
 
   getCurrentSize = () => [
     this.img.width,
-    Math.round(
-      (this.img.width / this.img.naturalWidth) * this.img.naturalHeight,
-    ),
-  ]
+    Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight)
+  ];
 }
 
 class Resize extends BaseModule {
@@ -173,29 +171,27 @@ class Resize extends BaseModule {
     this.addBox('nesw-resize'); // bottom left
 
     this.positionBoxes();
-  }
+  };
 
   onDestroy = () => {
     // reset drag handle cursors
     this.setCursor('');
-  }
+  };
 
   positionBoxes = () => {
-    const handleXOffset = `${-parseFloat(this.options.handleStyles.width) /
-      2}px`;
-    const handleYOffset = `${-parseFloat(this.options.handleStyles.height) /
-      2}px`;
+    const handleXOffset = `${-parseFloat(this.options.handleStyles.width) / 2}px`;
+    const handleYOffset = `${-parseFloat(this.options.handleStyles.height) / 2}px`;
 
     // set the top and left for each drag handle
     [
       { left: handleXOffset, top: handleYOffset }, // top left
       { right: handleXOffset, top: handleYOffset }, // top right
       { right: handleXOffset, bottom: handleYOffset }, // bottom right
-      { left: handleXOffset, bottom: handleYOffset }, // bottom left
+      { left: handleXOffset, bottom: handleYOffset } // bottom left
     ].forEach((pos, idx) => {
       Object.assign(this.boxes[idx].style, pos);
     });
-  }
+  };
 
   addBox = cursor => {
     // create div element for resize handle
@@ -219,7 +215,7 @@ class Resize extends BaseModule {
     this.overlay.appendChild(box);
     // keep track of drag handle
     this.boxes.push(box);
-  }
+  };
 
   handleMousedown = evt => {
     // note which box
@@ -242,7 +238,7 @@ class Resize extends BaseModule {
       document.addEventListener('mousemove', this.handleDrag, false);
       document.addEventListener('mouseup', this.handleMouseup, false);
     }
-  }
+  };
 
   handleMouseup = () => {
     // reset cursor everywhere
@@ -255,7 +251,7 @@ class Resize extends BaseModule {
       document.removeEventListener('mousemove', this.handleDrag);
       document.removeEventListener('mouseup', this.handleMouseup);
     }
-  }
+  };
 
   handleDrag = evt => {
     if (!this.img) {
@@ -278,13 +274,13 @@ class Resize extends BaseModule {
       this.img.width = Math.round(this.preDragWidth + deltaX);
     }
     this.requestUpdate();
-  }
+  };
 
   setCursor = value => {
     [document.body, this.img].forEach(el => {
       el.style.cursor = value; // eslint-disable-line no-param-reassign
     });
-  }
+  };
 }
 
 const Parchment = Quill.imports.parchment;
@@ -302,7 +298,7 @@ class Toolbar extends BaseModule {
     // Setup Buttons
     this._defineAlignments();
     this._addToolbarButtons();
-  }
+  };
 
   // The toolbar and its children will be destroyed when the overlay is removed
   onDestroy() {}
@@ -319,7 +315,7 @@ class Toolbar extends BaseModule {
           FloatStyle.add(this.img, 'left');
           MarginStyle.add(this.img, '0 1em 1em 0');
         },
-        isApplied: () => FloatStyle.value(this.img) === 'left',
+        isApplied: () => FloatStyle.value(this.img) === 'left'
       },
       {
         icon: IconAlignCenter,
@@ -328,7 +324,7 @@ class Toolbar extends BaseModule {
           FloatStyle.remove(this.img);
           MarginStyle.add(this.img, 'auto');
         },
-        isApplied: () => MarginStyle.value(this.img) === 'auto',
+        isApplied: () => MarginStyle.value(this.img) === 'auto'
       },
       {
         icon: IconAlignRight,
@@ -337,10 +333,10 @@ class Toolbar extends BaseModule {
           FloatStyle.add(this.img, 'right');
           MarginStyle.add(this.img, '0 0 1em 1em');
         },
-        isApplied: () => FloatStyle.value(this.img) === 'right',
-      },
+        isApplied: () => FloatStyle.value(this.img) === 'right'
+      }
     ];
-  }
+  };
 
   _addToolbarButtons = () => {
     const buttons = [];
@@ -381,7 +377,7 @@ class Toolbar extends BaseModule {
       }
       this.toolbar.appendChild(button);
     });
-  }
+  };
 
   _selectButton(button) {
     button.style.filter = 'invert(20%)';
@@ -414,11 +410,7 @@ class ImageResize {
     document.execCommand('enableObjectResizing', false, 'false');
 
     // respond to clicks inside the editor
-    this.quill.root.addEventListener(
-      'click',
-      this.handleClick,
-      false,
-    );
+    this.quill.root.addEventListener('click', this.handleClick, false);
 
     this.quill.root.parentNode.style.position =
       this.quill.root.parentNode.style.position || 'relative';
@@ -433,7 +425,7 @@ class ImageResize {
     this.removeModules();
 
     this.modules = this.moduleClasses.map(
-      ModuleClass => new (knownModules[ModuleClass] || ModuleClass)(this),
+      ModuleClass => new (knownModules[ModuleClass] || ModuleClass)(this)
     );
 
     this.modules.forEach(module => {
@@ -441,14 +433,14 @@ class ImageResize {
     });
 
     this.onUpdate();
-  }
+  };
 
   onUpdate = () => {
     this.repositionElements();
     this.modules.forEach(module => {
       module.onUpdate();
     });
-  }
+  };
 
   removeModules = () => {
     this.modules.forEach(module => {
@@ -456,14 +448,10 @@ class ImageResize {
     });
 
     this.modules = [];
-  }
+  };
 
   handleClick = evt => {
-    if (
-      evt.target &&
-      evt.target.tagName &&
-      evt.target.tagName.toUpperCase() === 'IMG'
-    ) {
+    if (evt.target && evt.target.tagName && evt.target.tagName.toUpperCase() === 'IMG') {
       if (this.img === evt.target) {
         // we are already focused on this image
         return;
@@ -478,7 +466,7 @@ class ImageResize {
       // clicked on a non image
       this.hide();
     }
-  }
+  };
 
   show = img => {
     // keep track of this img element
@@ -487,7 +475,7 @@ class ImageResize {
     this.showOverlay();
 
     this.initializeModules();
-  }
+  };
 
   showOverlay = () => {
     if (this.overlay) {
@@ -510,7 +498,7 @@ class ImageResize {
     this.quill.root.parentNode.appendChild(this.overlay);
 
     this.repositionElements();
-  }
+  };
 
   hideOverlay = () => {
     if (!this.overlay) {
@@ -527,7 +515,7 @@ class ImageResize {
 
     // reset user-select
     this.setUserSelect('');
-  }
+  };
 
   repositionElements = () => {
     if (!this.overlay || !this.img) {
@@ -543,25 +531,23 @@ class ImageResize {
       left: `${imgRect.left - containerRect.left - 1 + parent.scrollLeft}px`,
       top: `${imgRect.top - containerRect.top + parent.scrollTop}px`,
       width: `${imgRect.width}px`,
-      height: `${imgRect.height}px`,
+      height: `${imgRect.height}px`
     });
-  }
+  };
 
-  hide=() => {
+  hide = () => {
     this.hideOverlay();
     this.removeModules();
     this.img = undefined;
-  }
+  };
 
   setUserSelect = value => {
-    ['userSelect', 'mozUserSelect', 'webkitUserSelect', 'msUserSelect'].forEach(
-      prop => {
-        // set on contenteditable element and <html>
-        this.quill.root.style[prop] = value;
-        document.documentElement.style[prop] = value;
-      },
-    );
-  }
+    ['userSelect', 'mozUserSelect', 'webkitUserSelect', 'msUserSelect'].forEach(prop => {
+      // set on contenteditable element and <html>
+      this.quill.root.style[prop] = value;
+      document.documentElement.style[prop] = value;
+    });
+  };
 
   checkImage = evt => {
     if (this.img) {
@@ -570,7 +556,7 @@ class ImageResize {
       }
       this.hide();
     }
-  }
+  };
 }
 
 export default ImageResize;

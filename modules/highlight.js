@@ -63,8 +63,8 @@ highlight.configure({
     'thrift',
     'r',
     'matlab',
-    'swift',
+    'swift'
   ],
-  useBR: false,
+  useBR: false
 });
 window.hljs = highlight;

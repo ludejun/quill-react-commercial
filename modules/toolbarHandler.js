@@ -2,17 +2,12 @@ import Quill from 'quill';
 import { isUrl, isEmail } from '../utils';
 
 export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
-  let fileInput = this.container.querySelector(
-    'input.ql-image[type=file]',
-  );
+  let fileInput = this.container.querySelector('input.ql-image[type=file]');
 
   if (fileInput === null) {
     fileInput = document.createElement('input');
     fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute(
-      'accept',
-      'image/png, image/gif, image/jpeg, image/bmp, image/x-icon',
-    );
+    fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
     fileInput.classList.add('ql-image');
     fileInput.addEventListener('change', () => {
       const { files } = fileInput;
@@ -32,11 +27,7 @@ export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
       imgUploadApi(formData)
         .then(response => {
           this.quill.enable(true);
-          this.quill.editor.insertEmbed(
-            range.index,
-            'image',
-            response.data.url_path,
-          );
+          this.quill.editor.insertEmbed(range.index, 'image', response.data.url_path);
           this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
           fileInput.value = '';
           uploadSuccCB(response);
@@ -73,11 +64,12 @@ export function linkHandler(value) {
           document.getElementById('link-words').value,
           'link',
           document.getElementById('link-url').value,
-          'user',
+          'user'
         );
         this.quill.theme.tooltip.hide();
       };
-    } else { // 当有选中文本，弹出tooltip后允许修改此文本，并能插入超链接
+    } else {
+      // 当有选中文本，弹出tooltip后允许修改此文本，并能插入超链接
       console.log(selection, this.quill.theme, this.linkRange);
       const text = this.quill.getText(selection);
       this.quill.theme.tooltip.edit('link', '');
@@ -100,7 +92,7 @@ export function linkHandler(value) {
           document.getElementById('link-words').value,
           'link',
           document.getElementById('link-url').value,
-          'user',
+          'user'
         );
         this.quill.theme.tooltip.hide();
       };

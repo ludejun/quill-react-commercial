@@ -20,7 +20,7 @@ export default class MarkdownShortcuts {
             this.quill.formatLine(selection.index, 0, 'header', size - 1);
             this.quill.deleteText(selection.index - size, size);
           }, 0);
-        },
+        }
       },
       {
         name: 'blockquote',
@@ -31,7 +31,7 @@ export default class MarkdownShortcuts {
             this.quill.formatLine(selection.index, 1, 'blockquote', true);
             this.quill.deleteText(selection.index - 2, 2);
           }, 0);
-        },
+        }
       },
       {
         name: 'code-block',
@@ -42,7 +42,7 @@ export default class MarkdownShortcuts {
             this.quill.formatLine(selection.index, 1, 'code-block', true);
             this.quill.deleteText(selection.index - 4, 4);
           }, 0);
-        },
+        }
       },
       {
         name: 'bolditalic',
@@ -61,7 +61,7 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { bold: true, italic: true });
             this.quill.format('bold', false);
           }, 0);
-        },
+        }
       },
       {
         name: 'bold',
@@ -80,7 +80,7 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { bold: true });
             this.quill.format('bold', false);
           }, 0);
-        },
+        }
       },
       {
         name: 'italic',
@@ -99,7 +99,7 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { italic: true });
             this.quill.format('italic', false);
           }, 0);
-        },
+        }
       },
       {
         name: 'strikethrough',
@@ -118,7 +118,7 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { strike: true });
             this.quill.format('strike', false);
           }, 0);
-        },
+        }
       },
       {
         name: 'code',
@@ -138,7 +138,7 @@ export default class MarkdownShortcuts {
             this.quill.format('code', false);
             this.quill.insertText(this.quill.getSelection(), ' ');
           }, 0);
-        },
+        }
       },
       {
         name: 'hr',
@@ -152,7 +152,7 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex + 2, '\n', Quill.sources.SILENT);
             this.quill.setSelection(startIndex + 2, Quill.sources.SILENT);
           }, 0);
-        },
+        }
       },
       {
         name: 'asterisk-ul',
@@ -162,7 +162,7 @@ export default class MarkdownShortcuts {
             this.quill.formatLine(selection.index, 1, 'list', 'unordered');
             this.quill.deleteText(selection.index - 2, 2);
           }, 0);
-        },
+        }
       },
       {
         name: 'image',
@@ -179,7 +179,7 @@ export default class MarkdownShortcuts {
               this.quill.insertEmbed(start, 'image', hrefLink.slice(1, hrefLink.length - 1));
             }, 0);
           }
-        },
+        }
       },
       {
         name: 'link',
@@ -201,12 +201,12 @@ export default class MarkdownShortcuts {
               );
             }, 0);
           }
-        },
-      },
+        }
+      }
     ];
 
     // Handler that looks for insert deltas that match specific characters
-    this.quill.on('text-change', (delta) => {
+    this.quill.on('text-change', delta => {
       for (let i = 0; i < delta.ops.length; i++) {
         if (delta.ops[i].hasOwnProperty('insert')) {
           if (delta.ops[i].insert === ' ') {

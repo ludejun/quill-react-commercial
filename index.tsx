@@ -4,13 +4,7 @@ import Quill from 'quill';
 import QuillBetterTable from 'quill-better-table';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
-import {
-  ImageDrop,
-  ImageResize,
-  MagicUrl,
-  MarkdownShortcuts,
-  ToolbarTable,
-} from './modules/index';
+import { ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
 // import { MagicUrl } from './modules/magic-url';
 import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
 import { setContent } from './utils';
@@ -26,47 +20,49 @@ interface IBetterTable {
   operationMenu?: {
     insertColumnRight?: {
       text: string;
-    },
+    };
     insertColumnLeft?: {
       text: string;
-    },
+    };
     insertRowUp?: {
       text: string;
-    },
+    };
     insertRowDown?: {
       text: string;
-    },
+    };
     mergeCells?: {
       text: string;
-    },
+    };
     unmergeCells?: {
       text: string;
-    },
+    };
     deleteColumn?: {
       text: string;
-    },
+    };
     deleteRow?: {
       text: string;
-    },
+    };
     deleteTable?: {
       text: string;
-    },
-  },
+    };
+  };
   backgroundColor?: {
     colors?: string[];
     text?: string;
-  },
-  toolbarOptions?: boolean | {
-    dialogRows?: number;
-    dialogColumns?: number;
-    rowLabel?: string;
-    columnLabel?: string;
-    okLabel?: string;
   };
+  toolbarOptions?:
+    | boolean
+    | {
+        dialogRows?: number;
+        dialogColumns?: number;
+        rowLabel?: string;
+        columnLabel?: string;
+        okLabel?: string;
+      };
 }
 interface IModules {
   table?: boolean | IBetterTable;
-  codeHighlight?: boolean | { key: string, label: string }[];
+  codeHighlight?: boolean | { key: string; label: string }[];
   imageResize?: boolean | {};
   imageDrop?: boolean | {};
   magicUrl?: boolean;
@@ -81,7 +77,7 @@ interface IEditorProps {
       imgUploadApi: (formData: FormData) => void;
       uploadSuccCB?: (data: unknown) => void;
       uploadFailCB?: (error: unknown) => void;
-    },
+    };
     toolbarOptions?: [][];
   } & IModules;
   getQuillDomRef?: (instance: Ref<HTMLDivElement>) => void;
@@ -90,13 +86,19 @@ interface IEditorProps {
 }
 
 class RichTextEditor extends React.Component<IEditorProps> {
-  quillModules: IModules & { 'better-table'?: any, toolbarTable?: any, syntax?: any, markdownShortcuts?: boolean, };
+  quillModules: IModules & {
+    'better-table'?: any;
+    toolbarTable?: any;
+    syntax?: any;
+    markdownShortcuts?: boolean;
+  };
 
   toolbarHandlers: Record<string, () => void>;
 
   quill: Quill;
 
   quillRef: React.RefObject<HTMLDivElement>;
+  editorId: string;
 
   constructor(props: IEditorProps) {
     super(props);
@@ -104,74 +106,93 @@ class RichTextEditor extends React.Component<IEditorProps> {
     this.quillModules = {};
     this.toolbarHandlers = {};
     this.quillRef = createRef();
-
+    this.editorId = new Date().getTime() + (100 * Math.random()).toFixed(0);
+    
     // 处理外部传入的modules
     if (Object.keys(modules).length > 0) {
-      const { table, codeHighlight, imageResize = true, imageDrop, magicUrl = true, markdown = true, link = true, imageHandler } = modules;
+      const {
+        table,
+        codeHighlight,
+        imageResize = true,
+        imageDrop,
+        magicUrl = true,
+        markdown = true,
+        link = true,
+        imageHandler
+      } = modules;
       if (table) {
         this.quillModules.table = false;
         this.quillModules['better-table'] = {
           operationMenu: {
-            items: typeof table !== 'boolean' ? table.operationMenu : {
-              insertColumnRight: {
-                text: '右侧插入列',
-              },
-              insertColumnLeft: {
-                text: '左侧插入列',
-              },
-              insertRowUp: {
-                text: '上方插入行',
-              },
-              insertRowDown: {
-                text: '下方插入行',
-              },
-              mergeCells: {
-                text: '合并单元格',
-              },
-              unmergeCells: {
-                text: '取消单元格合并',
-              },
-              deleteColumn: {
-                text: '删除列',
-              },
-              deleteRow: {
-                text: '删除行',
-              },
-              deleteTable: {
-                text: '删除表格',
-              },
-            },
+            items:
+              typeof table !== 'boolean'
+                ? table.operationMenu
+                : {
+                    insertColumnRight: {
+                      text: '右侧插入列'
+                    },
+                    insertColumnLeft: {
+                      text: '左侧插入列'
+                    },
+                    insertRowUp: {
+                      text: '上方插入行'
+                    },
+                    insertRowDown: {
+                      text: '下方插入行'
+                    },
+                    mergeCells: {
+                      text: '合并单元格'
+                    },
+                    unmergeCells: {
+                      text: '取消单元格合并'
+                    },
+                    deleteColumn: {
+                      text: '删除列'
+                    },
+                    deleteRow: {
+                      text: '删除行'
+                    },
+                    deleteTable: {
+                      text: '删除表格'
+                    }
+                  },
             color: {
               colors: ['#fff', '#ECF3FC', '#999'], // 背景色值, ['white', 'red', 'yellow', 'blue'] as default
               text: '背景色', // subtitle, 'Background Colors' as default
-              ...(typeof table !== 'boolean' ? table.backgroundColor : null),
-            },
-          },
+              ...(typeof table !== 'boolean' ? table.backgroundColor : null)
+            }
+          }
         };
-        this.quillModules.toolbarTable = typeof table !== 'boolean' && table.toolbarOptions !== undefined ? table.toolbarOptions : true; // 添加table的工具栏处理函数，需要先registry，在DidMount中
+        this.quillModules.toolbarTable =
+          typeof table !== 'boolean' && table.toolbarOptions !== undefined
+            ? table.toolbarOptions
+            : true; // 添加table的工具栏处理函数，需要先registry，在DidMount中
       }
 
       if (codeHighlight) {
         this.quillModules.syntax = {
-          languages: typeof codeHighlight !== 'boolean' ? codeHighlight : [
-            { key: 'plain', label: '文本' },
-            { key: 'javascript', label: 'Javascript' },
-            { key: 'java', label: 'Java' },
-            { key: 'python', label: 'Python' },
-            { key: 'clike', label: 'C++/C' },
-            { key: 'csharp', label: 'C#' },
-            { key: 'php', label: 'PHP' },
-            { key: 'sql', label: 'SQL' },
-            { key: 'json', label: 'JSON' },
-            { key: 'bash', label: 'Bash' },
-            { key: 'go', label: 'Go' },
-            { key: 'objectivec', label: 'Objective-C' },
-            { key: 'xml', label: 'HTML/XML' },
-            { key: 'css', label: 'CSS' },
-            { key: 'ruby', label: 'Ruby' },
-            { key: 'swift', label: 'Swift' },
-            { key: 'scala', label: 'Scala' },
-          ],
+          languages:
+            typeof codeHighlight !== 'boolean'
+              ? codeHighlight
+              : [
+                  { key: 'plain', label: '文本' },
+                  { key: 'javascript', label: 'Javascript' },
+                  { key: 'java', label: 'Java' },
+                  { key: 'python', label: 'Python' },
+                  { key: 'clike', label: 'C++/C' },
+                  { key: 'csharp', label: 'C#' },
+                  { key: 'php', label: 'PHP' },
+                  { key: 'sql', label: 'SQL' },
+                  { key: 'json', label: 'JSON' },
+                  { key: 'bash', label: 'Bash' },
+                  { key: 'go', label: 'Go' },
+                  { key: 'objectivec', label: 'Objective-C' },
+                  { key: 'xml', label: 'HTML/XML' },
+                  { key: 'css', label: 'CSS' },
+                  { key: 'ruby', label: 'Ruby' },
+                  { key: 'swift', label: 'Swift' },
+                  { key: 'scala', label: 'Scala' }
+                ]
         };
       }
 
@@ -192,7 +213,12 @@ class RichTextEditor extends React.Component<IEditorProps> {
       this.toolbarHandlers.link = link && linkHandler;
       if (imageHandler) {
         const { imgUploadApi, uploadSuccCB, uploadFailCB } = imageHandler;
-        this.toolbarHandlers.image = imageUpload.bind(this, imgUploadApi, uploadSuccCB, uploadFailCB);
+        this.toolbarHandlers.image = imageUpload.bind(
+          this,
+          imgUploadApi,
+          uploadSuccCB,
+          uploadFailCB
+        );
       }
       this.toolbarHandlers.undo = undoHandler;
       this.toolbarHandlers.redo = redoHandler;
@@ -233,13 +259,20 @@ class RichTextEditor extends React.Component<IEditorProps> {
   }
 
   componentDidMount() {
-    const { modules = {}, placeholder, getQuillDomRef, getQuill, content, readOnly = false } = this.props;
+    const {
+      modules = {},
+      placeholder,
+      getQuillDomRef,
+      getQuill,
+      content,
+      readOnly = false
+    } = this.props;
     if (this.quillModules['better-table']) {
       Quill.register(
         {
-          'modules/better-table': QuillBetterTable,
+          'modules/better-table': QuillBetterTable
         },
-        true,
+        true
       );
     }
 
@@ -249,9 +282,9 @@ class RichTextEditor extends React.Component<IEditorProps> {
         'modules/imageDrop': ImageDrop,
         'modules/magicUrl': MagicUrl,
         'modules/markdownShortcuts': MarkdownShortcuts,
-        'modules/toolbarTable': ToolbarTable,
+        'modules/toolbarTable': ToolbarTable
       },
-      true,
+      true
     );
 
     const lineBreakMatcher = () => {
@@ -262,22 +295,33 @@ class RichTextEditor extends React.Component<IEditorProps> {
 
     const toolbarOptions = modules.toolbarOptions || [
       ['undo', 'redo'],
-      [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', false, '18px', '36px'] }],
+      [
+        { font: ['wsYaHei', 'songTi', 'serif', 'arial'] },
+        { size: ['12px', false, '18px', '36px'] }
+      ],
       [{ color: [] }, { background: [] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
+      [
+        { list: 'ordered' },
+        { list: 'bullet' },
+        { list: 'check' },
+        { indent: '-1' },
+        { indent: '+1' },
+        { align: [] }
+      ],
       [
         'blockquote',
         modules.codeHighlight ? 'code-block' : undefined,
         modules.link !== false ? 'link' : undefined,
         'image',
-        { script: 'sub' }, { script: 'super' },
+        { script: 'sub' },
+        { script: 'super' },
         this.quillModules['better-table'] ? 'table' : undefined,
-        'clean',
-      ],
+        'clean'
+      ]
     ];
 
-    this.quill = new Quill('#editor', {
+    this.quill = new Quill(`#editor${this.editorId}`, {
       debug: process.env.NODE_ENV === 'development' ? '-' : false,
       modules: {
         // formula: true, // todo 公式，暂不支持
@@ -285,27 +329,27 @@ class RichTextEditor extends React.Component<IEditorProps> {
         toolbar: {
           container: toolbarOptions, // Selector for toolbar container
           handlers: {
-            ...this.toolbarHandlers,
+            ...this.toolbarHandlers
             // image: quillImageHandler, // todo 处理图片先上传，再附链接。不处理默认保存base64
-          },
+          }
         },
         clipboard: {
-          matchers: [['BR', lineBreakMatcher]],
+          matchers: [['BR', lineBreakMatcher]]
         },
         keyboard: {
-          bindings: QuillBetterTable.keyboardBindings,
+          bindings: QuillBetterTable.keyboardBindings
         },
 
         history: {
           delay: 2000,
           maxStack: 100,
-          userOnly: true,
-        },
+          userOnly: true
+        }
       },
       placeholder: placeholder || '开始笔记（支持直接Markdown输入）...',
       readOnly,
       bounds: document.body,
-      theme: 'snow',
+      theme: 'snow'
     });
 
     this.quill.theme.tooltip.root.innerHTML = [
@@ -314,7 +358,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
       '<br />',
       '<span>链接地址：</span><input id="link-url" type="text" data-formula="e=mc^2" data-link="https://www.baidu.com" data-video="Embed URL" />',
       '<a class="ql-action"></a>',
-      '<a class="ql-remove"></a>',
+      '<a class="ql-remove"></a>'
     ].join('');
 
     // 当选中link格式时，弹出tooltip并能修改保存
@@ -343,7 +387,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
               document.getElementById('link-words').value,
               'link',
               document.getElementById('link-url').value,
-              'user',
+              'user'
             );
             this.quill.theme.tooltip.hide();
           };
@@ -422,7 +466,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         {/* <button className="ql-direction" value="rtl"></button> */}
         {/* <button className="ql-emoji" /> */}
         {/* </div> */}
-        <div id="editor" ref={this.quillRef} />
+        <div id={`editor${this.editorId}`} ref={this.quillRef} />
       </div>
     );
   }

@@ -16,10 +16,4 @@ import ToolbarTable from './toolbar-table';
 //   true,
 // );
 
-export {
-  ImageDrop,
-  ImageResize,
-  MagicUrl,
-  MarkdownShortcuts,
-  ToolbarTable,
-};
+export { ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable };
