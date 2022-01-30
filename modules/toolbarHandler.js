@@ -2,7 +2,7 @@ import Quill from 'quill';
 import { isUrl, isEmail } from '../utils';
 
 export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
-  let fileInput = this.container.querySelector('input.ql-image[type=file]');
+  let fileInput = this.quill.container.querySelector('input.ql-image[type=file]');
 
   if (fileInput === null) {
     fileInput = document.createElement('input');
@@ -11,7 +11,7 @@ export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
     fileInput.classList.add('ql-image');
     fileInput.addEventListener('change', () => {
       const { files } = fileInput;
-      // const range = this.quill.getSelection(true);
+      const range = this.quill.getSelection(true);
 
       if (!files || !files.length) {
         console.log('没有选择文件');
@@ -25,12 +25,12 @@ export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
 
       // todo 请求图片保存API
       imgUploadApi(formData)
-        .then(response => {
+        .then(({response, processRes}) => {
           this.quill.enable(true);
-          this.quill.editor.insertEmbed(range.index, 'image', response.data.url_path);
+          this.quill.editor.insertEmbed(range.index, 'image', processRes(response));
           this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
           fileInput.value = '';
-          uploadSuccCB(response);
+          if (!!uploadSuccCB) uploadSuccCB(response);
         })
         .catch(error => {
           console.log('图片上传失败');
@@ -39,7 +39,7 @@ export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
           uploadFailCB(error);
         });
     });
-    this.container.appendChild(fileInput);
+    this.quill.container.appendChild(fileInput);
   }
   fileInput.click();
 }

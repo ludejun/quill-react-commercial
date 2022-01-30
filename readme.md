@@ -102,6 +102,8 @@ modules.table的operationMenu的默认值如下，其他配置参考quill-better
 
 modules.imageHandler 不定义则默认插入图片转为base64后存在Delta中
 
+
+
 modules.toolbarOptionse为Quill toolbar按数组进行定义的方式，当为列表项时默认选中第一个
 
 ```javascript
@@ -168,3 +170,6 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 
 
 **readOnly：非必需，boolean；编辑器是否只读；默认为false**
+
+
+
