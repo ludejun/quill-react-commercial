@@ -74,7 +74,7 @@ interface IEditorProps {
   readOnly?: boolean;
   modules?: {
     imageHandler?: {
-      imgUploadApi: (formData) => Promise<{ response: {}, processRes: (response: {}) => string}>;
+      imgUploadApi: (formData) => Promise<{ response: {}; processRes: (response: {}) => string }>;
       uploadSuccCB?: (data: unknown) => void;
       uploadFailCB?: (error: unknown) => void;
     };
@@ -107,7 +107,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
     this.toolbarHandlers = {};
     this.quillRef = createRef();
     this.editorId = new Date().getTime() + (100 * Math.random()).toFixed(0);
-    
+
     // 处理外部传入的modules
     if (Object.keys(modules).length > 0) {
       const {
