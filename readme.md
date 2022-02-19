@@ -58,7 +58,7 @@ import 'quill-react-commercial/dist/quill-react-commercial.min.css';
   markdown: true, // 是否自动支持markdown，自动转换为富文本，默认为true
   link: true, // toolbar是否需要超链接及处理函数，默认为true
   imageHandler: {
-    imgUploadApi: (formData: FormData) => void; // 图片上传API
+    imgUploadApi: (formData: FormData) => Promise<string>; // 图片上传API，API返回的应该是结果为URL的Promise
     uploadSuccCB?: (data: unknown) => void; // 上传成功回调
     uploadFailCB?: (error: unknown) => void; // 上传失败回调
   }, // 点击toolbar上图片时的处理函数相关

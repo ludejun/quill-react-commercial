@@ -74,7 +74,7 @@ interface IEditorProps {
   readOnly?: boolean;
   modules?: {
     imageHandler?: {
-      imgUploadApi: (formData) => Promise<{ response: {}; processRes: (response: {}) => string }>;
+      imgUploadApi: (formData) => Promise<string>;
       uploadSuccCB?: (data: unknown) => void;
       uploadFailCB?: (error: unknown) => void;
     };
