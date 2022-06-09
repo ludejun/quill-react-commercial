@@ -50,5 +50,7 @@ export function setContent(content, quill) {
     } else {
       quill.clipboard.dangerouslyPasteHTML(content);
     }
+  } else {
+    quill.setContents('');
   }
 }

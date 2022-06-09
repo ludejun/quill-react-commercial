@@ -83,6 +83,7 @@ interface IEditorProps {
   getQuillDomRef?: (instance: Ref<HTMLDivElement>) => void;
   getQuill?: (quill: Quill) => void;
   content?: Delta | string;
+  onChange?: (delta: Delta, old: Delta, source?: string) => void;
 }
 
 class RichTextEditor extends React.Component<IEditorProps> {
@@ -265,7 +266,8 @@ class RichTextEditor extends React.Component<IEditorProps> {
       getQuillDomRef,
       getQuill,
       content,
-      readOnly = false
+      readOnly = false,
+      onChange,
     } = this.props;
     if (this.quillModules['better-table']) {
       Quill.register(
@@ -399,6 +401,12 @@ class RichTextEditor extends React.Component<IEditorProps> {
 
     getQuillDomRef && getQuillDomRef(this.quillRef);
     getQuill && getQuill(this.quill);
+
+    if (onChange) {
+      this.quill.on('text-change', (delta, old, source) => {
+        source === 'user' && onChange(delta, old);
+      });
+    }
   }
 
   componentDidUpdate(preProps) {

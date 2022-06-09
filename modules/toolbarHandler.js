@@ -25,7 +25,7 @@ export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
 
       // todo 请求图片保存API
       imgUploadApi(formData)
-        .then((url) => {
+        .then(url => {
           this.quill.enable(true);
           this.quill.editor.insertEmbed(range.index, 'image', url);
           this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
