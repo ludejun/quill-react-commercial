@@ -4,16 +4,27 @@ import Quill from 'quill';
 import QuillBetterTable from 'quill-better-table';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
-import { ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
+import Delta from 'quill-delta';
+import {
+  ImageDrop,
+  ImageResize,
+  MagicUrl,
+  MarkdownShortcuts,
+  ToolbarTable,
+} from './modules/index';
 // import { MagicUrl } from './modules/magic-url';
-import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
+import {
+  imageUpload,
+  linkHandler,
+  undoHandler,
+  redoHandler,
+} from './modules/toolbarHandler';
 import { setContent } from './utils';
 import 'quill/dist/quill.snow.css';
 import 'quill-better-table/dist/quill-better-table.css';
 import './richTextEditor.less';
 import './modules/index.less';
 
-import Delta from 'quill-delta';
 // const Delta = Quill.import('delta');
 
 interface IBetterTable {
@@ -83,6 +94,7 @@ interface IEditorProps {
   getQuillDomRef?: (instance: Ref<HTMLDivElement>) => void;
   getQuill?: (quill: Quill) => void;
   content?: Delta | string;
+  onChange?: (delta: Delta, old: Delta, source?: string) => void;
 }
 
 class RichTextEditor extends React.Component<IEditorProps> {
@@ -98,7 +110,8 @@ class RichTextEditor extends React.Component<IEditorProps> {
   quill: Quill;
 
   quillRef: React.RefObject<HTMLDivElement>;
-  editorId: string;
+
+  editorId: string; // 编辑器DOM-ID，防止同页面多个编辑器会串数据
 
   constructor(props: IEditorProps) {
     super(props);
@@ -118,7 +131,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         magicUrl = true,
         markdown = true,
         link = true,
-        imageHandler
+        imageHandler,
       } = modules;
       if (table) {
         this.quillModules.table = false;
@@ -129,39 +142,39 @@ class RichTextEditor extends React.Component<IEditorProps> {
                 ? table.operationMenu
                 : {
                     insertColumnRight: {
-                      text: '右侧插入列'
+                      text: '右侧插入列',
                     },
                     insertColumnLeft: {
-                      text: '左侧插入列'
+                      text: '左侧插入列',
                     },
                     insertRowUp: {
-                      text: '上方插入行'
+                      text: '上方插入行',
                     },
                     insertRowDown: {
-                      text: '下方插入行'
+                      text: '下方插入行',
                     },
                     mergeCells: {
-                      text: '合并单元格'
+                      text: '合并单元格',
                     },
                     unmergeCells: {
-                      text: '取消单元格合并'
+                      text: '取消单元格合并',
                     },
                     deleteColumn: {
-                      text: '删除列'
+                      text: '删除列',
                     },
                     deleteRow: {
-                      text: '删除行'
+                      text: '删除行',
                     },
                     deleteTable: {
-                      text: '删除表格'
-                    }
+                      text: '删除表格',
+                    },
                   },
             color: {
               colors: ['#fff', '#ECF3FC', '#999'], // 背景色值, ['white', 'red', 'yellow', 'blue'] as default
               text: '背景色', // subtitle, 'Background Colors' as default
-              ...(typeof table !== 'boolean' ? table.backgroundColor : null)
-            }
-          }
+              ...(typeof table !== 'boolean' ? table.backgroundColor : null),
+            },
+          },
         };
         this.quillModules.toolbarTable =
           typeof table !== 'boolean' && table.toolbarOptions !== undefined
@@ -191,18 +204,20 @@ class RichTextEditor extends React.Component<IEditorProps> {
                   { key: 'css', label: 'CSS' },
                   { key: 'ruby', label: 'Ruby' },
                   { key: 'swift', label: 'Swift' },
-                  { key: 'scala', label: 'Scala' }
-                ]
+                  { key: 'scala', label: 'Scala' },
+                ],
         };
       }
 
       // 默认添加图片缩放功能
       if (imageResize) {
-        this.quillModules.imageResize = typeof imageResize !== 'boolean' ? imageResize : {};
+        this.quillModules.imageResize =
+          typeof imageResize !== 'boolean' ? imageResize : {};
       }
       // 默认图片拖拽/复制到富文本
       if (imageDrop) {
-        this.quillModules.imageDrop = typeof imageDrop !== 'boolean' ? imageDrop : {};
+        this.quillModules.imageDrop =
+          typeof imageDrop !== 'boolean' ? imageDrop : {};
       }
       // 默认支持自动识别URL
       this.quillModules.magicUrl = magicUrl;
@@ -226,7 +241,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
 
     // 设置自定义字体/大小
     const { toolbarOptions } = modules;
-    let fontList = ['wsYaHei', 'songTi', 'serif', 'arial'];
+    let fontList = ['system', 'wsYaHei', 'songTi', 'serif', 'arial'];
     // const fontMapping = { 微软雅黑: 'wsYaHei', 宋体: 'songTi', 楷体: 'kaiTi'};
     let sizeList = ['12px', '14px', '18px', '36px'];
     if (toolbarOptions) {
@@ -265,12 +280,13 @@ class RichTextEditor extends React.Component<IEditorProps> {
       getQuillDomRef,
       getQuill,
       content,
-      readOnly = false
+      readOnly = false,
+      onChange,
     } = this.props;
     if (this.quillModules['better-table']) {
       Quill.register(
         {
-          'modules/better-table': QuillBetterTable
+          'modules/better-table': QuillBetterTable,
         },
         true
       );
@@ -282,7 +298,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         'modules/imageDrop': ImageDrop,
         'modules/magicUrl': MagicUrl,
         'modules/markdownShortcuts': MarkdownShortcuts,
-        'modules/toolbarTable': ToolbarTable
+        'modules/toolbarTable': ToolbarTable,
       },
       true
     );
@@ -296,8 +312,9 @@ class RichTextEditor extends React.Component<IEditorProps> {
     const toolbarOptions = modules.toolbarOptions || [
       ['undo', 'redo'],
       [
-        { font: ['wsYaHei', 'songTi', 'serif', 'arial'] },
-        { size: ['12px', false, '18px', '36px'] }
+        { font: ['system', 'wsYaHei', 'songTi', 'serif', 'arial'] },
+        { size: ['12px', false, '18px', '36px'] },
+        { header: [1, 2, 3, 4] },
       ],
       [{ color: [] }, { background: [] }],
       ['bold', 'italic', 'underline', 'strike'],
@@ -307,7 +324,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         { list: 'check' },
         { indent: '-1' },
         { indent: '+1' },
-        { align: [] }
+        { align: [] },
       ],
       [
         'blockquote',
@@ -317,8 +334,8 @@ class RichTextEditor extends React.Component<IEditorProps> {
         { script: 'sub' },
         { script: 'super' },
         this.quillModules['better-table'] ? 'table' : undefined,
-        'clean'
-      ]
+        'clean',
+      ],
     ];
 
     this.quill = new Quill(`#editor${this.editorId}`, {
@@ -329,27 +346,27 @@ class RichTextEditor extends React.Component<IEditorProps> {
         toolbar: {
           container: toolbarOptions, // Selector for toolbar container
           handlers: {
-            ...this.toolbarHandlers
+            ...this.toolbarHandlers,
             // image: quillImageHandler, // todo 处理图片先上传，再附链接。不处理默认保存base64
-          }
+          },
         },
         clipboard: {
-          matchers: [['BR', lineBreakMatcher]]
+          matchers: [['BR', lineBreakMatcher]],
         },
         keyboard: {
-          bindings: QuillBetterTable.keyboardBindings
+          bindings: QuillBetterTable.keyboardBindings,
         },
 
         history: {
           delay: 2000,
           maxStack: 100,
-          userOnly: true
-        }
+          userOnly: true,
+        },
       },
       placeholder: placeholder || '开始笔记（支持直接Markdown输入）...',
       readOnly,
       bounds: document.body,
-      theme: 'snow'
+      theme: 'snow',
     });
 
     this.quill.theme.tooltip.root.innerHTML = [
@@ -358,7 +375,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
       '<br />',
       '<span>链接地址：</span><input id="link-url" type="text" data-formula="e=mc^2" data-link="https://www.baidu.com" data-video="Embed URL" />',
       '<a class="ql-action"></a>',
-      '<a class="ql-remove"></a>'
+      '<a class="ql-remove"></a>',
     ].join('');
 
     // 当选中link格式时，弹出tooltip并能修改保存
@@ -399,6 +416,12 @@ class RichTextEditor extends React.Component<IEditorProps> {
 
     getQuillDomRef && getQuillDomRef(this.quillRef);
     getQuill && getQuill(this.quill);
+
+    if (onChange) {
+      this.quill.on('text-change', (delta, old, source) => {
+        source === 'user' && onChange(delta, old);
+      });
+    }
   }
 
   componentDidUpdate(preProps) {
