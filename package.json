@@ -1,8 +1,8 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "",
-  "main": "dist/quill-react-commercial.min.js",
+  "main": "index.tsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config ./webpack.config.js"
