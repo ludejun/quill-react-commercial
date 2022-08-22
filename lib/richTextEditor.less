@@ -1,0 +1,84 @@
+#editor {
+  width: 100%;
+  height: 500px;
+}
+
+#toolbar {
+  width: 100%;
+}
+
+.ql-container {
+  // font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", SimSun, sans-serif;
+  font-size: 14px;
+}
+
+/* Set dropdown font-families */
+.ql-toolbar .ql-font .ql-picker-label::before,
+.ql-toolbar .ql-font .ql-picker-item::before {
+  content: attr(data-value) !important;
+}
+.ql-toolbar .ql-size .ql-picker-label::before,
+.ql-toolbar .ql-size .ql-picker-item::before {
+  content: '14px' !important;
+}
+.ql-toolbar .ql-size .ql-picker-label[data-value]::before,
+.ql-toolbar .ql-size .ql-picker-item[data-value]::before {
+  content: attr(data-value) !important;
+}
+.ql-toolbar .ql-font .ql-picker-label[data-value=wsYaHei]::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value=wsYaHei]::before {
+  content: '微软雅黑' !important;
+}
+.ql-toolbar .ql-font .ql-picker-label[data-value=songTi]::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value=songTi]::before {
+  content: '宋体' !important;
+}
+.ql-toolbar .ql-font .ql-picker-label[data-value=kaiTi]::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value=kaiTi]::before {
+  content: '楷体' !important;
+}
+.ql-toolbar .ql-font .ql-picker-label[data-value=system]::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value=system]::before {
+  content: '系统默认' !important;
+}
+
+
+/* Set content font-families */
+.ql-font-wsYaHei {
+  font-family: "Microsoft YaHei", "微软雅黑";
+}
+.ql-font-songTi {
+  font-family: SimSun, "宋体";
+}
+.ql-font-kaiTi {
+  font-family: "楷体";
+}
+.ql-font-arial {
+  font-family: arial;
+}
+
+// 图片resize框
+.resize-box {
+  height: 8px;
+  width: 8px;
+  background-color: #000;
+  position: absolute;
+  cursor: nwse-resize;
+}
+.resize-left-top {
+  left: -4px;
+  top: -4px;
+}
+.resize-right-bottom {
+  bottom: -4px;
+  right: -4px;
+}
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  z-index: 100;
+}
+
+// 图片上传input
+input.ql-image {
+  display: none;
+}
