@@ -1,17 +1,31 @@
-import React, { Ref, createRef, useRef, useEffect } from 'react';
+import React, { Ref, createRef } from 'react';
 import './modules/highlight';
 import Quill from 'quill';
 import QuillBetterTable from 'quill-better-table';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
 import Delta from 'quill-delta';
-import { ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
-import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
+import {
+  ImageDrop,
+  ImageResize,
+  MagicUrl,
+  MarkdownShortcuts,
+  ToolbarTable,
+} from './modules/index';
+// import { MagicUrl } from './modules/magic-url';
+import {
+  imageUpload,
+  linkHandler,
+  undoHandler,
+  redoHandler,
+} from './modules/toolbarHandler';
 import { setContent } from './utils';
 import 'quill/dist/quill.snow.css';
 import 'quill-better-table/dist/quill-better-table.css';
 import './richTextEditor.less';
 import './modules/index.less';
+
+// const Delta = Quill.import('delta');
 
 interface IBetterTable {
   operationMenu?: {
@@ -77,33 +91,37 @@ interface IEditorProps {
     };
     toolbarOptions?: [][];
   } & IModules;
-  // getQuillDomRef?: (instance: HTMLDivElement | undefined) => void;
+  getQuillDomRef?: (instance: Ref<HTMLDivElement>) => void;
   getQuill?: (quill: Quill) => void;
   content?: Delta | string;
   onChange?: (delta: Delta, old: Delta, source?: string) => void;
 }
 
-const RichTextEditor = (props: IEditorProps) => {
-  const { modules = {}, content } = props;
-  const quillModules = useRef<
-    IModules & {
-      'better-table'?: Record<string, unknown>;
-      toolbarTable?: IBetterTable['toolbarOptions'] | boolean;
-      syntax?: Record<string, unknown>;
-      markdownShortcuts?: boolean;
-    }
-  >({});
-  const toolbarHandlers = useRef<Record<string, unknown>>({});
-  // const quillDomRef = useRef<HTMLDivElement>();
-  const quillRef = useRef<
-    Quill & {
-      theme?: Record<string, any>;
-    }
-  >();
-  const editorId = useRef<string>(new Date().getTime() + (100 * Math.random()).toFixed(0));
+class RichTextEditor extends React.Component<IEditorProps> {
+  quillModules: IModules & {
+    'better-table'?: any;
+    toolbarTable?: any;
+    syntax?: any;
+    markdownShortcuts?: boolean;
+  };
 
-  // 处理外部传入的modules
-  useEffect(() => {
+  toolbarHandlers: Record<string, () => void>;
+
+  quill: Quill;
+
+  quillRef: React.RefObject<HTMLDivElement>;
+
+  editorId: string; // 编辑器DOM-ID，防止同页面多个编辑器会串数据
+
+  constructor(props: IEditorProps) {
+    super(props);
+    const { modules = {} } = props;
+    this.quillModules = {};
+    this.toolbarHandlers = {};
+    this.quillRef = createRef();
+    this.editorId = new Date().getTime() + (100 * Math.random()).toFixed(0);
+
+    // 处理外部传入的modules
     if (Object.keys(modules).length > 0) {
       const {
         table,
@@ -116,8 +134,8 @@ const RichTextEditor = (props: IEditorProps) => {
         imageHandler,
       } = modules;
       if (table) {
-        quillModules.current.table = false;
-        quillModules.current['better-table'] = {
+        this.quillModules.table = false;
+        this.quillModules['better-table'] = {
           operationMenu: {
             items:
               typeof table !== 'boolean'
@@ -158,14 +176,14 @@ const RichTextEditor = (props: IEditorProps) => {
             },
           },
         };
-        quillModules.current.toolbarTable =
+        this.quillModules.toolbarTable =
           typeof table !== 'boolean' && table.toolbarOptions !== undefined
             ? table.toolbarOptions
             : true; // 添加table的工具栏处理函数，需要先registry，在DidMount中
       }
 
       if (codeHighlight) {
-        quillModules.current.syntax = {
+        this.quillModules.syntax = {
           languages:
             typeof codeHighlight !== 'boolean'
               ? codeHighlight
@@ -193,36 +211,43 @@ const RichTextEditor = (props: IEditorProps) => {
 
       // 默认添加图片缩放功能
       if (imageResize) {
-        quillModules.current.imageResize = typeof imageResize !== 'boolean' ? imageResize : {};
+        this.quillModules.imageResize =
+          typeof imageResize !== 'boolean' ? imageResize : {};
       }
       // 默认图片拖拽/复制到富文本
       if (imageDrop) {
-        quillModules.current.imageDrop = typeof imageDrop !== 'boolean' ? imageDrop : {};
+        this.quillModules.imageDrop =
+          typeof imageDrop !== 'boolean' ? imageDrop : {};
       }
       // 默认支持自动识别URL
-      quillModules.current.magicUrl = magicUrl;
+      this.quillModules.magicUrl = magicUrl;
       // 默认支持自动识别markdown语法
-      quillModules.current.markdownShortcuts = markdown;
+      this.quillModules.markdownShortcuts = markdown;
 
       // toolbar handler处理
-      toolbarHandlers.current.link = link && linkHandler;
+      this.toolbarHandlers.link = link && linkHandler;
       if (imageHandler) {
         const { imgUploadApi, uploadSuccCB, uploadFailCB } = imageHandler;
-        toolbarHandlers.current.image = () =>
-          imageUpload.bind(quillRef.current, imgUploadApi, uploadSuccCB, uploadFailCB);
+        this.toolbarHandlers.image = imageUpload.bind(
+          this,
+          imgUploadApi,
+          uploadSuccCB,
+          uploadFailCB
+        );
       }
-      toolbarHandlers.current.undo = undoHandler;
-      toolbarHandlers.current.redo = redoHandler;
+      this.toolbarHandlers.undo = undoHandler;
+      this.toolbarHandlers.redo = redoHandler;
     }
 
     // 设置自定义字体/大小
     const { toolbarOptions } = modules;
     let fontList = ['system', 'wsYaHei', 'songTi', 'serif', 'arial'];
+    // const fontMapping = { 微软雅黑: 'wsYaHei', 宋体: 'songTi', 楷体: 'kaiTi'};
     let sizeList = ['12px', '14px', '18px', '36px'];
     if (toolbarOptions) {
-      toolbarOptions.forEach((formats) => {
+      toolbarOptions.forEach(formats => {
         if (Array.isArray(formats)) {
-          formats.forEach((format: { font?: []; size?: [] }) => {
+          formats.forEach(format => {
             if (typeof format === 'object') {
               if (format.font && Array.isArray(format.font)) {
                 fontList = format.font;
@@ -246,22 +271,24 @@ const RichTextEditor = (props: IEditorProps) => {
     const icons = Quill.import('ui/icons');
     icons.undo = IconUndo;
     icons.redo = IconRedo;
-  }, [modules]);
+  }
 
-  useEffect(() => {
+  componentDidMount() {
     const {
+      modules = {},
       placeholder,
-      // getQuillDomRef,
+      getQuillDomRef,
       getQuill,
+      content,
       readOnly = false,
       onChange,
-    } = props;
-    if (quillModules.current['better-table']) {
+    } = this.props;
+    if (this.quillModules['better-table']) {
       Quill.register(
         {
           'modules/better-table': QuillBetterTable,
         },
-        true,
+        true
       );
     }
 
@@ -273,7 +300,7 @@ const RichTextEditor = (props: IEditorProps) => {
         'modules/markdownShortcuts': MarkdownShortcuts,
         'modules/toolbarTable': ToolbarTable,
       },
-      true,
+      true
     );
 
     const lineBreakMatcher = () => {
@@ -306,20 +333,20 @@ const RichTextEditor = (props: IEditorProps) => {
         'image',
         { script: 'sub' },
         { script: 'super' },
-        quillModules.current['better-table'] ? 'table' : undefined,
+        this.quillModules['better-table'] ? 'table' : undefined,
         'clean',
       ],
     ];
 
-    quillRef.current = new Quill(`#editor${editorId.current}`, {
+    this.quill = new Quill(`#editor${this.editorId}`, {
       debug: process.env.NODE_ENV === 'development' ? '-' : false,
       modules: {
         // formula: true, // todo 公式，暂不支持
-        ...quillModules.current,
+        ...this.quillModules,
         toolbar: {
           container: toolbarOptions, // Selector for toolbar container
           handlers: {
-            ...toolbarHandlers.current,
+            ...this.toolbarHandlers,
             // image: quillImageHandler, // todo 处理图片先上传，再附链接。不处理默认保存base64
           },
         },
@@ -342,66 +369,130 @@ const RichTextEditor = (props: IEditorProps) => {
       theme: 'snow',
     });
 
-    if (quillRef.current && quillRef.current.theme) {
-      quillRef.current.theme.tooltip.root.innerHTML = [
-        '<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>',
-        '<span>链接文字：</span><input id="link-words" type="text" />',
-        '<br />',
-        '<span>链接地址：</span><input id="link-url" type="text" data-formula="e=mc^2" data-link="https://www.baidu.com" data-video="Embed URL" />',
-        '<a class="ql-action"></a>',
-        '<a class="ql-remove"></a>',
-      ].join('');
-    }
+    this.quill.theme.tooltip.root.innerHTML = [
+      '<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>',
+      '<span>链接文字：</span><input id="link-words" type="text" />',
+      '<br />',
+      '<span>链接地址：</span><input id="link-url" type="text" data-formula="e=mc^2" data-link="https://www.baidu.com" data-video="Embed URL" />',
+      '<a class="ql-action"></a>',
+      '<a class="ql-remove"></a>',
+    ].join('');
 
     // 当选中link格式时，弹出tooltip并能修改保存
-    quillRef.current.on('selection-change', (range, oldRange, source) => {
+    this.quill.on('selection-change', (range, oldRange, source) => {
       if (range == null) return;
       if (range.length === 0 && source === 'user') {
-        console.log(4444, quillRef.current?.getFormat());
-        const format = quillRef.current?.getFormat();
-        if (format && format.hasOwnProperty('link') && quillRef.current && quillRef.current.theme) {
-          quillRef.current.theme.tooltip.root.classList.add('ql-editing');
-          (document.getElementById('link-url') as HTMLInputElement).value = format.link;
-          const [leaf, offset] = quillRef.current?.getLeaf(range.index);
+        // const [link, offset] = this.quill.scroll.descendant(LinkBlot, range.index);
+        // if (link != null) {
+        //   this.quill.theme.tooltip.root.classList.add('ql-editing');
+        // }
+        console.log(4444, this.quill.getFormat());
+        const format = this.quill.getFormat();
+        if (format.hasOwnProperty('link')) {
+          this.quill.theme.tooltip.root.classList.add('ql-editing');
+          document.getElementById('link-url').value = format.link;
+          const [leaf, offset] = this.quill.getLeaf(range.index);
           console.log(5555, leaf, offset, leaf.text, leaf.length());
-          (document.getElementById('link-words') as HTMLInputElement).value = leaf.text;
+          document.getElementById('link-words').value = leaf.text;
 
-          (document.querySelector('a.ql-action') as HTMLAnchorElement).onclick = () => {
-            if (quillRef.current) {
-              quillRef.current.deleteText(range.index - offset, leaf.length());
-              quillRef.current.insertText(
-                range.index - offset,
-                (document.getElementById('link-words') as HTMLInputElement).value,
-                'link',
-                (document.getElementById('link-url') as HTMLInputElement).value,
-                'user',
-              );
-              if (quillRef.current.theme) quillRef.current.theme.tooltip.hide();
-            }
+          document.querySelector('a.ql-action').onclick = () => {
+            console.log(document.getElementById('link-url').value);
+
+            this.quill.deleteText(range.index - offset, leaf.length());
+            this.quill.insertText(
+              range.index - offset,
+              document.getElementById('link-words').value,
+              'link',
+              document.getElementById('link-url').value,
+              'user'
+            );
+            this.quill.theme.tooltip.hide();
           };
         }
       }
     });
 
-    setContent(content, quillRef.current); // 设置初始内容
+    setContent(content, this.quill); // 设置初始内容
 
-    // getQuillDomRef && getQuillDomRef(quillDomRef.current);
-    getQuill && getQuill(quillRef.current);
+    getQuillDomRef && getQuillDomRef(this.quillRef);
+    getQuill && getQuill(this.quill);
 
     if (onChange) {
-      quillRef.current.on('text-change', (delta, old, source) => {
+      this.quill.on('text-change', (delta, old, source) => {
         source === 'user' && onChange(delta, old);
       });
     }
-  }, []);
+  }
 
-  useEffect(() => {
-    setContent(content, quillRef.current);
-  }, [content]);
+  componentDidUpdate(preProps) {
+    const { content: preContent } = preProps;
+    const { content } = this.props;
+    if (preContent !== content) {
+      setContent(content, this.quill);
+    }
+  }
 
-  return (
-    <div className="content-container">
-      <div id={`editor${editorId.current}`} />
-    </div>
-  );
-};
+  componentWillUnmount() {
+    // clearInterval(this.saveTimer);
+  }
+
+  render() {
+    return (
+      <div className="content-container">
+        {/* <div id="toolbar">
+          <span className="ql-formats">
+            <button className="ql-undo" title="撤销(Ctr+Z)" />
+            <button className="ql-redo" title="恢复(Ctr+B)" />
+          </span>
+          <span className="ql-formats">
+            <select className="ql-font" defaultValue="wsYaHei">
+              <option value="wsYaHei">微软雅黑</option>
+              <option value="songTi">宋体</option>
+              <option value="serif">serif</option>
+              <option value="arial">arial</option>
+            </select>
+            <select className="ql-size" defaultValue="14px">
+              <option value="12px">12px</option>
+              <option value="14px">14px</option>
+              <option value="18px">18px</option>
+              <option value="36px">36px</option>
+            </select>
+          </span>
+          <span className="ql-formats">
+            <select className="ql-color" title="字体颜色" />
+            <select className="ql-background" title="背景颜色" />
+          </span>
+          <span className="ql-formats">
+            <button className="ql-bold" title="粗体(Ctr+B)" />
+            <button className="ql-italic" title="斜体(Ctr+I)" />
+            <button className="ql-underline" title="下划线(Ctr+U)" />
+            <button className="ql-strike" title="中划线(Ctr+B)" />
+          </span>
+          <span className="ql-formats">
+            <button className="ql-list" value="ordered" title="有序列表" />
+            <button className="ql-list" value="bullet" title="无序列表" />
+            <button className="ql-list" value="check" title="任务列表" />
+            <button className="ql-indent" value="-1" title="清除缩进" />
+            <button className="ql-indent" value="+1" title="缩进" />
+            <select className="ql-align" title="对齐方式" />
+          </span>
+          <span className="ql-formats">
+            <button className="ql-blockquote" title="引用" />
+            {this.props.modules.codeHighlight ? <button className="ql-code-block" title="代码块" /> : null}
+            <button className="ql-link" title="超链接" />
+            <button className="ql-image" title="图片" />
+            <button className="ql-script" value="sub" title="右下标" />
+            <button className="ql-script" value="super" title="右上标" />
+            {this.props.modules.table ? <button className="ql-table" title="插入表格" /> : null}
+            <button className="ql-clean" />
+          </span> */}
+        {/* <button className="ql-direction" value="rtl"></button> */}
+        {/* <button className="ql-emoji" /> */}
+        {/* </div> */}
+        <div id={`editor${this.editorId}`} ref={this.quillRef} />
+      </div>
+    );
+  }
+}
+
+export default RichTextEditor;

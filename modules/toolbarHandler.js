@@ -1,8 +1,8 @@
 import Quill from 'quill';
 import { isUrl, isEmail } from '../utils';
 
-export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
-  let fileInput = this.quill.container.querySelector('input.ql-image[type=file]');
+export function imageUpload(quill, imgUploadApi, uploadSuccCB, uploadFailCB) {
+  let fileInput = quill.container.querySelector('input.ql-image[type=file]');
 
   if (fileInput === null) {
     fileInput = document.createElement('input');
@@ -11,7 +11,7 @@ export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
     fileInput.classList.add('ql-image');
     fileInput.addEventListener('change', () => {
       const { files } = fileInput;
-      const range = this.quill.getSelection(true);
+      const range = quill.getSelection(true);
 
       if (!files || !files.length) {
         console.log('没有选择文件');
@@ -21,25 +21,25 @@ export function imageUpload(imgUploadApi, uploadSuccCB, uploadFailCB) {
       const formData = new FormData();
       formData.append('file', files[0]);
 
-      this.quill.enable(false);
+      quill.enable(false);
 
       // todo 请求图片保存API
       imgUploadApi(formData)
-        .then(url => {
-          this.quill.enable(true);
-          this.quill.editor.insertEmbed(range.index, 'image', url);
-          this.quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        .then((url) => {
+          quill.enable(true);
+          quill.editor.insertEmbed(range.index, 'image', url);
+          quill.setSelection(range.index + 1, Quill.sources.SILENT);
           fileInput.value = '';
           if (!!uploadSuccCB) uploadSuccCB(response);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log('图片上传失败');
           console.log(error);
-          this.quill.enable(true);
+          quill.enable(true);
           uploadFailCB(error);
         });
     });
-    this.quill.container.appendChild(fileInput);
+    quill.container.appendChild(fileInput);
   }
   fileInput.click();
 }

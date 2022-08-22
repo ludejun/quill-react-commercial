@@ -59,7 +59,8 @@
     "node_modules", "babel.config.js", "metro.config.js", "jest.config.js", "lib", "dist"
   ],
   "include": [
-    "./index.tsx",
+    "index.tsx",
     "./modules/*",
+    "custom.d.ts"
   ]
 }

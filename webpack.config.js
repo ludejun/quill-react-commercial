@@ -85,7 +85,7 @@ const config = {
     rules: loaders
   },
 
-  mode: 'development',
+  mode: 'production',
   devtool: 'cheap-module-source-map',
 
   plugins: [
