@@ -209,7 +209,7 @@ const RichTextEditor = (props: IEditorProps) => {
       if (imageHandler) {
         const { imgUploadApi, uploadSuccCB, uploadFailCB } = imageHandler;
         toolbarHandlers.current.image = () =>
-          imageUpload.bind(quillRef.current, imgUploadApi, uploadSuccCB, uploadFailCB);
+          imageUpload(quillRef.current, imgUploadApi, uploadSuccCB, uploadFailCB);
       }
       toolbarHandlers.current.undo = undoHandler;
       toolbarHandlers.current.redo = redoHandler;
