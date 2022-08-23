@@ -1,10 +1,10 @@
-import React, { Ref, createRef, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import './modules/highlight';
 import Quill from 'quill';
 import QuillBetterTable from 'quill-better-table';
+import Delta from 'quill-delta';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
-import Delta from 'quill-delta';
 import { ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
 import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
 import { setContent } from './utils';
@@ -405,3 +405,5 @@ const RichTextEditor = (props: IEditorProps) => {
     </div>
   );
 };
+
+export default RichTextEditor;
