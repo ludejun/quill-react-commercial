@@ -1,11 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import './modules/highlight';
 import Quill from 'quill';
 import QuillBetterTable from 'quill-better-table';
 import Delta from 'quill-delta';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
-import { ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
+import { highlightInit, ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
 import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
 import { setContent } from './utils';
 import 'quill/dist/quill.snow.css';
@@ -166,6 +165,7 @@ const RichTextEditor = (props: IEditorProps) => {
 
       if (codeHighlight) {
         quillModules.current.syntax = {
+          hljs: highlightInit(),
           languages:
             typeof codeHighlight !== 'boolean'
               ? codeHighlight

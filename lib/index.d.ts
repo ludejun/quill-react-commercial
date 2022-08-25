@@ -1,5 +1,4 @@
 /// <reference types="react" />
-import './modules/highlight';
 import Quill from 'quill';
 import Delta from 'quill-delta';
 import 'quill/dist/quill.snow.css';
