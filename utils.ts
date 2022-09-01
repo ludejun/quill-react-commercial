@@ -46,7 +46,8 @@ export function isMobile() {
 
 // 设置content
 export function setContent(content, quill: Quill) {
-  // quill.getModule('imageResize')
+  // console.log(6666, quill.getModule('imageResize'));
+  quill.getModule('imageResize')?.hide(); // 在设置新值时，需要将上一个笔记可能遗留的imageResize图层弄消失，不然focus图片后的图层可能会保留
   if (content) {
     if (typeof content === 'object') {
       quill.setContents(content);

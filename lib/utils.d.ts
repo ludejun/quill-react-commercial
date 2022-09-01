@@ -1,5 +1,8 @@
-export function isUrl(url: any): boolean;
-export function isEmail(url: any): boolean;
-export function saveLink(quill: any, isToolbar: any): void;
-export function isMobile(): boolean;
-export function setContent(content: any, quill: any): void;
+import Quill from 'quill';
+export declare function isUrl(url: string): boolean;
+export declare function isEmail(url: string): boolean;
+export declare function saveLink(quill: Quill & {
+    theme?: Record<string, any>;
+}, isToolbar: any): void;
+export declare function isMobile(): boolean;
+export declare function setContent(content: any, quill: Quill): void;
