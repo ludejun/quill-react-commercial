@@ -1,16 +1,23 @@
 import React, { useRef, useEffect } from 'react';
 import Quill from 'quill';
-import QuillBetterTable from 'quill-better-table';
+// import QuillBetterTable from 'quill-better-table';
 import Delta from 'quill-delta';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
-import { highlightInit, ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
+import {
+  highlightInit,
+  ImageDrop,
+  ImageResize,
+  MagicUrl,
+  ToolbarTable,
+  QuillBetterTable,
+} from './modules/index';
 import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
 import { setContent } from './utils';
 import 'quill/dist/quill.snow.css';
-import 'quill-better-table/dist/quill-better-table.css';
-import './richTextEditor.less';
-import './modules/index.less';
+// import 'quill-better-table/dist/quill-better-table.css';
+import './assets/richTextEditor.less';
+import './assets/modules.less';
 
 interface IBetterTable {
   operationMenu?: {
@@ -202,7 +209,7 @@ const RichTextEditor = (props: IEditorProps) => {
       // 默认支持自动识别URL
       quillModules.current.magicUrl = magicUrl;
       // 默认支持自动识别markdown语法
-      quillModules.current.markdownShortcuts = markdown;
+      // quillModules.current.markdownShortcuts = markdown;
 
       // toolbar handler处理
       toolbarHandlers.current.link = link && linkHandler;
@@ -270,7 +277,7 @@ const RichTextEditor = (props: IEditorProps) => {
         'modules/imageResize': ImageResize,
         'modules/imageDrop': ImageDrop,
         'modules/magicUrl': MagicUrl,
-        'modules/markdownShortcuts': MarkdownShortcuts,
+        // 'modules/markdownShortcuts': MarkdownShortcuts,
         'modules/toolbarTable': ToolbarTable,
       },
       true,
@@ -287,7 +294,7 @@ const RichTextEditor = (props: IEditorProps) => {
       [
         { font: ['system', 'wsYaHei', 'songTi', 'serif', 'arial'] },
         { size: ['12px', false, '18px', '36px'] },
-        { header: [1, 2, 3, 4] },
+        { header: [false, 1, 2, 3, 4] },
       ],
       [{ color: [] }, { background: [] }],
       ['bold', 'italic', 'underline', 'strike'],

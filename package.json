@@ -1,13 +1,13 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.2.3-alpha3",
+  "version": "1.2.3-alpha10",
   "description": "",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "umdbuild": "webpack --config ./webpack.config.js",
-    "tsbuild": "tsc && cp *.less lib/ && cp modules/*.less lib/modules/",
+    "tsbuild": "tsc && cp -R assets lib/",
     "build": "yarn umdbuild && yarn tsbuild"
   },
   "author": "ludejun@live.cn",
@@ -42,7 +42,7 @@
     "@babel/preset-typescript": "^7.10.4",
     "@babel/runtime": "^7.8.3",
     "@types/quill": "^2.0.9",
-    "@types/react": "^18.0.17",
+    "@types/react": "^18.0.18",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.4.2",

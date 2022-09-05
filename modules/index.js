@@ -5,6 +5,7 @@ import { MagicUrl } from './magic-url';
 import MarkdownShortcuts from './markdown-shortcuts';
 import ToolbarTable from './toolbar-table';
 import highlightInit from './highlight';
+import QuillBetterTable from './quill-better-table/quill-better-table';
 
 // Quill.register(
 //   {
@@ -17,4 +18,12 @@ import highlightInit from './highlight';
 //   true,
 // );
 
-export { highlightInit, ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable };
+export {
+  highlightInit,
+  ImageDrop,
+  ImageResize,
+  MagicUrl,
+  MarkdownShortcuts,
+  ToolbarTable,
+  QuillBetterTable,
+};

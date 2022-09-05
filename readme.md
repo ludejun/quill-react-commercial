@@ -172,4 +172,32 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 **readOnly：非必需，boolean；编辑器是否只读；默认为false**
 
 
+### 安装SDK问题
 
+1. svg不能正常展示，在主项目的webpack配置中对svg打包进行修改
+```javascript
+// webpack5
+{
+  test: /\.(svg)$/i,
+  type: 'asset/source',
+},
+
+
+// webpack4
+{
+  test: /\.(svg)$/i,
+  type: 'svg-inline-loader',
+},
+```
+
+2. 如何切换代码高亮配色样式
+
+默认使用highlight.js的vscode2015配色，如需切换配色，可以直接引入对应样式文件
+```javascript
+import 'highlight.js/styles/darcula.css';
+// 如不想安装highlight.js，请下载到本地，import本地文件
+```
+或者
+```html
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/androidstudio.min.css">
+```

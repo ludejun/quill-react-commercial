@@ -2,9 +2,8 @@
 import Quill from 'quill';
 import Delta from 'quill-delta';
 import 'quill/dist/quill.snow.css';
-import 'quill-better-table/dist/quill-better-table.css';
-import './richTextEditor.less';
-import './modules/index.less';
+import './assets/richTextEditor.less';
+import './assets/modules.less';
 interface IBetterTable {
     operationMenu?: {
         insertColumnRight?: {
