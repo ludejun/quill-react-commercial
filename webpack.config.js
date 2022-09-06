@@ -71,26 +71,27 @@ const loaders = [
 
 const config = {
   resolve: {
-    extensions: ['.ts', '.tsx', '.web.js', '.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.web.js', '.js', '.jsx'],
   },
   entry: path.join(__dirname, './index.tsx'),
   output: {
     path: path.join(__dirname, './dist'),
     filename: 'quill-react-commercial.min.js',
+    library: 'RichTextEditor',
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
   },
 
   module: {
-    rules: loaders
+    rules: loaders,
   },
 
-  mode: 'production',
+  mode: 'development',
   devtool: 'cheap-module-source-map',
 
   plugins: [
     new CleanWebpackPlugin({
-      cleanAfterEveryBuildPatterns: ['dist']
+      cleanAfterEveryBuildPatterns: ['dist'],
     }),
     // new webpack.ProvidePlugin({
     //   'window.Quill': 'quill/dist/quill.js',
@@ -100,14 +101,35 @@ const config = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: 'quill-react-commercial.min.css'
+      filename: 'quill-react-commercial.min.css',
     }),
-    new webpack.optimize.AggressiveMergingPlugin()
+    new webpack.optimize.AggressiveMergingPlugin(),
   ],
 
   performance: {
     maxAssetSize: 1000000,
-    hints: 'warning'
+    hints: 'warning',
+  },
+
+  externals: {
+    react: {
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react',
+      root: 'React',
+    },
+    'react-dom': {
+      commonjs: 'react-dom',
+      commonjs2: 'react-dom',
+      amd: 'react-dom',
+      root: 'ReactDOM',
+    },
+    'react-dom/server': {
+      commonjs: 'react-dom/server',
+      commonjs2: 'react-dom/server',
+      amd: 'react-dom/server',
+      root: 'ReactDOMServer',
+    },
   }
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.2.3-alpha10",
+  "version": "1.2.4",
   "description": "",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "umdbuild": "webpack --config ./webpack.config.js",
     "tsbuild": "tsc && cp -R assets lib/",
-    "build": "yarn umdbuild && yarn tsbuild"
+    "build": "yarn umdbuild && yarn tsbuild",
+    "example": "yarn umdbuild && npx babel example/app.js --watch --out-dir ./example/compile --source-maps"
   },
   "author": "ludejun@live.cn",
   "repository": {
@@ -32,6 +33,7 @@
     "*.css"
   ],
   "devDependencies": {
+    "@babel/cli": "^7.18.10",
     "@babel/core": "^7.8.3",
     "@babel/plugin-proposal-class-properties": "^7.16.0",
     "@babel/plugin-proposal-decorators": "^7.16.4",
