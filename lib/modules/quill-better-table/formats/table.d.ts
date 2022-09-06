@@ -46,13 +46,13 @@ export class TableCell extends TableCell_base {
     static create(value: any): any;
     static formats(domNode: any): {
         row: any;
-        "cell-bg": any;
+        'cell-bg': any;
     };
     checkMerge(): boolean;
     cellOffset(): any;
     formats(): {
         row: any;
-        "cell-bg": any;
+        'cell-bg': any;
     };
     toggleAttribute(name: any, value: any): void;
     formatChildren(name: any, value: any): void;

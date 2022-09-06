@@ -179,7 +179,7 @@ table.quill-better-table {
     }
   }
 }
-
+// table上的宽度调节器
 .qlbt-col-tool {
   position: absolute;
   display: flex;
@@ -232,6 +232,16 @@ table.quill-better-table {
       display: block;
       width: 8px;
       height: 100%;
+    }
+  }
+}
+// 解决疑难bug：table中输入List，下一个cell的有序列表前数字可能会继承上一个cell中的列表数字
+.quill-better-table {
+  td {
+    ol:first-child {
+      li:first-child {
+        counter-reset: list-0 0;
+      }
     }
   }
 }

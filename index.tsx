@@ -11,6 +11,7 @@ import {
   MagicUrl,
   ToolbarTable,
   QuillBetterTable,
+  MarkdownShortcuts,
 } from './modules/index';
 import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
 import { setContent } from './utils';
@@ -209,7 +210,7 @@ const RichTextEditor = (props: IEditorProps) => {
       // 默认支持自动识别URL
       quillModules.current.magicUrl = magicUrl;
       // 默认支持自动识别markdown语法
-      // quillModules.current.markdownShortcuts = markdown;
+      quillModules.current.markdownShortcuts = markdown;
 
       // toolbar handler处理
       toolbarHandlers.current.link = link && linkHandler;
@@ -277,7 +278,7 @@ const RichTextEditor = (props: IEditorProps) => {
         'modules/imageResize': ImageResize,
         'modules/imageDrop': ImageDrop,
         'modules/magicUrl': MagicUrl,
-        // 'modules/markdownShortcuts': MarkdownShortcuts,
+        'modules/markdownShortcuts': MarkdownShortcuts,
         'modules/toolbarTable': ToolbarTable,
       },
       true,
@@ -334,7 +335,12 @@ const RichTextEditor = (props: IEditorProps) => {
           matchers: [['BR', lineBreakMatcher]],
         },
         keyboard: {
-          bindings: QuillBetterTable.keyboardBindings,
+          bindings: {
+            ...QuillBetterTable.keyboardBindings,
+            'list autofill': {
+              prefix: /^\s{0,}(1){1,1}(\.|-|\*|\[ ?\]|\[x\])$/,
+            },
+          },
         },
 
         history: {

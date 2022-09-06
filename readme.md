@@ -6,7 +6,7 @@ Quill作为很出众并流行的开源富文本编辑器，有着良好的数据
 
 微信小程序的富文本编辑器也使用的Quill底层和数据结构，可以和quill-react-commercial打通编辑和展示。
 
-SDK默认使用源码index.tsx作为入口，若想要在html中引入等打包后的结果，可以使用dist/文件夹中的文件。
+SDK默认使用源码index.tsx作为入口，若想要在html中引入等打包后的结果，可以使用dist/文件夹中的文件，参考示例example。
 
 ### 安装
 

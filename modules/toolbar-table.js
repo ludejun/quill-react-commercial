@@ -108,7 +108,6 @@ class ToolbarTable extends Module {
   }
 
   createTable(row, column) {
-    console.log(row, column);
     ToolbarTable.tableDialogClose();
     this.quill.getModule('better-table').insertTable(row, column);
   }
