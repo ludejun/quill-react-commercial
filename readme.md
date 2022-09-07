@@ -201,3 +201,12 @@ import 'highlight.js/styles/darcula.css';
 ```html
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/androidstudio.min.css">
 ```
+
+### 开发须知
+
+需要调试编辑器功能时，可以执行 **yarn example** 来打包静态资源给 example/index.html 使用，浏览器打开index.html即可
+
+- 修改example中的JS会自动重新babel，只需要刷新浏览器即可
+- 修改编辑器本身的JS、Less需要重新执行 yarn example
+- index.html中引入的本地的react、react-dom，外网CDN太慢
+- 生成了map文件，可以本地调试；需要更多信息，可以临时将webpack的mode修改为development

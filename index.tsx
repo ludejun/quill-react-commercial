@@ -337,6 +337,7 @@ const RichTextEditor = (props: IEditorProps) => {
         keyboard: {
           bindings: {
             ...QuillBetterTable.keyboardBindings,
+            // 有序列表只能输入“1. ”才会触发，改变比如输入“30. ”会变为“1. ”开始的有序列表的行为
             'list autofill': {
               prefix: /^\s{0,}(1){1,1}(\.|-|\*|\[ ?\]|\[x\])$/,
             },

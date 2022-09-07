@@ -25,36 +25,63 @@
 .ql-toolbar .ql-size .ql-picker-item[data-value]::before {
   content: attr(data-value) !important;
 }
-.ql-toolbar .ql-font .ql-picker-label[data-value=wsYaHei]::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value=wsYaHei]::before {
+.ql-toolbar .ql-font .ql-picker-label[data-value='wsYaHei']::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value='wsYaHei']::before {
   content: '微软雅黑' !important;
 }
-.ql-toolbar .ql-font .ql-picker-label[data-value=songTi]::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value=songTi]::before {
+.ql-toolbar .ql-font .ql-picker-label[data-value='songTi']::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value='songTi']::before {
   content: '宋体' !important;
 }
-.ql-toolbar .ql-font .ql-picker-label[data-value=kaiTi]::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value=kaiTi]::before {
+.ql-toolbar .ql-font .ql-picker-label[data-value='kaiTi']::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value='kaiTi']::before {
   content: '楷体' !important;
 }
-.ql-toolbar .ql-font .ql-picker-label[data-value=system]::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value=system]::before {
+.ql-toolbar .ql-font .ql-picker-label[data-value='system']::before,
+.ql-toolbar .ql-font .ql-picker-item[data-value='system']::before {
   content: '系统默认' !important;
 }
 
-
 /* Set content font-families */
 .ql-font-wsYaHei {
-  font-family: "Microsoft YaHei", "微软雅黑";
+  font-family: 'Microsoft YaHei', '微软雅黑';
 }
 .ql-font-songTi {
-  font-family: SimSun, "宋体";
+  font-family: SimSun, '宋体';
 }
 .ql-font-kaiTi {
-  font-family: "楷体";
+  font-family: '楷体';
 }
 .ql-font-arial {
   font-family: arial;
+}
+.ql-snow .ql-picker.ql-size {
+    width: 60px;
+}
+
+// Header的显示
+.ql-snow .ql-picker.ql-header {
+    width: 60px;
+}
+.ql-snow .ql-picker.ql-header .ql-picker-item::before,
+.ql-snow .ql-picker.ql-header .ql-picker-label::before {
+  content: '正文';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='1']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='1']::before {
+  content: 'H1';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='2']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='2']::before {
+  content: 'H2';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='3']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='3']::before {
+  content: 'H3';
+}
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='4']::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='4']::before {
+  content: 'H4';
 }
 
 /* 图片resize框 */
