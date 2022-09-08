@@ -1,5 +1,13 @@
 # Change-Log
 
+### 1.2.7
+
+- 升级quill-magic-url，使能自动识别URL
+- 修改列表样式、缩进等
+- 默认table列宽变为120
+- 修改触发list的keyboard.bindings.'list autofill'.prefix
+- 修改触发list的markdown的正则
+- 点击URL出来的弹框添加跳转功能
 
 ### 1.2.6
 

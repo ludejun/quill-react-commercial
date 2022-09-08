@@ -8,7 +8,7 @@ const Container = Quill.import('blots/container');
 
 const COL_ATTRIBUTES = ['width'];
 const COL_DEFAULT = {
-  width: 100,
+  width: 120,
 };
 const CELL_IDENTITY_KEYS = ['row', 'cell'];
 const CELL_ATTRIBUTES = ['rowspan', 'colspan'];

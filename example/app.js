@@ -14,6 +14,7 @@ const App = () => {
   return (
     <div className="App">
       <RichTextEditor
+        readOnly={false}
         modules={{
           table: {},
           codeHighlight: true,

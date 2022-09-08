@@ -339,7 +339,7 @@ const RichTextEditor = (props: IEditorProps) => {
             ...QuillBetterTable.keyboardBindings,
             // 有序列表只能输入“1. ”才会触发，改变比如输入“30. ”会变为“1. ”开始的有序列表的行为
             'list autofill': {
-              prefix: /^\s{0,}(1){1,1}(\.|-|\*|\[ ?\]|\[x\])$/,
+              prefix: /^\s*(1{1,1}\.)$/,
             },
           },
         },
@@ -358,8 +358,7 @@ const RichTextEditor = (props: IEditorProps) => {
 
     if (quillRef.current && quillRef.current.theme) {
       quillRef.current.theme.tooltip.root.innerHTML = [
-        '<a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank"></a>',
-        '<span>链接文字：</span><input id="link-words" type="text" />',
+        '<span>链接文字：</span><input id="link-words" type="text" /><a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank">跳转</a>',
         '<br />',
         '<span>链接地址：</span><input id="link-url" type="text" data-formula="e=mc^2" data-link="https://www.baidu.com" data-video="Embed URL" />',
         '<a class="ql-action"></a>',
@@ -369,31 +368,41 @@ const RichTextEditor = (props: IEditorProps) => {
 
     // 当选中link格式时，弹出tooltip并能修改保存
     quillRef.current.on('selection-change', (range, oldRange, source) => {
-      if (range == null) return;
-      if (range.length === 0 && source === 'user') {
-        console.log(4444, quillRef.current?.getFormat());
-        const format = quillRef.current?.getFormat();
-        if (format && format.hasOwnProperty('link') && quillRef.current && quillRef.current.theme) {
-          quillRef.current.theme.tooltip.root.classList.add('ql-editing');
-          (document.getElementById('link-url') as HTMLInputElement).value = format.link;
-          const [leaf, offset] = quillRef.current?.getLeaf(range.index);
-          console.log(5555, leaf, offset, leaf.text, leaf.length());
-          (document.getElementById('link-words') as HTMLInputElement).value = leaf.text;
+      try {
+        if (range == null) return;
+        if (range.length === 0 && source === 'user') {
+          console.log(4444, quillRef.current?.getFormat());
+          const format = quillRef.current?.getFormat();
+          if (
+            format &&
+            format.hasOwnProperty('link') &&
+            quillRef.current &&
+            quillRef.current.theme
+          ) {
+            quillRef.current.theme.tooltip.root.classList.add('ql-editing');
+            (document.getElementById('link-url') as HTMLInputElement).value = format.link;
+            (document.querySelector('a.ql-preview') as HTMLAnchorElement).href = format.link;
+            const [leaf, offset] = quillRef.current?.getLeaf(range.index);
+            console.log(5555, leaf, offset, leaf.text, leaf.length());
+            (document.getElementById('link-words') as HTMLInputElement).value = leaf.text;
 
-          (document.querySelector('a.ql-action') as HTMLAnchorElement).onclick = () => {
-            if (quillRef.current) {
-              quillRef.current.deleteText(range.index - offset, leaf.length());
-              quillRef.current.insertText(
-                range.index - offset,
-                (document.getElementById('link-words') as HTMLInputElement).value,
-                'link',
-                (document.getElementById('link-url') as HTMLInputElement).value,
-                'user',
-              );
-              if (quillRef.current.theme) quillRef.current.theme.tooltip.hide();
-            }
-          };
+            (document.querySelector('a.ql-action') as HTMLAnchorElement).onclick = () => {
+              if (quillRef.current) {
+                quillRef.current.deleteText(range.index - offset, leaf.length());
+                quillRef.current.insertText(
+                  range.index - offset,
+                  (document.getElementById('link-words') as HTMLInputElement).value,
+                  'link',
+                  (document.getElementById('link-url') as HTMLInputElement).value,
+                  'user',
+                );
+                if (quillRef.current.theme) quillRef.current.theme.tooltip.hide();
+              }
+            };
+          }
         }
+      } catch (e) {
+        console.log(e);
       }
     });
 

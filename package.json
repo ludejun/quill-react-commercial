@@ -1,6 +1,6 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
@@ -22,7 +22,7 @@
     "quill": "^2.0.0-dev.4",
     "quill-better-table": "^1.2.10",
     "quill-image-drop-module": "^1.0.3",
-    "quill-magic-url": "^3.0.2"
+    "quill-magic-url": "^4.2.0"
   },
   "peerDependencies": {
     "react": "^16.8.0",
@@ -69,6 +69,9 @@
     "rich text",
     "Rich Text Format",
     "Syntax Table Image",
+    "editor",
+    "rich-text-editor",
+    "wysiwyg-editor",
     "富文本编辑器",
     "微信小程序",
     "辰记"
