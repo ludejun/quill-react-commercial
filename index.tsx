@@ -352,7 +352,7 @@ const RichTextEditor = (props: IEditorProps) => {
       },
       placeholder: placeholder || '开始笔记（支持直接Markdown输入）...',
       readOnly,
-      bounds: document.body,
+      bounds: document.querySelector(`#editor${editorId.current}`) as HTMLElement,
       theme: 'snow',
     });
 

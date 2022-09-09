@@ -1,5 +1,9 @@
 # Change-Log
 
+### 1.2.8
+
+- 修改boundary边界为编辑器实例本身，原为document.body
+- 修改部分样式
 ### 1.2.7
 
 - 升级quill-magic-url，使能自动识别URL
