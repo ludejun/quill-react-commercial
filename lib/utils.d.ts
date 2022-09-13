@@ -6,3 +6,4 @@ export declare function saveLink(quill: Quill & {
 }, isToolbar: any): void;
 export declare function isMobile(): boolean;
 export declare function setContent(content: any, quill: Quill): void;
+export declare const optionDisableToggle: (quill: Quill, blockList: string[], disable: boolean) => void;

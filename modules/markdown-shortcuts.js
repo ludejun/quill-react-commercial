@@ -1,18 +1,29 @@
-// 在输入时自动将符合markdown语法的文本转为Delta
 import Quill from 'quill';
 
-export default class MarkdownShortcuts {
+const BlockEmbed = Quill.import('blots/block/embed');
+
+class HorizontalRule extends BlockEmbed {}
+HorizontalRule.blotName = 'hr';
+HorizontalRule.tagName = 'hr';
+
+const Block = Quill.import('blots/block');
+
+Quill.register('formats/horizontal', HorizontalRule);
+
+class MarkdownShortcuts {
   constructor(quill, options) {
     this.quill = quill;
     this.options = options;
+    this.ignoreElements = (options && options.ignore) || [];
 
     this.ignoreTags = ['PRE'];
-    this.matches = [
+
+    const elements = [
       {
         name: 'header',
         pattern: /^(#){1,6}\s/g,
         action: (text, selection, pattern) => {
-          const match = pattern.exec(text);
+          var match = pattern.exec(text);
           if (!match) return;
           const size = match[0].length;
           // Need to defer this action https://github.com/quilljs/quill/issues/1134
@@ -20,7 +31,7 @@ export default class MarkdownShortcuts {
             this.quill.formatLine(selection.index, 0, 'header', size - 1);
             this.quill.deleteText(selection.index - size, size);
           }, 0);
-        }
+        },
       },
       {
         name: 'blockquote',
@@ -31,7 +42,7 @@ export default class MarkdownShortcuts {
             this.quill.formatLine(selection.index, 1, 'blockquote', true);
             this.quill.deleteText(selection.index - 2, 2);
           }, 0);
-        }
+        },
       },
       {
         name: 'code-block',
@@ -42,13 +53,13 @@ export default class MarkdownShortcuts {
             this.quill.formatLine(selection.index, 1, 'code-block', true);
             this.quill.deleteText(selection.index - 4, 4);
           }, 0);
-        }
+        },
       },
       {
         name: 'bolditalic',
         pattern: /(?:\*|_){3}(.+?)(?:\*|_){3}/g,
         action: (text, selection, pattern, lineStart) => {
-          const match = pattern.exec(text);
+          let match = pattern.exec(text);
 
           const annotatedText = match[0];
           const matchedText = match[1];
@@ -61,13 +72,13 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { bold: true, italic: true });
             this.quill.format('bold', false);
           }, 0);
-        }
+        },
       },
       {
         name: 'bold',
         pattern: /(?:\*|_){2}(.+?)(?:\*|_){2}/g,
         action: (text, selection, pattern, lineStart) => {
-          const match = pattern.exec(text);
+          let match = pattern.exec(text);
 
           const annotatedText = match[0];
           const matchedText = match[1];
@@ -80,13 +91,13 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { bold: true });
             this.quill.format('bold', false);
           }, 0);
-        }
+        },
       },
       {
         name: 'italic',
         pattern: /(?:\*|_){1}(.+?)(?:\*|_){1}/g,
         action: (text, selection, pattern, lineStart) => {
-          const match = pattern.exec(text);
+          let match = pattern.exec(text);
 
           const annotatedText = match[0];
           const matchedText = match[1];
@@ -99,13 +110,13 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { italic: true });
             this.quill.format('italic', false);
           }, 0);
-        }
+        },
       },
       {
         name: 'strikethrough',
         pattern: /(?:~~)(.+?)(?:~~)/g,
         action: (text, selection, pattern, lineStart) => {
-          const match = pattern.exec(text);
+          let match = pattern.exec(text);
 
           const annotatedText = match[0];
           const matchedText = match[1];
@@ -118,13 +129,13 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex, matchedText, { strike: true });
             this.quill.format('strike', false);
           }, 0);
-        }
+        },
       },
       {
         name: 'code',
         pattern: /(?:`)(.+?)(?:`)/g,
         action: (text, selection, pattern, lineStart) => {
-          const match = pattern.exec(text);
+          let match = pattern.exec(text);
 
           const annotatedText = match[0];
           const matchedText = match[1];
@@ -138,7 +149,7 @@ export default class MarkdownShortcuts {
             this.quill.format('code', false);
             this.quill.insertText(this.quill.getSelection(), ' ');
           }, 0);
-        }
+        },
       },
       {
         name: 'hr',
@@ -152,17 +163,28 @@ export default class MarkdownShortcuts {
             this.quill.insertText(startIndex + 2, '\n', Quill.sources.SILENT);
             this.quill.setSelection(startIndex + 2, Quill.sources.SILENT);
           }, 0);
-        }
+        },
+      },
+      {
+        name: 'plus-ul',
+        // Quill 1.3.5 already treat * as another trigger for bullet lists
+        pattern: /^\+\s$/g,
+        action: (text, selection, pattern) => {
+          setTimeout(() => {
+            this.quill.formatLine(selection.index, 1, 'list', 'unordered');
+            this.quill.deleteText(selection.index - 2, 2);
+          }, 0);
+        },
       },
       {
         name: 'asterisk-ul',
-        pattern: /^(\-|\*|\+)\s$/g,
+        pattern: /^(\-|\*)\s$/g,
         action: (text, selection) => {
           setTimeout(() => {
             this.quill.formatLine(selection.index, 1, 'list', 'bullet');
             this.quill.deleteText(selection.index - 2, 2);
           }, 0);
-        }
+        },
       },
       {
         name: 'image',
@@ -179,7 +201,7 @@ export default class MarkdownShortcuts {
               this.quill.insertEmbed(start, 'image', hrefLink.slice(1, hrefLink.length - 1));
             }, 0);
           }
-        }
+        },
       },
       {
         name: 'link',
@@ -197,16 +219,18 @@ export default class MarkdownShortcuts {
                 start,
                 hrefText.slice(1, hrefText.length - 1),
                 'link',
-                hrefLink.slice(1, hrefLink.length - 1)
+                hrefLink.slice(1, hrefLink.length - 1),
               );
             }, 0);
           }
-        }
-      }
+        },
+      },
     ];
 
+    this.matches = elements.filter((element) => !this.ignoreElements.includes(element.name));
+
     // Handler that looks for insert deltas that match specific characters
-    this.quill.on('text-change', delta => {
+    this.quill.on('text-change', (delta, oldContents, source) => {
       for (let i = 0; i < delta.ops.length; i++) {
         if (delta.ops[i].hasOwnProperty('insert')) {
           if (delta.ops[i].insert === ' ') {
@@ -214,6 +238,8 @@ export default class MarkdownShortcuts {
           } else if (delta.ops[i].insert === '\n') {
             this.onEnter();
           }
+        } else if (delta.ops[i].hasOwnProperty('delete') && source === 'user') {
+          this.onDelete();
         }
       }
     });
@@ -230,11 +256,22 @@ export default class MarkdownShortcuts {
     const text = line.domNode.textContent;
     const lineStart = selection.index - offset;
     if (this.isValid(text, line.domNode.tagName)) {
-      for (const match of this.matches) {
+      for (let match of this.matches) {
         const matchedText = text.match(match.pattern);
-        if (matchedText) {
+        // 不要在代码块中使用markdown激活
+        // 不在table中激活header、list、code、引用等
+        // console.log('markdown matched:', match, matchedText, line.domNode.tagName, selection, this.quill.getFormat());
+        const format = this.quill.getFormat() || {};
+        const disableInTable = [
+          'header',
+          'blockquote',
+          'code-block',
+          'hr',
+          'plus-ul',
+          'asterisk-ul',
+        ];
+        if (matchedText && !format['code-block'] && !(format['table-cell-line'] && disableInTable.includes(match.name))) {
           // We need to replace only matched text not the whole line
-          console.log('matched:', match.name, text);
           match.action(text, selection, match.pattern, lineStart);
           return;
         }
@@ -243,21 +280,66 @@ export default class MarkdownShortcuts {
   }
 
   onEnter() {
-    const selection = this.quill.getSelection();
+    let selection = this.quill.getSelection();
     if (!selection) return;
     const [line, offset] = this.quill.getLine(selection.index);
-    const text = `${line.domNode.textContent} `;
+    const text = line.domNode.textContent + ' ';
     const lineStart = selection.index - offset;
     selection.length = selection.index++;
     if (this.isValid(text, line.domNode.tagName)) {
-      for (const match of this.matches) {
+      for (let match of this.matches) {
         const matchedText = text.match(match.pattern);
-        if (matchedText) {
-          console.log('matched', match.name, text);
+        // 不要在代码块中使用markdown激活
+        // 不在table中激活header、list、code、引用等
+        // console.log('markdown matched:', match, matchedText, line.domNode.tagName, selection, this.quill.getFormat());
+        const format = this.quill.getFormat() || {};
+        const disableInTable = [
+          'header',
+          'blockquote',
+          'code-block',
+          'hr',
+          'plus-ul',
+          'asterisk-ul',
+        ];
+        if (
+          matchedText &&
+          !format['code-block'] &&
+          !(format['table-cell-line'] && disableInTable.includes(match.name))
+        ) {
           match.action(text, selection, match.pattern, lineStart);
           return;
         }
       }
     }
   }
+
+  onDelete() {
+    const range = this.quill.getSelection();
+    // console.log('delete: ', range, this.quill.getFormat(range));
+    if (!range) {
+      return;
+    }
+    // console.log('delete: ', range, this.quill.getFormat(range));
+    const format = this.quill.getFormat(range);
+
+    if (format.blockquote || format.code || format['code-block']) {
+      if (this.isLastBrElement(range) || this.isEmptyLine(range)) {
+        this.quill.removeFormat(range.index, range.length);
+      }
+    }
+  }
+
+  isLastBrElement(range) {
+    const [block] = this.quill.scroll.descendant(Block, range.index);
+    const isBrElement = block != null && block.domNode.firstChild instanceof HTMLBRElement;
+    return isBrElement;
+  }
+
+  isEmptyLine(range) {
+    const [line] = this.quill.getLine(range.index);
+    const isEmpty = line.children.head.text.trim() === '';
+    return isEmpty;
+  }
 }
+
+export default MarkdownShortcuts;

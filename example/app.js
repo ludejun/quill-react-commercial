@@ -1,12 +1,14 @@
 
 const App = () => {
   const quill = React.useRef({});
+  const [delta, setDelta] = React.useState('');
   const initContent = '';
   const getQuill = (quillIns) => {
     quill.current = quillIns;
   };
   const quillChange = (delta, old, source) => {
     console.log('quill-change:', delta, old, source);
+    setDelta(JSON.stringify(quill.current.getContents()));
   };
   console.log(window, window.RichTextEditor);
   const RichTextEditor = window.RichTextEditor.default;
@@ -34,6 +36,7 @@ const App = () => {
         }
         onChange={quillChange}
       />
+      <div style={{height: 200}}>{delta}</div>
     </div>
   );
 }

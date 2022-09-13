@@ -68,7 +68,7 @@ export namespace TableCell {
     const tagName_3: string;
     export { tagName_3 as tagName };
     export { TableRow as requiredContainer };
-    const allowedChildren_1: any[];
+    const allowedChildren_1: (typeof Header | typeof TableCellLine)[];
     export { allowedChildren_1 as allowedChildren };
 }
 declare const TableRow_base: any;
@@ -152,4 +152,5 @@ export function rowId(): string;
 export function cellId(): string;
 export const CELL_IDENTITY_KEYS: string[];
 export const CELL_ATTRIBUTES: string[];
+import Header from "./header";
 export {};

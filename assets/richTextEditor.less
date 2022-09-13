@@ -126,3 +126,12 @@ input.ql-image {
 .ql-code-block-container .ql-ui {
   color: #999;
 }
+
+// option的disable状态
+.ql-formats button:disabled, .ql-formats .picker-disable {
+  opacity: 0.5;
+  cursor: not-allowed;
+  .ql-picker-label {
+    cursor: not-allowed;
+  }
+}

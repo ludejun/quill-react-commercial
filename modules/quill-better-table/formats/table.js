@@ -882,8 +882,9 @@ TableCell.requiredContainer = TableRow;
 
 // https://github.com/soccerloway/quill-better-table/issues/68
 // 支持table中输入List
-const List = Quill.import('formats/list');
-TableCell.allowedChildren = [TableCellLine, Header, List.requiredContainer, Block];
+// const List = Quill.import('formats/list');
+// TableCell.allowedChildren = [TableCellLine, Header, List.requiredContainer, Block];
+TableCell.allowedChildren = [TableCellLine, Header];
 TableCellLine.requiredContainer = TableCell;
 
 TableColGroup.allowedChildren = [TableCol];

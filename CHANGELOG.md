@@ -1,5 +1,12 @@
 # Change-Log
 
+
+### 1.2.9
+
+- 禁止在table中使用header、list、code、引用等块，并修改list触发器、markdown触发器使这些格式在tabl-cell中不生效
+- 修改markdown触发器，增加删除块级，修复hr不生效
+- 修改markdown触发器，禁止在代码块中生效
+- 修改代码高亮中shell函数，实际使用vim高亮规则，shell的keywords中缺少很多常规命令行，这些命令行不在标准shell中：https://github.com/highlightjs/highlight.js/issues/630#issuecomment-61978331
 ### 1.2.8
 
 - 修改boundary边界为编辑器实例本身，原为document.body

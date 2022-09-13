@@ -1,7 +1,9 @@
-export default class MarkdownShortcuts {
+export default MarkdownShortcuts;
+declare class MarkdownShortcuts {
     constructor(quill: any, options: any);
     quill: any;
     options: any;
+    ignoreElements: any;
     ignoreTags: string[];
     matches: {
         name: string;
@@ -11,4 +13,7 @@ export default class MarkdownShortcuts {
     isValid(text: any, tagName: any): boolean;
     onSpace(): void;
     onEnter(): void;
+    onDelete(): void;
+    isLastBrElement(range: any): boolean;
+    isEmptyLine(range: any): boolean;
 }

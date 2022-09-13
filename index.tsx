@@ -14,7 +14,7 @@ import {
   MarkdownShortcuts,
 } from './modules/index';
 import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
-import { setContent } from './utils';
+import { optionDisableToggle, setContent } from './utils';
 import 'quill/dist/quill.snow.css';
 // import 'quill-better-table/dist/quill-better-table.css';
 import './assets/richTextEditor.less';
@@ -182,12 +182,12 @@ const RichTextEditor = (props: IEditorProps) => {
                   { key: 'javascript', label: 'Javascript' },
                   { key: 'java', label: 'Java' },
                   { key: 'python', label: 'Python' },
-                  { key: 'clike', label: 'C++/C' },
+                  { key: 'cpp', label: 'C++/C' },
                   { key: 'csharp', label: 'C#' },
                   { key: 'php', label: 'PHP' },
                   { key: 'sql', label: 'SQL' },
                   { key: 'json', label: 'JSON' },
-                  { key: 'bash', label: 'Bash' },
+                  { key: 'shell', label: 'Shell' },
                   { key: 'go', label: 'Go' },
                   { key: 'objectivec', label: 'Objective-C' },
                   { key: 'xml', label: 'HTML/XML' },
@@ -328,7 +328,6 @@ const RichTextEditor = (props: IEditorProps) => {
           container: toolbarOptions, // Selector for toolbar container
           handlers: {
             ...toolbarHandlers.current,
-            // image: quillImageHandler, // todo 处理图片先上传，再附链接。不处理默认保存base64
           },
         },
         clipboard: {
@@ -340,6 +339,14 @@ const RichTextEditor = (props: IEditorProps) => {
             // 有序列表只能输入“1. ”才会触发，改变比如输入“30. ”会变为“1. ”开始的有序列表的行为
             'list autofill': {
               prefix: /^\s*(1{1,1}\.)$/,
+              format: {
+                list: false,
+                'code-block': false,
+                blockquote: false,
+                header: false,
+                table: false,
+                'table-cell-line': false, // 在table中不触发有序列表
+              },
             },
           },
         },
@@ -403,6 +410,18 @@ const RichTextEditor = (props: IEditorProps) => {
         }
       } catch (e) {
         console.log(e);
+      }
+    });
+
+    // 当新建table或者选中table时，禁止部分toolbar options
+    quillRef.current.on('editor-change', (eventName, ...args) => {
+      console.log('editor-change', eventName, args, quillRef.current.getFormat());
+      const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
+      const format = quillRef.current.getFormat() || {};
+      if (format && format['table-cell-line']) {
+        optionDisableToggle(quillRef.current, disableInTable, true);
+      } else {
+        optionDisableToggle(quillRef.current, disableInTable, false);
       }
     });
 

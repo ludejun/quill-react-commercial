@@ -58,3 +58,25 @@ export function setContent(content, quill: Quill) {
     quill.setText('');
   }
 }
+
+// toolbar的option在disable中切换
+export const optionDisableToggle = (quill: Quill, blockList: string[], disable: boolean) => {
+  const toolbar = quill.getModule('toolbar');
+  blockList.forEach((item) => {
+    const btns = toolbar.container.querySelectorAll(`.ql-${item}`);
+    btns.forEach((btn) => {
+      if (btn.className.indexOf('ql-picker') >= 0) {
+        const picker = btn.querySelector('.ql-picker-options');
+        if (disable) {
+          picker.style = 'display: none;';
+          btn.classList.add('picker-disable');
+        } else {
+          picker.style = '';
+          btn.classList.remove('picker-disable');
+        }
+      } else {
+        btn.disabled = disable;
+      }
+    });
+  });
+};
