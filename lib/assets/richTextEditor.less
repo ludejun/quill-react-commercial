@@ -1,12 +1,3 @@
-#editor {
-  width: 100%;
-  height: 500px;
-}
-
-#toolbar {
-  width: 100%;
-}
-
 .ql-container {
   /* font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", SimSun, sans-serif; */
   font-size: 14px;
@@ -69,12 +60,12 @@
   font-family: arial;
 }
 .ql-snow .ql-picker.ql-size {
-    width: 60px;
+  width: 60px;
 }
 
 // Header的显示
 .ql-snow .ql-picker.ql-header {
-    width: 60px;
+  width: 60px;
 }
 .ql-snow .ql-picker.ql-header .ql-picker-item::before,
 .ql-snow .ql-picker.ql-header .ql-picker-label::before {
@@ -118,20 +109,61 @@
   z-index: 100;
 }
 
-/* 图片上传input */
-input.ql-image {
-  display: none;
-}
-
 .ql-code-block-container .ql-ui {
   color: #999;
 }
 
 // option的disable状态
-.ql-formats button:disabled, .ql-formats .picker-disable {
+.ql-formats button:disabled,
+.ql-formats .picker-disable {
   opacity: 0.5;
   cursor: not-allowed;
   .ql-picker-label {
     cursor: not-allowed;
+  }
+}
+// image upload modal
+.image-tooltip {
+  position: absolute;
+  border: 1px solid #ccc;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background: #fff;
+  width: 300px;
+  input.ql-image {
+    display: none;
+  }
+  .image-upload-btn {
+    height: 24px;
+    line-height: 24px;
+    background: #ccc;
+    width: 70px;
+    padding: 0 6px;
+    cursor: pointer;
+  }
+  .image-url-form {
+    display: flex;
+        align-items: center;
+    justify-content: space-between;
+    input {
+      border: 0;
+    border-bottom: 1px solid #ccc;
+    width: 200px;
+    }
+    span {
+      cursor: pointer;
+    }
+    span:hover {
+      color: #06c;
+    }
+  }
+  .image-close {
+    position: absolute;
+    top: 10px;
+    width: 32px;
+    right: 10px;
+    cursor: pointer;
   }
 }

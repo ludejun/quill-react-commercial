@@ -20,14 +20,14 @@ const App = () => {
         modules={{
           table: {},
           codeHighlight: true,
-          // imageHandler: {
-          //   imgUploadApi: (formData) =>
-          //     // console.log(apiURL('uploadImg'))
-          //     request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(
-          //       (response) => response.url,
-          //     ),
-          //   uploadFailCB: () => console.error('图片上传失败'),
-          // },
+          imageHandler: {
+            imgUploadApi: (formData) =>
+              // console.log(apiURL('uploadImg'))
+              request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(
+                (response) => response.url,
+              ),
+            uploadFailCB: () => console.error('图片上传失败'),
+          },
         }}
         getQuill={getQuill}
         content={

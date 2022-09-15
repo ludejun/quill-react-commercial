@@ -367,17 +367,19 @@ const RichTextEditor = (props: IEditorProps) => {
       quillRef.current.theme.tooltip.root.innerHTML = [
         '<span>链接文字：</span><input id="link-words" type="text" /><a class="ql-preview" rel="noopener noreferrer" target="_blank" href="about:blank">跳转</a>',
         '<br />',
-        '<span>链接地址：</span><input id="link-url" type="text" data-formula="e=mc^2" data-link="https://www.baidu.com" data-video="Embed URL" />',
+        '<span>链接地址：</span><input id="link-url" type="text" data-formula="e=mc^2" data-link="https://example.com" data-video="Embed URL" />',
         '<a class="ql-action"></a>',
         '<a class="ql-remove"></a>',
       ].join('');
     }
 
-    // 当选中link格式时，弹出tooltip并能修改保存
+    
     quillRef.current.on('selection-change', (range, oldRange, source) => {
       try {
-        if (range == null) return;
-        if (range.length === 0 && source === 'user') {
+        if (range == null || !quillRef.current.hasFocus()) return;
+
+        // 当选中link格式时，弹出tooltip并能修改保存
+        if (modules.link !== false && range.length === 0 && source === 'user') {
           console.log(4444, quillRef.current?.getFormat());
           const format = quillRef.current?.getFormat();
           if (
@@ -408,22 +410,41 @@ const RichTextEditor = (props: IEditorProps) => {
             };
           }
         }
+
+        // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
+        if (modules.table) {
+          const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
+          const format = quillRef.current.getFormat() || {};
+          if (format && format['table-cell-line']) {
+            optionDisableToggle(quillRef.current, disableInTable, true);
+          } else {
+            optionDisableToggle(quillRef.current, disableInTable, false);
+          }
+        }
       } catch (e) {
         console.log(e);
       }
     });
 
-    // 当新建table或者选中table时，禁止部分toolbar options
-    quillRef.current.on('editor-change', (eventName, ...args) => {
-      console.log('editor-change', eventName, args, quillRef.current.getFormat());
-      const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
-      const format = quillRef.current.getFormat() || {};
-      if (format && format['table-cell-line']) {
-        optionDisableToggle(quillRef.current, disableInTable, true);
-      } else {
-        optionDisableToggle(quillRef.current, disableInTable, false);
-      }
-    });
+    
+    // quillRef.current.on('editor-change', (eventName, ...args) => {
+    //   console.log(
+    //     'editor-change',
+    //     eventName,
+    //     args,
+    //     quillRef.current.getFormat(),
+    //     quillRef.current.hasFocus(),
+    //   );
+    //   if (modules.table && quillRef.current.hasFocus() && args[2] === 'user') {
+    //     const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
+    //     const format = quillRef.current.getFormat() || {};
+    //     if (format && format['table-cell-line']) {
+    //       optionDisableToggle(quillRef.current, disableInTable, true);
+    //     } else {
+    //       optionDisableToggle(quillRef.current, disableInTable, false);
+    //     }
+    //   }
+    // });
 
     setContent(content, quillRef.current); // 设置初始内容
 

@@ -1,47 +1,86 @@
 import Quill from 'quill';
 import { isUrl, isEmail } from '../utils';
+import close from '../assets/icons/icon_close.svg';
 
 export function imageUpload(quill, imgUploadApi, uploadSuccCB, uploadFailCB) {
-  let fileInput = quill.container.querySelector('input.ql-image[type=file]');
+  quill.disable();
 
-  if (fileInput === null) {
-    fileInput = document.createElement('input');
-    fileInput.setAttribute('type', 'file');
-    fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
-    fileInput.classList.add('ql-image');
-    fileInput.addEventListener('change', () => {
-      const { files } = fileInput;
-      const range = quill.getSelection(true);
+  let modal = quill.container.querySelector('div.image-tooltip');
+  let fileInput;
 
-      if (!files || !files.length) {
-        console.log('没有选择文件');
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append('file', files[0]);
-
-      quill.enable(false);
-
-      // todo 请求图片保存API
-      imgUploadApi(formData)
-        .then((url) => {
-          quill.enable(true);
-          quill.editor.insertEmbed(range.index, 'image', url);
-          quill.setSelection(range.index + 1, Quill.sources.SILENT);
-          fileInput.value = '';
-          if (!!uploadSuccCB) uploadSuccCB(response);
-        })
-        .catch((error) => {
-          console.log('图片上传失败');
-          console.log(error);
-          quill.enable(true);
-          uploadFailCB(error);
-        });
+  if (modal === null) {
+    modal = document.createElement('div');
+    modal.classList.add('image-tooltip');
+    modal.innerHTML = `
+      <input type="file" class="ql-image" accept="image/png, image/gif, image/jpeg, image/bmp, image/x-icon" />
+      <div class="image-upload-btn">上传图片</div>
+      <p class="image-url-label">您也可以输入网络图片URL</p>
+      <div class="image-url-form"><input type="text" placeholder="http://example.com/image.png" class="image-url-input" /><span class="url-submit">插入</span></div>
+      <div class="image-close">${close}</div>
+      `;
+    quill.container.append(modal);
+    fileInput = modal.querySelector('input.ql-image[type=file]');
+    const urlInput = modal.querySelector('input.image-url-input');
+    modal.querySelector('.image-close').addEventListener('click', (e) => {
+      modal.classList.add('ql-hidden');
+      quill.enable(true);
+      e.stopPropagation();
     });
-    quill.container.appendChild(fileInput);
+    modal.querySelector('.url-submit').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const url = urlInput.value;
+      if (url && isUrl(url)) {
+        const range = quill.getSelection(true);
+        quill.editor.insertEmbed(range.index, 'image', url);
+        quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        modal.classList.add('ql-hidden');
+        urlInput.value = '';
+        quill.enable(true);
+      } else {
+        console.log('请输入正确URL');
+      }
+    });
+    modal.querySelector('.image-upload-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+  } else {
+    modal.classList.remove('ql-hidden');
+    fileInput = modal.querySelector('input.ql-image[type=file]');
   }
-  fileInput.click();
+
+  fileInput.addEventListener('change', () => {
+    const { files } = fileInput;
+    const range = quill.getSelection(true);
+
+    if (!files || !files.length) {
+      console.log('没有选择文件');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', files[0]);
+
+    // todo 请求图片保存API
+    imgUploadApi(formData)
+      .then((url) => {
+        modal.classList.add('ql-hidden');
+        quill.enable(true);
+        quill.editor.insertEmbed(range.index, 'image', url);
+        quill.setSelection(range.index + 1, Quill.sources.SILENT);
+        fileInput.value = '';
+        if (!!uploadSuccCB) uploadSuccCB(response);
+      })
+      .catch((error) => {
+        console.log('图片上传失败');
+        console.log(error);
+        quill.enable(true);
+        uploadFailCB(error);
+      });
+  });
+  // quill.container.appendChild(fileInput);
+
+  // fileInput.click();
 }
 
 export function linkHandler(value) {
@@ -64,7 +103,7 @@ export function linkHandler(value) {
           document.getElementById('link-words').value,
           'link',
           document.getElementById('link-url').value,
-          'user'
+          'user',
         );
         this.quill.theme.tooltip.hide();
       };
@@ -92,7 +131,7 @@ export function linkHandler(value) {
           document.getElementById('link-words').value,
           'link',
           document.getElementById('link-url').value,
-          'user'
+          'user',
         );
         this.quill.theme.tooltip.hide();
       };

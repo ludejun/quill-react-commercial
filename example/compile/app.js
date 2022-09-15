@@ -39,15 +39,19 @@ var App = function App() {
     readOnly: false,
     modules: {
       table: {},
-      codeHighlight: true // imageHandler: {
-      //   imgUploadApi: (formData) =>
-      //     // console.log(apiURL('uploadImg'))
-      //     request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(
-      //       (response) => response.url,
-      //     ),
-      //   uploadFailCB: () => console.error('图片上传失败'),
-      // },
-
+      codeHighlight: true,
+      imageHandler: {
+        imgUploadApi: function imgUploadApi(formData) {
+          return (// console.log(apiURL('uploadImg'))
+            request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(function (response) {
+              return response.url;
+            })
+          );
+        },
+        uploadFailCB: function uploadFailCB() {
+          return console.error('图片上传失败');
+        }
+      }
     },
     getQuill: getQuill,
     content: // 初始化笔记内容，而不能直接使用activeNote.content，因为当更新或保存会重新渲染导致内容重置到保存时刻，光标变到开头

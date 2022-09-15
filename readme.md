@@ -6,7 +6,7 @@ Quill作为很出众并流行的开源富文本编辑器，有着良好的数据
 
 微信小程序的富文本编辑器也使用的Quill底层和数据结构，可以和quill-react-commercial打通编辑和展示。
 
-SDK默认使用源码index.tsx作为入口，若想要在html中引入等打包后的结果，可以使用dist/文件夹中的文件，参考示例example。
+SDK默认使用lib/index.js作为入口，若想要在html中引入等打包后的结果，可以使用dist/文件夹中的文件，参考示例example。
 
 ### 安装
 
@@ -209,3 +209,19 @@ import 'highlight.js/styles/darcula.css';
 - 修改编辑器本身的JS、Less需要重新执行 yarn example
 - index.html中引入的本地的react、react-dom，外网CDN太慢
 - 生成了map文件，可以本地调试；需要更多信息，可以临时将webpack的mode修改为development
+
+### 剩余已知bug或体验优化
+
+- 有序列表换行，不要重新开始
+- 复制文章中的图片处理
+- 截图复制处理
+- table中插入图片只能base64
+- 插入图片选外部URL
+- table中不能插入list、header、blockquote、code-block
+- 多主题、多语种支持
+- 已上传图片但本文中未使用图片处理
+- 图片截取
+- 图片focus时功能menu添加：文字环绕、添加超链接URL、删除、添加备注
+- table多cell内容复制不能
+- 图片的resize框在滚动时不随动
+- 图片上传Modal框URL不合规的UI反馈没有
