@@ -58,29 +58,24 @@ export function imageUpload(quill, imgUploadApi, uploadSuccCB, uploadFailCB) {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', files[0]);
-
-    // todo 请求图片保存API
-    imgUploadApi(formData)
-      .then((url) => {
+    // 请求图片保存API
+    uploadImg(
+      files[0],
+      imgUploadApi,
+      (url) => {
         modal.classList.add('ql-hidden');
         quill.enable(true);
         quill.editor.insertEmbed(range.index, 'image', url);
         quill.setSelection(range.index + 1, Quill.sources.SILENT);
         fileInput.value = '';
-        if (!!uploadSuccCB) uploadSuccCB(response);
-      })
-      .catch((error) => {
-        console.log('图片上传失败');
-        console.log(error);
+        if (!!uploadSuccCB) uploadSuccCB(url);
+      },
+      (error) => {
         quill.enable(true);
         uploadFailCB(error);
-      });
+      },
+    );
   });
-  // quill.container.appendChild(fileInput);
-
-  // fileInput.click();
 }
 
 export function linkHandler(value) {
@@ -148,3 +143,18 @@ export function undoHandler() {
 export function redoHandler() {
   this.quill.history.redo();
 }
+
+// 上传图片，参数为blob File
+export const uploadImg = (blob, imgUploadApi, uploadSuccCB, uploadFailCB) => {
+  const formData = new FormData();
+  formData.append('file', blob);
+  imgUploadApi(formData)
+    .then((url) => {
+      uploadSuccCB(url);
+    })
+    .catch((error) => {
+      console.log('图片上传失败');
+      console.log(error);
+      uploadFailCB(error);
+    });
+};

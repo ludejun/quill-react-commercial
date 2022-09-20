@@ -245,3 +245,31 @@ table.quill-better-table {
     }
   }
 }
+
+// 编辑器中图片
+.ql-container {
+  .img-status {
+    display: none;
+    position: absolute;
+  }
+  div.upload-fail {
+    opacity: 0.5;
+    background-color: #fff;
+  }
+  div.uploading .fail {
+    display: none;
+  }
+  div.uploading .uploading {
+    display: block;
+  }
+  div.upload-fail .uploading {
+    display: none;
+  }
+  div.upload-fail .fail {
+    display: block;
+  }
+  div.upload-fail {
+    color: red;
+  }
+  
+}

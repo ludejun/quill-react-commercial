@@ -1,6 +1,6 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A Quill component for React and more maturely.",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
@@ -21,7 +21,6 @@
     "highlight.js": "^10.7.2",
     "quill": "^2.0.0-dev.4",
     "quill-better-table": "^1.2.10",
-    "quill-image-drop-module": "^1.0.3",
     "quill-magic-url": "^4.2.0"
   },
   "peerDependencies": {
@@ -38,6 +37,7 @@
     "@babel/plugin-proposal-class-properties": "^7.16.0",
     "@babel/plugin-proposal-decorators": "^7.16.4",
     "@babel/plugin-syntax-class-properties": "^7.12.13",
+    "@babel/plugin-transform-runtime": "^7.19.1",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-es2015": "^7.0.0-beta.53",
     "@babel/preset-react": "^7.10.4",

@@ -1,9 +1,14 @@
 # Change-Log
 
+### 1.3.1
+- 图片复制及拖拽到编辑器的处理Module重构，重新换思路，先更快的给用户Base64展示，后台上传
+- 图片复制及拖拽支持API上传，及上传状态展示
+- 图片上传Modal框close icon的样式调整
 ### 1.3.0
 - 上传图片添加Modal框，支持选择网络图片URL
 - 修复editor-change监听导致Link Modal、图片Modal框不可focus的bug，删除editor-change监听
 - 修改readme.md
+
 ### 1.2.9
 
 - 禁止在table中使用header、list、code、引用等块，并修改list触发器、markdown触发器使这些格式在tabl-cell中不生效

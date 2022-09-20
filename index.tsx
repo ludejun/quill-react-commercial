@@ -116,7 +116,7 @@ const RichTextEditor = (props: IEditorProps) => {
         table,
         codeHighlight,
         imageResize = true,
-        imageDrop,
+        imageDrop = true,
         magicUrl = true,
         markdown = true,
         link = true,
@@ -205,7 +205,10 @@ const RichTextEditor = (props: IEditorProps) => {
       }
       // 默认图片拖拽/复制到富文本
       if (imageDrop) {
-        quillModules.current.imageDrop = typeof imageDrop !== 'boolean' ? imageDrop : {};
+        quillModules.current.imageDrop = imageDrop === false ? imageDrop : {
+          imageHandler,
+          ...(typeof imageDrop === 'object' ? imageDrop : null),
+        };
       }
       // 默认支持自动识别URL
       quillModules.current.magicUrl = magicUrl;

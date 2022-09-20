@@ -1,5 +1,5 @@
 // import Quill from 'quill';
-import { ImageDrop } from './imageDrop';
+import { ImageDrop } from './imagePasteDrop';
 import ImageResize from './imageResize';
 import { MagicUrl } from './magic-url';
 import MarkdownShortcuts from './markdown-shortcuts';

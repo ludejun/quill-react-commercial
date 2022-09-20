@@ -214,10 +214,9 @@ import 'highlight.js/styles/darcula.css';
 
 - 有序列表换行，不要重新开始
 - 复制文章中的图片处理
-- 截图复制处理
+- 复制、拖拽图片到编辑器的上传API失败后的重新上传
 - table中插入图片只能base64
-- 插入图片选外部URL
-- table中不能插入list、header、blockquote、code-block
+- table中不能插入list、header、blockquote、code-block，尝试允许
 - 多主题、多语种支持
 - 已上传图片但本文中未使用图片处理
 - 图片截取
