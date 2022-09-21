@@ -146,15 +146,20 @@ export function redoHandler() {
 
 // 上传图片，参数为blob File
 export const uploadImg = (blob, imgUploadApi, uploadSuccCB, uploadFailCB) => {
-  const formData = new FormData();
-  formData.append('file', blob);
-  imgUploadApi(formData)
-    .then((url) => {
-      uploadSuccCB(url);
-    })
-    .catch((error) => {
-      console.log('图片上传失败');
-      console.log(error);
-      uploadFailCB(error);
-    });
+  try {
+    const formData = new FormData();
+    formData.append('file', blob, blob.name || `default.${blob.type.split('/')[1]}`);
+    imgUploadApi(formData)
+      .then((url) => {
+        uploadSuccCB(url);
+      })
+      .catch((error) => {
+        console.log('图片上传失败');
+        console.log(error);
+        uploadFailCB(error);
+      });
+    // uploadFailCB('1234');
+  } catch (e) {
+    console.log('uploadImg', e);
+  }
 };

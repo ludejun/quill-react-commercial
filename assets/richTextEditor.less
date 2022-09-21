@@ -1,6 +1,7 @@
 .ql-container {
   /* font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", SimSun, sans-serif; */
   font-size: 14px;
+  overflow: hidden;
   .ql-editor {
     line-height: 1.8;
   }
@@ -163,9 +164,11 @@
   .image-close {
     position: absolute;
     top: 10px;
-    width: 32px;
-    height: 32px;
     right: 10px;
     cursor: pointer;
+    svg {
+      width: 32px;
+      height: 32px;
+    }
   }
 }

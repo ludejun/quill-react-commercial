@@ -224,3 +224,5 @@ import 'highlight.js/styles/darcula.css';
 - table多cell内容复制不能
 - 图片的resize框在滚动时不随动
 - 图片上传Modal框URL不合规的UI反馈没有
+- table中输入URL不能自动变超链接
+- shell/bash的代码高亮难看

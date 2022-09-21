@@ -19,4 +19,5 @@ export class ImageDrop {
      * @return Blob
      */
     b64toBlob(b64Data: string, contentType: string, sliceSize: any): Blob;
+    showFailTooltip(id: any): void;
 }
