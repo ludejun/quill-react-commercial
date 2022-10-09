@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import Quill from 'quill';
+import Quill, { RangeStatic, Sources } from 'quill';
 import Delta from 'quill-delta';
 import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
@@ -71,7 +71,9 @@ interface IEditorProps {
     } & IModules;
     getQuill?: (quill: Quill) => void;
     content?: Delta | string;
-    onChange?: (delta: Delta, old: Delta, source?: string) => void;
+    onChange?: (delta: Delta, old: Delta, source?: Sources) => void;
+    onFocus?: (range?: RangeStatic) => void;
+    onBlur?: (oldRange?: RangeStatic) => void;
 }
 declare const RichTextEditor: (props: IEditorProps) => JSX.Element;
 export default RichTextEditor;

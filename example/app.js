@@ -35,6 +35,7 @@ const App = () => {
           initContent
         }
         onChange={quillChange}
+        onFocus={(arg) => {}}
       />
       <div style={{height: 200}}>{delta}</div>
     </div>

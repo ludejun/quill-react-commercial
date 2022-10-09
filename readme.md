@@ -169,6 +169,10 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 
 **onChange：非必需，function；编辑器quill实例onChange触发时的callback**
 
+**onFocus：非必需，function；编辑器quill实例Focus触发时的callback**
+
+**onBlur：非必需，function；编辑器quill实例Blur触发时的callback**
+
 其他quill的实例方法，可以在获取实例后参考Quill API
 
 ### 安装SDK问题

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import Quill from 'quill';
+import Quill, { RangeStatic, Sources } from 'quill';
 // import QuillBetterTable from 'quill-better-table';
 import Delta from 'quill-delta';
 import IconUndo from 'quill/assets/icons/undo.svg';
@@ -87,7 +87,9 @@ interface IEditorProps {
   // getQuillDomRef?: (instance: HTMLDivElement | undefined) => void;
   getQuill?: (quill: Quill) => void;
   content?: Delta | string;
-  onChange?: (delta: Delta, old: Delta, source?: string) => void;
+  onChange?: (delta: Delta, old: Delta, source?: Sources) => void;
+  onFocus?: (range?: RangeStatic) => void;
+  onBlur?: (oldRange?: RangeStatic) => void;
 }
 
 const RichTextEditor = (props: IEditorProps) => {
@@ -266,6 +268,8 @@ const RichTextEditor = (props: IEditorProps) => {
       getQuill,
       readOnly = false,
       onChange,
+      onFocus,
+      onBlur,
     } = props;
     if (quillModules.current['better-table']) {
       Quill.register(
@@ -375,9 +379,8 @@ const RichTextEditor = (props: IEditorProps) => {
         '<a class="ql-remove"></a>',
       ].join('');
     }
-
     
-    quillRef.current.on('selection-change', (range, oldRange, source) => {
+    quillRef.current.on('selection-change', (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
       try {
         if (range == null || !quillRef.current.hasFocus()) return;
 
@@ -455,8 +458,16 @@ const RichTextEditor = (props: IEditorProps) => {
     getQuill && getQuill(quillRef.current);
 
     if (onChange) {
-      quillRef.current.on('text-change', (delta, old, source) => {
+      quillRef.current.on('text-change', (delta: Delta, old: Delta, source: Sources) => {
         source === 'user' && onChange(delta, old);
+      });
+    }
+    if (onFocus || onBlur) {
+      quillRef.current.on('selection-change', (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
+        const hasFocus = range && !oldRange;
+        const hasBlur = !range && oldRange;
+        if (onFocus && hasFocus) onFocus(range);
+        if (onBlur && hasBlur) onBlur(oldRange);
       });
     }
   }, []);
@@ -467,6 +478,7 @@ const RichTextEditor = (props: IEditorProps) => {
 
   return (
     <div className="content-container">
+      <div>Toolbar zai na</div>
       <div id={`editor${editorId.current}`} />
     </div>
   );
