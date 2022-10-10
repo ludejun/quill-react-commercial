@@ -478,7 +478,6 @@ const RichTextEditor = (props: IEditorProps) => {
 
   return (
     <div className="content-container">
-      <div>Toolbar zai na</div>
       <div id={`editor${editorId.current}`} />
     </div>
   );
