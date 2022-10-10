@@ -58,6 +58,11 @@ interface IModules {
     markdown?: boolean;
     link?: boolean | {};
 }
+declare type Title = {
+    placeholder?: string;
+    onChange?: (title: string) => void;
+    defaultValue?: string;
+};
 interface IEditorProps {
     placeholder?: string;
     readOnly?: boolean;
@@ -74,6 +79,7 @@ interface IEditorProps {
     onChange?: (delta: Delta, old: Delta, source?: Sources) => void;
     onFocus?: (range?: RangeStatic) => void;
     onBlur?: (oldRange?: RangeStatic) => void;
+    title?: boolean | Title;
 }
 declare const RichTextEditor: (props: IEditorProps) => JSX.Element;
 export default RichTextEditor;

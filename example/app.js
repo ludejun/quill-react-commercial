@@ -1,4 +1,3 @@
-
 const App = () => {
   const quill = React.useRef({});
   const [delta, setDelta] = React.useState('');
@@ -36,11 +35,12 @@ const App = () => {
         }
         onChange={quillChange}
         onFocus={(arg) => {}}
+        title={{ placeholder: 'Title', onChange: (title) => console.log(title) }}
       />
-      <div style={{height: 200}}>{delta}</div>
+      <div style={{ height: 200 }}>{delta}</div>
     </div>
   );
-}
+};
 const domContainer = document.querySelector('#root');
 const root = ReactDOM.createRoot(domContainer);
 root.render(<App />);

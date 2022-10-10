@@ -57,7 +57,13 @@ var App = function App() {
     content: // 初始化笔记内容，而不能直接使用activeNote.content，因为当更新或保存会重新渲染导致内容重置到保存时刻，光标变到开头
     initContent,
     onChange: quillChange,
-    onFocus: function onFocus(arg) {}
+    onFocus: function onFocus(arg) {},
+    title: {
+      placeholder: 'Title',
+      onChange: function onChange(title) {
+        return console.log(title);
+      }
+    }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 200

@@ -73,6 +73,11 @@ interface IModules {
   markdown?: boolean;
   link?: boolean | {};
 }
+type Title = {
+  placeholder?: string;
+  onChange?: (title: string) => void;
+  defaultValue?: string;
+};
 interface IEditorProps {
   placeholder?: string;
   readOnly?: boolean;
@@ -90,10 +95,11 @@ interface IEditorProps {
   onChange?: (delta: Delta, old: Delta, source?: Sources) => void;
   onFocus?: (range?: RangeStatic) => void;
   onBlur?: (oldRange?: RangeStatic) => void;
+  title?: boolean | Title;
 }
 
 const RichTextEditor = (props: IEditorProps) => {
-  const { modules = {}, content } = props;
+  const { modules = {}, content, title = false } = props;
   const quillModules = useRef<
     IModules & {
       'better-table'?: Record<string, unknown>;
@@ -207,10 +213,13 @@ const RichTextEditor = (props: IEditorProps) => {
       }
       // 默认图片拖拽/复制到富文本
       if (imageDrop) {
-        quillModules.current.imageDrop = imageDrop === false ? imageDrop : {
-          imageHandler,
-          ...(typeof imageDrop === 'object' ? imageDrop : null),
-        };
+        quillModules.current.imageDrop =
+          imageDrop === false
+            ? imageDrop
+            : {
+                imageHandler,
+                ...(typeof imageDrop === 'object' ? imageDrop : null),
+              };
       }
       // 默认支持自动识别URL
       quillModules.current.magicUrl = magicUrl;
@@ -379,60 +388,62 @@ const RichTextEditor = (props: IEditorProps) => {
         '<a class="ql-remove"></a>',
       ].join('');
     }
-    
-    quillRef.current.on('selection-change', (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
-      try {
-        if (range == null || !quillRef.current.hasFocus()) return;
 
-        // 当选中link格式时，弹出tooltip并能修改保存
-        if (modules.link !== false && range.length === 0 && source === 'user') {
-          console.log(4444, quillRef.current?.getFormat());
-          const format = quillRef.current?.getFormat();
-          if (
-            format &&
-            format.hasOwnProperty('link') &&
-            quillRef.current &&
-            quillRef.current.theme
-          ) {
-            quillRef.current.theme.tooltip.root.classList.add('ql-editing');
-            (document.getElementById('link-url') as HTMLInputElement).value = format.link;
-            (document.querySelector('a.ql-preview') as HTMLAnchorElement).href = format.link;
-            const [leaf, offset] = quillRef.current?.getLeaf(range.index);
-            console.log(5555, leaf, offset, leaf.text, leaf.length());
-            (document.getElementById('link-words') as HTMLInputElement).value = leaf.text;
+    quillRef.current.on(
+      'selection-change',
+      (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
+        try {
+          if (range == null || !quillRef.current.hasFocus()) return;
 
-            (document.querySelector('a.ql-action') as HTMLAnchorElement).onclick = () => {
-              if (quillRef.current) {
-                quillRef.current.deleteText(range.index - offset, leaf.length());
-                quillRef.current.insertText(
-                  range.index - offset,
-                  (document.getElementById('link-words') as HTMLInputElement).value,
-                  'link',
-                  (document.getElementById('link-url') as HTMLInputElement).value,
-                  'user',
-                );
-                if (quillRef.current.theme) quillRef.current.theme.tooltip.hide();
-              }
-            };
+          // 当选中link格式时，弹出tooltip并能修改保存
+          if (modules.link !== false && range.length === 0 && source === 'user') {
+            console.log(4444, quillRef.current?.getFormat());
+            const format = quillRef.current?.getFormat();
+            if (
+              format &&
+              format.hasOwnProperty('link') &&
+              quillRef.current &&
+              quillRef.current.theme
+            ) {
+              quillRef.current.theme.tooltip.root.classList.add('ql-editing');
+              (document.getElementById('link-url') as HTMLInputElement).value = format.link;
+              (document.querySelector('a.ql-preview') as HTMLAnchorElement).href = format.link;
+              const [leaf, offset] = quillRef.current?.getLeaf(range.index);
+              console.log(5555, leaf, offset, leaf.text, leaf.length());
+              (document.getElementById('link-words') as HTMLInputElement).value = leaf.text;
+
+              (document.querySelector('a.ql-action') as HTMLAnchorElement).onclick = () => {
+                if (quillRef.current) {
+                  quillRef.current.deleteText(range.index - offset, leaf.length());
+                  quillRef.current.insertText(
+                    range.index - offset,
+                    (document.getElementById('link-words') as HTMLInputElement).value,
+                    'link',
+                    (document.getElementById('link-url') as HTMLInputElement).value,
+                    'user',
+                  );
+                  if (quillRef.current.theme) quillRef.current.theme.tooltip.hide();
+                }
+              };
+            }
           }
-        }
 
-        // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
-        if (modules.table) {
-          const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
-          const format = quillRef.current.getFormat() || {};
-          if (format && format['table-cell-line']) {
-            optionDisableToggle(quillRef.current, disableInTable, true);
-          } else {
-            optionDisableToggle(quillRef.current, disableInTable, false);
+          // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
+          if (modules.table) {
+            const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
+            const format = quillRef.current.getFormat() || {};
+            if (format && format['table-cell-line']) {
+              optionDisableToggle(quillRef.current, disableInTable, true);
+            } else {
+              optionDisableToggle(quillRef.current, disableInTable, false);
+            }
           }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
-      }
-    });
+      },
+    );
 
-    
     // quillRef.current.on('editor-change', (eventName, ...args) => {
     //   console.log(
     //     'editor-change',
@@ -463,12 +474,24 @@ const RichTextEditor = (props: IEditorProps) => {
       });
     }
     if (onFocus || onBlur) {
-      quillRef.current.on('selection-change', (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
-        const hasFocus = range && !oldRange;
-        const hasBlur = !range && oldRange;
-        if (onFocus && hasFocus) onFocus(range);
-        if (onBlur && hasBlur) onBlur(oldRange);
-      });
+      quillRef.current.on(
+        'selection-change',
+        (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
+          const hasFocus = range && !oldRange;
+          const hasBlur = !range && oldRange;
+          if (onFocus && hasFocus) onFocus(range);
+          if (onBlur && hasBlur) onBlur(oldRange);
+        },
+      );
+    }
+
+    if (title) {
+      document
+        .getElementById(`editor${editorId.current}`)
+        .parentNode.insertBefore(
+          document.querySelector(`#editor${editorId.current} + input`),
+          document.getElementById(`editor${editorId.current}`),
+        );
     }
   }, []);
 
@@ -476,9 +499,27 @@ const RichTextEditor = (props: IEditorProps) => {
     setContent(content, quillRef.current);
   }, [content]);
 
+  const renderTitle = () => {
+    if (title) {
+      const config = title === true ? ({} as Title) : title;
+      return (
+        <input
+          type="text"
+          placeholder={config.placeholder}
+          className="title-input"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => config.onChange(e.target.value)}
+          defaultValue={config.defaultValue}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <div className="content-container">
       <div id={`editor${editorId.current}`} />
+      {renderTitle()}
     </div>
   );
 };
