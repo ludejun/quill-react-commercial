@@ -1,4 +1,5 @@
 import Quill from 'quill';
+import Delta from 'quill-delta';
 
 // 匹配URL地址，可以不含协议
 export function isUrl(url: string) {
@@ -12,21 +13,21 @@ export function isEmail(url: string) {
   return /^\S+@\S+\.\S+$/.test(url);
 }
 
-export function saveLink(quill: Quill & { theme?: Record<string, any> }, isToolbar) {
-  if (isToolbar) {
-    const range = quill.getSelection();
-    quill.deleteText(range.index, range.length);
-    quill.insertText(
-      range.index,
-      (document.getElementById('link-words') as HTMLInputElement).value,
-      'link',
-      (document.getElementById('link-url') as HTMLInputElement).value,
-      'user',
-    );
-  }
+// export function saveLink(quill: Quill & { theme?: Record<string, any> }, isToolbar) {
+//   if (isToolbar) {
+//     const range = quill.getSelection();
+//     quill.deleteText(range.index, range.length);
+//     quill.insertText(
+//       range.index,
+//       (document.getElementById('link-words') as HTMLInputElement).value,
+//       'link',
+//       (document.getElementById('link-url') as HTMLInputElement).value,
+//       'user',
+//     );
+//   }
 
-  quill.theme.tooltip.hide();
-}
+//   quill.theme.tooltip.hide();
+// }
 
 // 是否移动端H5
 export function isMobile() {
@@ -45,7 +46,7 @@ export function isMobile() {
 }
 
 // 设置content
-export function setContent(content, quill: Quill) {
+export function setContent(content: Delta | string, quill: Quill) {
   // console.log(6666, quill.getModule('imageResize'));
   quill.getModule('imageResize')?.hide(); // 在设置新值时，需要将上一个笔记可能遗留的imageResize图层弄消失，不然focus图片后的图层可能会保留
   if (content) {
@@ -64,14 +65,14 @@ export const optionDisableToggle = (quill: Quill, blockList: string[], disable: 
   const toolbar = quill.getModule('toolbar');
   blockList.forEach((item) => {
     const btns = toolbar.container.querySelectorAll(`.ql-${item}`);
-    btns.forEach((btn) => {
+    btns.forEach((btn: HTMLButtonElement) => {
       if (btn.className.indexOf('ql-picker') >= 0) {
-        const picker = btn.querySelector('.ql-picker-options');
+        const picker = btn.querySelector('.ql-picker-options') as HTMLElement;
         if (disable) {
-          picker.style = 'display: none;';
+          picker.setAttribute('style', 'display: none');
           btn.classList.add('picker-disable');
         } else {
-          picker.style = '';
+          picker.setAttribute('style', '');
           btn.classList.remove('picker-disable');
         }
       } else {

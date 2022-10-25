@@ -1,5 +1,10 @@
 # Change-Log
 
+### 1.3.7 / 1.3.8
+- 采用Rollup打包，放弃tsc/webpack打包，使svg配置更简单，对npm包更友好
+- 删除readme中svg不显示的webpack配置建议
+### 1.3.6
+- Title Input添加onFocus、onBlur回调
 ### 1.3.5
 - 添加Title属性，参考印象笔记将Title内置到编辑器中
 ### 1.3.4

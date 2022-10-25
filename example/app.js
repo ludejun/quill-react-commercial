@@ -1,6 +1,7 @@
 const App = () => {
   const quill = React.useRef({});
   const [delta, setDelta] = React.useState('');
+  const [title, setTitle] = React.useState('');
   const initContent = '';
   const getQuill = (quillIns) => {
     quill.current = quillIns;
@@ -9,8 +10,8 @@ const App = () => {
     console.log('quill-change:', delta, old, source);
     setDelta(JSON.stringify(quill.current.getContents()));
   };
-  console.log(window, window.RichTextEditor);
-  const RichTextEditor = window.RichTextEditor.default;
+  console.log(window, window.quillReactCommercial);
+  const RichTextEditor = window.quillReactCommercial;
 
   return (
     <div className="App">
@@ -35,7 +36,8 @@ const App = () => {
         }
         onChange={quillChange}
         onFocus={(arg) => {}}
-        title={{ placeholder: 'Title', onChange: (title) => console.log(title) }}
+        title={{ placeholder: 'Title', onChange: (title) => console.log(title), defaultValue: '' }}
+        style={{ background: '#eee', height: 600 }}
       />
       <div style={{ height: 200 }}>{delta}</div>
     </div>

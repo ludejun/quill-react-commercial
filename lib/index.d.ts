@@ -1,5 +1,5 @@
-/// <reference types="react" />
-import Quill, { RangeStatic, Sources } from 'quill';
+import React from 'react';
+import Quill, { RangeStatic } from 'quill';
 import Delta from 'quill-delta';
 import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
@@ -62,6 +62,8 @@ declare type Title = {
     placeholder?: string;
     onChange?: (title: string) => void;
     defaultValue?: string;
+    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 interface IEditorProps {
     placeholder?: string;
@@ -76,7 +78,7 @@ interface IEditorProps {
     } & IModules;
     getQuill?: (quill: Quill) => void;
     content?: Delta | string;
-    onChange?: (delta: Delta, old: Delta, source?: Sources) => void;
+    onChange?: (delta: Delta, old: Delta) => void;
     onFocus?: (range?: RangeStatic) => void;
     onBlur?: (oldRange?: RangeStatic) => void;
     title?: boolean | Title;

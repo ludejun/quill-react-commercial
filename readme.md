@@ -23,6 +23,7 @@ import RichTextEditor from 'quill-react-commercial';
 <RichTextEditor modules={{ table: {}, codeHighlight: true }} />
 ```
 
+- 如需要umd包，可以采用dist文件夹中打好的，script引入文件后，window.quillReactCommercial即可拿到组件，参考example
 
 
 ### API
@@ -179,7 +180,7 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 
 ### 安装SDK问题
 
-1. svg不能正常展示，在主项目的webpack配置中对svg打包进行修改
+1. svg不能正常展示，在主项目的webpack配置中对svg打包进行修改（1.3.7版本之后不用配置）
 ```javascript
 // webpack5
 {
@@ -195,7 +196,7 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 },
 ```
 
-2. 如何切换代码高亮配色样式
+1. 如何切换代码高亮配色样式
 
 默认使用highlight.js的vscode2015配色，如需切换配色，可以直接引入对应样式文件
 ```javascript
@@ -215,6 +216,7 @@ import 'highlight.js/styles/darcula.css';
 - 修改编辑器本身的JS、Less需要重新执行 yarn example
 - index.html中引入的本地的react、react-dom，外网CDN太慢
 - 生成了map文件，可以本地调试；需要更多信息，可以临时将webpack的mode修改为development
+- 1.3.7后采用Rollup打包，避免之前tsc和webpack打包导致svg引入需要多余配置的问题
 
 ### 剩余已知bug或体验优化
 

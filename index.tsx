@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, CSSProperties } from 'react';
 import Quill, { RangeStatic, Sources } from 'quill';
 // import QuillBetterTable from 'quill-better-table';
 import Delta from 'quill-delta';
@@ -77,13 +77,15 @@ type Title = {
   placeholder?: string;
   onChange?: (title: string) => void;
   defaultValue?: string;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 interface IEditorProps {
   placeholder?: string;
   readOnly?: boolean;
   modules?: {
     imageHandler?: {
-      imgUploadApi: (formData) => Promise<string>;
+      imgUploadApi: (formData: any) => Promise<string>;
       uploadSuccCB?: (data: unknown) => void;
       uploadFailCB?: (error: unknown) => void;
     };
@@ -92,10 +94,11 @@ interface IEditorProps {
   // getQuillDomRef?: (instance: HTMLDivElement | undefined) => void;
   getQuill?: (quill: Quill) => void;
   content?: Delta | string;
-  onChange?: (delta: Delta, old: Delta, source?: Sources) => void;
+  onChange?: (delta: Delta, old: Delta) => void;
   onFocus?: (range?: RangeStatic) => void;
   onBlur?: (oldRange?: RangeStatic) => void;
   title?: boolean | Title;
+  // style?: CSSProperties;
 }
 
 const RichTextEditor = (props: IEditorProps) => {
@@ -336,7 +339,7 @@ const RichTextEditor = (props: IEditorProps) => {
     ];
 
     quillRef.current = new Quill(`#editor${editorId.current}`, {
-      debug: process.env.NODE_ENV === 'development' ? '-' : false,
+      debug: false,
       modules: {
         // formula: true, // todo 公式，暂不支持
         ...quillModules.current,
@@ -393,7 +396,7 @@ const RichTextEditor = (props: IEditorProps) => {
       'selection-change',
       (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
         try {
-          if (range == null || !quillRef.current.hasFocus()) return;
+          if (range == null || !quillRef.current?.hasFocus()) return;
 
           // 当选中link格式时，弹出tooltip并能修改保存
           if (modules.link !== false && range.length === 0 && source === 'user') {
@@ -429,7 +432,7 @@ const RichTextEditor = (props: IEditorProps) => {
           }
 
           // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
-          if (modules.table) {
+          if (modules.table && quillRef.current) {
             const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
             const format = quillRef.current.getFormat() || {};
             if (format && format['table-cell-line']) {
@@ -463,7 +466,7 @@ const RichTextEditor = (props: IEditorProps) => {
     //   }
     // });
 
-    setContent(content, quillRef.current); // 设置初始内容
+    content && setContent(content, quillRef.current); // 设置初始内容
 
     // getQuillDomRef && getQuillDomRef(quillDomRef.current);
     getQuill && getQuill(quillRef.current);
@@ -488,15 +491,15 @@ const RichTextEditor = (props: IEditorProps) => {
     if (title) {
       document
         .getElementById(`editor${editorId.current}`)
-        .parentNode.insertBefore(
-          document.querySelector(`#editor${editorId.current} + input`),
+        ?.parentNode?.insertBefore(
+          document.querySelector(`#editor${editorId.current} + input`) as Element,
           document.getElementById(`editor${editorId.current}`),
         );
     }
   }, []);
 
   useEffect(() => {
-    setContent(content, quillRef.current);
+    content && quillRef.current && setContent(content, quillRef.current);
   }, [content]);
 
   const renderTitle = () => {
@@ -507,8 +510,12 @@ const RichTextEditor = (props: IEditorProps) => {
           type="text"
           placeholder={config.placeholder}
           className="title-input"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => config.onChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            config.onChange && config.onChange(e.target.value)
+          }
           defaultValue={config.defaultValue}
+          onFocus={config.onFocus}
+          onBlur={config.onBlur}
         />
       );
     } else {
