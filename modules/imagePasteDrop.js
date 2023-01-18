@@ -17,13 +17,16 @@ export class ImageDrop {
   constructor(quill, options = {}) {
     // save the quill reference
     this.quill = quill;
+    this.options = options;
     this.imageHandler = options.imageHandler; // 添加图片上传方法
+    if (this.uploadTimer) clearTimeout(this.uploadTimer);
     this.quill.on('text-change', (delta, oldDelta, source) => {
       if (this.imageHandler.imgUploadApi) {
-        setTimeout(() => {
+        this.uploadTimer = setTimeout(() => {
           const imgs = quill.container.querySelectorAll(
             'img[src^="data:"]:not(.uploading):not(.upload-fail)',
           );
+          console.log(7777, imgs);
           imgs.forEach((img) => this.uploadBase64Img(img));
         }, 1);
       }
@@ -33,15 +36,18 @@ export class ImageDrop {
   }
 
   uploadBase64Img(img) {
+    console.log(8888, img);
     const base64Str = img.getAttribute('src');
-    if (typeof base64Str === 'string' && base64Str.length > 100) {
+    if ((typeof base64Str === 'string' && base64Str.length > this.options.urlLength) || 100) {
       // 在图片上增加浮层，使用伪元素失败，在图片上建立位置一样元素div，div增加样式或者别的dom更有操作性
       const id = parseInt(Math.random() * 1000); // 用来删除图片时删除同className的tooltip，删除在markdown-shortcuts中
       img.classList.add('uploading', `i-${id}`); // text-change监听中图片选择器要用
 
       const statusDiv = document.createElement('div');
       statusDiv.classList.add('img-status', 'uploading');
-      statusDiv.innerHTML = `<div class="uploading">Uploading...</div><div class="fail">上传失败</div>`;
+      statusDiv.innerHTML = `<div class="uploading">${
+        this.options.uploadingHtml || '图片上传中...'
+      }</div><div class="fail">${this.options.failHtml || '上传失败'}</div>`;
       // 这个时候img dom已经插入了编辑器，但是还没有渲染，位置信息可能不对
       // const rect = img.getBoundingClientRect();
       const parent = this.quill.root.parentNode;
@@ -65,9 +71,9 @@ export class ImageDrop {
           img.classList.add('upload-fail');
           statusDiv.classList.remove('uploading');
           statusDiv.classList.add('upload-fail', `i-${id}`);
-          this.showFailTooltip(id);
+          this.showFailTooltip(img, id);
           // 添加这个事件主要是防止页面滚动导致tooltip覆盖层错位，后续可以监听滚动事件，但是有性能问题
-          img.addEventListener('mouseenter', () => this.showFailTooltip(id));
+          img.addEventListener('mouseenter', (e) => this.showFailTooltip(e.target, id));
           if (uploadFailCB) uploadFailCB(error);
         });
     }
@@ -130,22 +136,29 @@ export class ImageDrop {
     });
   }
 
-  showFailTooltip(id) {
-    const img = this.quill.container.querySelector(`img.i-${id}`);
+  showFailTooltip(img, id) {
     if (img) {
-      const rect = img.getBoundingClientRect();
-      const parent = this.quill.root.parentNode;
-      const tooltip = parent.querySelector(`div.i-${id}`);
-      const containerRect = parent.getBoundingClientRect();
-      if (tooltip) {
-        tooltip.style.cssText = `${tooltip.style.cssText}left:${
-          rect.left - containerRect.left - 1 + parent.scrollLeft
-        }px;top:${rect.top - containerRect.top + parent.scrollTop}px;height:${img.height}px;width:${
-          img.width
-        }px;display: block;`;
-        setTimeout(() => {
-          tooltip.style.display = 'none';
-        }, 2000);
+      const base64Str = img.getAttribute('src');
+      if ((typeof base64Str === 'string' && base64Str.length > this.options.urlLength) || 100) {
+        const rect = img.getBoundingClientRect();
+        const parent = this.quill.root.parentNode;
+        const tooltip = parent.querySelector(`div.i-${id}`);
+        const containerRect = parent.getBoundingClientRect();
+        if (tooltip) {
+          tooltip.style.cssText = `${tooltip.style.cssText}left:${
+            rect.left - containerRect.left - 1 + parent.scrollLeft
+          }px;top:${rect.top - containerRect.top + parent.scrollTop}px;max-height:${
+            img.height
+          }px;max-width:${img.width}px;display: block;`;
+          setTimeout(() => {
+            tooltip.style.display = 'none';
+          }, 2000);
+        }
+      } else {
+        // 已经上传成功的图片删除失败tooltip
+        this.quill.root.parentNode.removeChild(
+          this.quill.root.parentNode.querySelector(`div.i-${id}`),
+        );
       }
     }
   }

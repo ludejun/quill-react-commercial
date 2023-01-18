@@ -6,6 +6,7 @@ import MarkdownShortcuts from './markdown-shortcuts';
 import ToolbarTable from './toolbar-table';
 import highlightInit from './highlight';
 import QuillBetterTable from './quill-better-table/quill-better-table';
+import Image from './image';
 
 // Quill.register(
 //   {
@@ -21,6 +22,7 @@ import QuillBetterTable from './quill-better-table/quill-better-table';
 export {
   highlightInit,
   ImageDrop,
+  Image,
   ImageResize,
   MagicUrl,
   MarkdownShortcuts,

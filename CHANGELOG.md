@@ -1,5 +1,15 @@
 # Change-Log
 
+### 1.4.0
+- 图片的位置状态保存及复现（Delta中保存位置）
+- 超链接tooltip当不输入文本保存自动带入URL，并自动对URL进行标准化
+- bugfix：当最开始是code块、list、引用块时，无法使用Backspace删除样式
+- bugfix：多次插入本地图片时，由于每次都是addEventListener添加事件导致多次插入
+- bugfix：无法插入自定义数字Table，变成1格的table
+- 删除quill-magic-url依赖
+
+### 1.3.9
+- 为Title添加受控和非受控方式，value & defaultValue
 ### 1.3.7 / 1.3.8
 - 采用Rollup打包，放弃tsc/webpack打包，使svg配置更简单，对npm包更友好
 - 删除readme中svg不显示的webpack配置建议

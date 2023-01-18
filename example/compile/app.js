@@ -12,7 +12,7 @@ var App = function App() {
     _React$useState2 = _slicedToArray(_React$useState, 2),
     delta = _React$useState2[0],
     setDelta = _React$useState2[1];
-  var _React$useState3 = React.useState(''),
+  var _React$useState3 = React.useState('1234'),
     _React$useState4 = _slicedToArray(_React$useState3, 2),
     title = _React$useState4[0],
     setTitle = _React$useState4[1];
@@ -56,9 +56,9 @@ var App = function App() {
     title: {
       placeholder: 'Title',
       onChange: function onChange(title) {
-        return console.log(title);
+        return setTitle(title);
       },
-      defaultValue: ''
+      value: title
     },
     style: {
       background: '#eee',

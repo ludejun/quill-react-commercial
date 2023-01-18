@@ -48,8 +48,8 @@ class ToolbarTable extends Module {
       });
       document.getElementById('table-dialog-submit').addEventListener('click', () => {
         this.createTable(
-          document.getElementById('row-number').value,
-          document.getElementById('column-number').value
+          Number(document.getElementById('row-number').value),
+          Number(document.getElementById('column-number').value)
         );
       });
     }

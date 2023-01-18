@@ -315,17 +315,27 @@ class MarkdownShortcuts {
 
   onDelete() {
     const range = this.quill.getSelection();
-    // console.log('delete: ', range, this.quill.getFormat(range));
     if (!range) {
       return;
     }
-    // 当在引用、代码块中删除到最后，应该删除该样式
-    const format = this.quill.getFormat(range);
-    if (format.blockquote || format.code || format['code-block']) {
-      if (this.isLastBrElement(range) || this.isEmptyLine(range)) {
-        this.quill.removeFormat(range.index, range.length);
-      }
-    }
+    // // 当在引用、代码块中删除到最后，应该删除该样式
+    // const format = this.quill.getFormat(range);
+    // if (format.blockquote || format.code || format['code-block']) {
+    //   const [leaf] = this.quill.getLeaf(range.index);
+    //   const [block] = this.quill.scroll.descendant(Block, range.index);
+    //   console.log(
+    //     this.quill.getContents(),
+    //     this.quill.getContents(range.index),
+    //     leaf,
+    //     leaf.text,
+    //     this.quill.getIndex(leaf),
+    //     block,
+    //     block.parent.cachedText,
+    //   );
+    //   if (this.isLastBrElement(range) || this.isEmptyLine(range)) {
+    //     this.quill.removeFormat(range.index, range.length);
+    //   }
+    // }
 
     // 当删除图片，该图片的失败tooltip应该删除，此tooltip是在ImageDrop Module中添加
     const imgTooltip = this.quill.root.parentNode.querySelectorAll('div.upload-fail');

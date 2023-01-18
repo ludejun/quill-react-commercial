@@ -62,6 +62,7 @@ declare type Title = {
     placeholder?: string;
     onChange?: (title: string) => void;
     defaultValue?: string;
+    value?: string;
     onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
     onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };

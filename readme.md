@@ -223,14 +223,13 @@ import 'highlight.js/styles/darcula.css';
 - 有序列表换行，不要重新开始
 - 复制文章中的图片处理
 - 复制、拖拽图片到编辑器的上传API失败后的重新上传
-- table中插入图片只能base64
 - table中不能插入list、header、blockquote、code-block，尝试允许
 - 多主题、多语种支持
-- 已上传图片但本文中未使用图片处理
 - 图片截取
 - 图片focus时功能menu添加：文字环绕、添加超链接URL、删除、添加备注
 - table多cell内容复制不能
 - 图片的resize框在滚动时不随动
 - 图片上传Modal框URL不合规的UI反馈没有
-- table中输入URL不能自动变超链接
 - shell/bash的代码高亮难看
+- 在编辑中插入图片并上传成功，但是又删除，服务器上已存在之前上传图片
+- 本地图片上传失败，没有提示

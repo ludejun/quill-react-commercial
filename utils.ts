@@ -1,3 +1,4 @@
+import normalizeUrl from 'normalize-url';
 import Quill from 'quill';
 import Delta from 'quill-delta';
 
@@ -13,21 +14,17 @@ export function isEmail(url: string) {
   return /^\S+@\S+\.\S+$/.test(url);
 }
 
-// export function saveLink(quill: Quill & { theme?: Record<string, any> }, isToolbar) {
-//   if (isToolbar) {
-//     const range = quill.getSelection();
-//     quill.deleteText(range.index, range.length);
-//     quill.insertText(
-//       range.index,
-//       (document.getElementById('link-words') as HTMLInputElement).value,
-//       'link',
-//       (document.getElementById('link-url') as HTMLInputElement).value,
-//       'user',
-//     );
-//   }
-
-//   quill.theme.tooltip.hide();
-// }
+// 超链接tooltip的保存操作
+export function saveLink(quill: Quill & { theme?: Record<string, any> }, startIndex: number) {
+  const url = (document.getElementById('link-url') as HTMLInputElement).value;
+  if (url && isUrl(url)) {
+    const words = (document.getElementById('link-words') as HTMLInputElement).value || url;
+    quill.insertText(startIndex, words, 'link', normalizeUrl(url), 'user');
+    if (quill.theme) quill.theme.tooltip.hide();
+  } else {
+    (document.getElementById('link-url') as HTMLInputElement).focus();
+  }
+}
 
 // 是否移动端H5
 export function isMobile() {

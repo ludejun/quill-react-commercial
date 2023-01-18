@@ -1,7 +1,7 @@
 const App = () => {
   const quill = React.useRef({});
   const [delta, setDelta] = React.useState('');
-  const [title, setTitle] = React.useState('');
+  const [title, setTitle] = React.useState('1234');
   const initContent = '';
   const getQuill = (quillIns) => {
     quill.current = quillIns;
@@ -36,7 +36,7 @@ const App = () => {
         }
         onChange={quillChange}
         onFocus={(arg) => {}}
-        title={{ placeholder: 'Title', onChange: (title) => console.log(title), defaultValue: '' }}
+        title={{ placeholder: 'Title', onChange: (title) => setTitle(title), value: title }}
         style={{ background: '#eee', height: 600 }}
       />
       <div style={{ height: 200 }}>{delta}</div>
