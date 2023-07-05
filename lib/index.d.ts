@@ -1,4 +1,4 @@
-import React from 'react';
+/// <reference types="react" />
 import Quill, { RangeStatic } from 'quill';
 import Delta from 'quill-delta';
 import 'quill/dist/quill.snow.css';
@@ -58,14 +58,6 @@ interface IModules {
     markdown?: boolean;
     link?: boolean | {};
 }
-declare type Title = {
-    placeholder?: string;
-    onChange?: (title: string) => void;
-    defaultValue?: string;
-    value?: string;
-    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-};
 interface IEditorProps {
     placeholder?: string;
     readOnly?: boolean;
@@ -77,12 +69,11 @@ interface IEditorProps {
         };
         toolbarOptions?: [][];
     } & IModules;
-    getQuill?: (quill: Quill) => void;
+    getQuill?: (quill: Quill, uploadedImgsList?: string[]) => void;
     content?: Delta | string;
     onChange?: (delta: Delta, old: Delta) => void;
     onFocus?: (range?: RangeStatic) => void;
     onBlur?: (oldRange?: RangeStatic) => void;
-    title?: boolean | Title;
 }
 declare const RichTextEditor: (props: IEditorProps) => JSX.Element;
 export default RichTextEditor;

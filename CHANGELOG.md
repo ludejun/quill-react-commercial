@@ -1,5 +1,13 @@
 # Change-Log
 
+### 1.4.2
+- 更改编辑器内容区的顶部 padding，防止在第一行是 table 时，table 的调节工具行被遮挡；工具行的高度减小
+- 将 markdown 中 onDelete 涉及到图片删除的归到imagePasteDrop.js中
+- 完善开发依赖项
+- 修改选中link时tooltip的实现，修复当光标在link最起始处tooltip无法正常展示的bug
+- 去掉Title
+- 修改样式
+- bugfix：当content变为空时，不能及时渲染出来，还保留上次内容的bug
 ### 1.4.1
 - 1.4.0样式问题修复
 ### 1.4.0

@@ -19,16 +19,23 @@ export class ImageDrop {
     this.quill = quill;
     this.options = options;
     this.imageHandler = options.imageHandler; // 添加图片上传方法
+    this.uploadedImgsList = options.uploadedImgsList;
     if (this.uploadTimer) clearTimeout(this.uploadTimer);
     this.quill.on('text-change', (delta, oldDelta, source) => {
-      if (this.imageHandler.imgUploadApi) {
+      if (this.imageHandler && this.imageHandler.imgUploadApi) {
         this.uploadTimer = setTimeout(() => {
           const imgs = quill.container.querySelectorAll(
             'img[src^="data:"]:not(.uploading):not(.upload-fail)',
           );
-          console.log(7777, imgs);
           imgs.forEach((img) => this.uploadBase64Img(img));
         }, 1);
+      }
+
+      // 当删除图片，该图片的失败tooltip应该删除，此tooltip是在ImageDrop Module中添加
+      for (let i = 0; i < delta.ops.length; i++) {
+        if (delta.ops[i].hasOwnProperty('delete') && source === 'user') {
+          this.onDelete(); // TODO还没有判断删除的是图片，测试条件应该是上传但是断网的情况
+        }
       }
     });
     this.b64ToUrl = this.b64ToUrl.bind(this);
@@ -36,7 +43,6 @@ export class ImageDrop {
   }
 
   uploadBase64Img(img) {
-    console.log(8888, img);
     const base64Str = img.getAttribute('src');
     if ((typeof base64Str === 'string' && base64Str.length > this.options.urlLength) || 100) {
       // 在图片上增加浮层，使用伪元素失败，在图片上建立位置一样元素div，div增加样式或者别的dom更有操作性
@@ -63,6 +69,7 @@ export class ImageDrop {
         .then((url) => {
           img.setAttribute('src', url);
           parent.removeChild(statusDiv);
+          this.uploadedImgsList.push(url);
           if (uploadSuccCB) uploadSuccCB(url);
         })
         .catch((error) => {
@@ -160,6 +167,21 @@ export class ImageDrop {
           this.quill.root.parentNode.querySelector(`div.i-${id}`),
         );
       }
+    }
+  }
+
+  onDelete() {
+    const imgTooltip = this.quill.root.parentNode.querySelectorAll('div.upload-fail');
+    if (imgTooltip.length > 0) {
+      const base64Img = this.quill.container.querySelectorAll('img[src^="data:"]');
+      let classList = [];
+      base64Img.forEach((img) => {
+        classList = classList.concat(img.className.split(' '));
+      });
+      imgTooltip.forEach((tooltip) => {
+        const match = tooltip.className.split(' ').filter((css) => /i-\w/.test(css));
+        if (!classList.includes(match[0])) this.quill.root.parentNode.removeChild(tooltip);
+      });
     }
   }
 }

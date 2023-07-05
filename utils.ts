@@ -19,7 +19,7 @@ export function saveLink(quill: Quill & { theme?: Record<string, any> }, startIn
   const url = (document.getElementById('link-url') as HTMLInputElement).value;
   if (url && isUrl(url)) {
     const words = (document.getElementById('link-words') as HTMLInputElement).value || url;
-    quill.insertText(startIndex, words, 'link', normalizeUrl(url), 'user');
+    quill.insertText(startIndex, words, 'link', normalizeUrl(url, { stripWWW: false }), 'user');
     if (quill.theme) quill.theme.tooltip.hide();
   } else {
     (document.getElementById('link-url') as HTMLInputElement).focus();

@@ -110,7 +110,7 @@ export function linkHandler(value) {
       if (isEmail(text) && text.indexOf('mailto:') !== 0) {
         href = `mailto:${text}`;
       } else if (isUrl(text)) {
-        href = normalizeUrl(text);
+        href = normalizeUrl(text, { stripWWW: false });
       }
       document.getElementById('link-url').value = href;
       document.querySelector('a.ql-action').onclick = () => {

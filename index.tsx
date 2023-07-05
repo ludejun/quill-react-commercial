@@ -73,14 +73,6 @@ interface IModules {
   markdown?: boolean;
   link?: boolean | {};
 }
-type Title = {
-  placeholder?: string;
-  onChange?: (title: string) => void;
-  defaultValue?: string;
-  value?: string;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-};
 interface IEditorProps {
   placeholder?: string;
   readOnly?: boolean;
@@ -93,17 +85,17 @@ interface IEditorProps {
     toolbarOptions?: [][];
   } & IModules;
   // getQuillDomRef?: (instance: HTMLDivElement | undefined) => void;
-  getQuill?: (quill: Quill) => void;
+  getQuill?: (quill: Quill, uploadedImgsList?: string[]) => void;
   content?: Delta | string;
   onChange?: (delta: Delta, old: Delta) => void;
   onFocus?: (range?: RangeStatic) => void;
   onBlur?: (oldRange?: RangeStatic) => void;
-  title?: boolean | Title;
   // style?: CSSProperties;
 }
 
+const LinkBlot = Quill.import('formats/link');
 const RichTextEditor = (props: IEditorProps) => {
-  const { modules = {}, content, title = false } = props;
+  const { modules = {}, content } = props;
   const quillModules = useRef<
     IModules & {
       'better-table'?: Record<string, unknown>;
@@ -113,13 +105,13 @@ const RichTextEditor = (props: IEditorProps) => {
     }
   >({});
   const toolbarHandlers = useRef<Record<string, unknown>>({});
-  // const quillDomRef = useRef<HTMLDivElement>();
   const quillRef = useRef<
     Quill & {
       theme?: Record<string, any>;
     }
   >();
   const editorId = useRef<string>(new Date().getTime() + (100 * Math.random()).toFixed(0));
+  const uploadedImgsList = useRef<string[]>([]); // 已上传图片，主要给onComplete使用，可以用来判断哪些已上传图片实际并没有被使用
 
   // 处理外部传入的modules
   useEffect(() => {
@@ -217,9 +209,6 @@ const RichTextEditor = (props: IEditorProps) => {
           imageResize === false
             ? imageResize
             : {
-                onUpdate: () => {
-                  console.log('img update');
-                },
                 ...(typeof imageResize === 'object' ? imageResize : null),
               };
       }
@@ -230,6 +219,7 @@ const RichTextEditor = (props: IEditorProps) => {
             ? imageDrop
             : {
                 imageHandler,
+                uploadedImgsList: uploadedImgsList.current,
                 ...(typeof imageDrop === 'object' ? imageDrop : null),
               };
       }
@@ -283,15 +273,7 @@ const RichTextEditor = (props: IEditorProps) => {
   }, [modules]);
 
   useEffect(() => {
-    const {
-      placeholder,
-      // getQuillDomRef,
-      getQuill,
-      readOnly = false,
-      onChange,
-      onFocus,
-      onBlur,
-    } = props;
+    const { placeholder, getQuill, readOnly = false, onChange, onFocus, onBlur } = props;
     if (quillModules.current['better-table']) {
       Quill.register(
         {
@@ -320,14 +302,13 @@ const RichTextEditor = (props: IEditorProps) => {
     };
 
     const toolbarOptions = modules.toolbarOptions || [
-      ['undo', 'redo'],
+      ['undo', 'redo', 'clean'],
       [
         { font: ['system', 'wsYaHei', 'songTi', 'serif', 'arial'] },
         { size: ['12px', false, '18px', '36px'] },
         { header: [false, 1, 2, 3, 4] },
       ],
-      [{ color: [] }, { background: [] }],
-      ['bold', 'italic', 'underline', 'strike'],
+      ['bold', 'italic', 'underline', 'strike', { color: [] }, { background: [] }],
       [
         { list: 'ordered' },
         { list: 'bullet' },
@@ -344,7 +325,6 @@ const RichTextEditor = (props: IEditorProps) => {
         { script: 'sub' },
         { script: 'super' },
         quillModules.current['better-table'] ? 'table' : undefined,
-        'clean',
       ],
     ];
 
@@ -444,27 +424,26 @@ const RichTextEditor = (props: IEditorProps) => {
 
           // 当选中link格式时，弹出tooltip并能修改保存
           if (modules.link !== false && range.length === 0 && source === 'user') {
-            console.log(4444, quillRef.current?.getFormat());
-            const format = quillRef.current?.getFormat();
-            if (
-              format &&
-              format.hasOwnProperty('link') &&
-              quillRef.current &&
-              quillRef.current.theme
-            ) {
-              quillRef.current.theme.tooltip.root.classList.add('ql-editing');
-              (document.getElementById('link-url') as HTMLInputElement).value = format.link;
-              (document.querySelector('a.ql-preview') as HTMLAnchorElement).href = format.link;
-              const [leaf, offset] = quillRef.current?.getLeaf(range.index);
-              console.log(5555, leaf, offset, leaf.text, leaf.length());
-              (document.getElementById('link-words') as HTMLInputElement).value = leaf.text;
+            const [link, offset] = quillRef.current.scroll.descendant(LinkBlot, range.index);
+            // console.log(4444, quillRef.current?.getFormat(), link, offset);
+            if (link !== null) {
+              quillRef.current?.theme?.tooltip.root.classList.add('ql-editing');
+              const [leaf] = quillRef.current?.getLeaf(range.index);
 
-              (document.querySelector('a.ql-action') as HTMLAnchorElement).onclick = () => {
-                if (quillRef.current) {
-                  quillRef.current.deleteText(range.index - offset, leaf.length());
-                  saveLink(quillRef.current, range.index - offset);
-                }
-              };
+              const container = quillRef.current?.root.parentNode;
+              const url = quillRef.current?.getFormat().link;
+              // console.log(6666, leaf.text, container);
+              if (container) {
+                (container?.querySelector('#link-url') as HTMLInputElement).value = url;
+                (container?.querySelector('a.ql-preview') as HTMLAnchorElement).href = url;
+                (container?.querySelector('#link-words') as HTMLInputElement).value = leaf.text;
+                (container?.querySelector('a.ql-action') as HTMLAnchorElement).onclick = () => {
+                  if (quillRef.current) {
+                    quillRef.current.deleteText(range.index - offset, link.length());
+                    saveLink(quillRef.current, range.index - offset);
+                  }
+                };
+              }
             }
           }
 
@@ -506,7 +485,7 @@ const RichTextEditor = (props: IEditorProps) => {
     content && setContent(content, quillRef.current); // 设置初始内容
 
     // getQuillDomRef && getQuillDomRef(quillDomRef.current);
-    getQuill && getQuill(quillRef.current);
+    getQuill && getQuill(quillRef.current, uploadedImgsList.current);
 
     if (onChange) {
       quillRef.current.on('text-change', (delta: Delta, old: Delta, source: Sources) => {
@@ -524,47 +503,15 @@ const RichTextEditor = (props: IEditorProps) => {
         },
       );
     }
-
-    if (title) {
-      document
-        .getElementById(`editor${editorId.current}`)
-        ?.parentNode?.insertBefore(
-          document.querySelector(`#editor${editorId.current} + input`) as Element,
-          document.getElementById(`editor${editorId.current}`),
-        );
-    }
   }, []);
 
   useEffect(() => {
-    content && quillRef.current && setContent(content, quillRef.current);
+    quillRef.current && setContent(content, quillRef.current);
   }, [content]);
-
-  const renderTitle = () => {
-    if (title) {
-      const config = title === true ? ({} as Title) : title;
-      return (
-        <input
-          type="text"
-          placeholder={config.placeholder}
-          className="title-input"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            config.onChange && config.onChange(e.target.value)
-          }
-          defaultValue={config.defaultValue}
-          value={config.value}
-          onFocus={config.onFocus}
-          onBlur={config.onBlur}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
 
   return (
     <div className="content-container">
       <div id={`editor${editorId.current}`} />
-      {renderTitle()}
     </div>
   );
 };

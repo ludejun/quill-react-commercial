@@ -1,8 +1,8 @@
 import Quill from 'quill'
 import { css } from '../utils'
 
-const COL_TOOL_HEIGHT = 12
-const COL_TOOL_CELL_HEIGHT = 12
+const COL_TOOL_HEIGHT = 10
+const COL_TOOL_CELL_HEIGHT = 10
 const ROW_TOOL_WIDTH = 12
 const CELL_MIN_WIDTH = 50
 const PRIMARY_COLOR = '#35A7ED'

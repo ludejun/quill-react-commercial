@@ -1,3 +1,5 @@
+// 1.4.0: 图片的位置状态保存及复现（Delta中保存位置）
+// 参考：https://github.com/kensnyder/quill-image-resize-module/issues/10
 import Quill from 'quill';
 const Parchment = Quill.import('parchment');
 const BaseImage = Quill.import('formats/image');

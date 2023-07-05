@@ -1,9 +1,9 @@
 .ql-container {
-  /* font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", SimSun, sans-serif; */
   font-size: 14px;
   overflow: hidden;
   .ql-editor {
     line-height: 1.8;
+    padding-top: 18px;
   }
   .ql-editor ol {
     padding-left: 0.3em;
@@ -17,7 +17,11 @@
   }
 }
 .ql-container.ql-snow {
+  border: 1px solid #e7e7e7;
   border-top: 0;
+}
+.ql-toolbar.ql-snow {
+  border: 1px solid #e7e7e7;
 }
 
 /* Set dropdown font-families */
@@ -47,7 +51,7 @@
 }
 .ql-toolbar .ql-font .ql-picker-label[data-value='system']::before,
 .ql-toolbar .ql-font .ql-picker-item[data-value='system']::before {
-  content: '系统默认' !important;
+  content: '系统字体' !important;
 }
 
 /* Set content font-families */
@@ -63,14 +67,17 @@
 .ql-font-arial {
   font-family: arial;
 }
+
 .ql-snow .ql-picker.ql-size {
   width: 60px;
 }
-
-// Header的显示
+.ql-snow .ql-picker.ql-font {
+  width: 84px;
+}
 .ql-snow .ql-picker.ql-header {
   width: 60px;
 }
+// Header的显示
 .ql-snow .ql-picker.ql-header .ql-picker-item::before,
 .ql-snow .ql-picker.ql-header .ql-picker-label::before {
   content: '正文';
@@ -91,17 +98,11 @@
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value='4']::before {
   content: 'H4';
 }
-// title input
-.title-input {
-  outline: none;
-  background: none;
-  border: none;
-  font-size: 18px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 8px 15px;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+// 区块分割
+.ql-toolbar .ql-formats:not(:last-child) {
+  border-right: 1px solid #e7e7e7;
+  padding-right: 6px;
+  margin-right: 6px;
 }
 
 /* 图片resize框 */
@@ -125,6 +126,7 @@
   z-index: 100;
 }
 
+// 代码块UI
 .ql-code-block-container .ql-ui {
   color: #999;
 }

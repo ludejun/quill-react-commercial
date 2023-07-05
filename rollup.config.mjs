@@ -42,7 +42,7 @@ export default {
     }),
     postcss(),
     // image(), // 将所有图片打包成base64
-    strip(), // Remove debugger statements and functions like assert.equal and console.log from your code 生产环境打开
+    // strip(), // Remove debugger statements and functions like assert.equal and console.log from your code 生产环境打开
     // url(), // 将所有图片打包成js文件
     svg(), // 将svg作为inline打包，dom中直接嵌入svg dom，非base64，采用image/url打成base64有部分图片展示不出来，还需要套img src标签
   ],
