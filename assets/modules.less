@@ -1,74 +1,86 @@
+@import './theme.less';
+// icon tooltip
+.quill-icon-tooltip {
+  position: absolute;
+  z-index: 100;
+  border-radius: 6px;
+  background-color: @tooltip-color;
+  color: #fff;
+  padding: 6px 8px;
+  font-size: 14px;
+  width: max-content;
+}
 // link的输入框
 .ql-snow .ql-tooltip[data-mode='link']::before {
-  content: '' !important;
+  content: '';
   margin-right: 0;
 }
 .ql-snow .ql-tooltip::before {
-  content: '' !important;
-  margin-right: 0 !important;
+  content: '';
+  margin-right: 0;
+}
+.ql-container .ql-tooltip {
+  input.text-input {
+    width: 280px;
+  }
+  .ql-link-save {
+    color: @primary-color;
+    margin-left: 10px;
+  }
+  .ql-link-jump,
+  .ql-link-clear {
+    margin-left: 10px;
+    line-height: 0;
+  }
+  .err-tips {
+    margin-left: 40px;
+  }
 }
 
-.ql-snow .ql-tooltip.ql-editing a.ql-action::after {
-  content: '保存' !important;
+// imageDropPaste 图片上传
+.ql-container {
+  .img-container {
+    position: relative;
+  }
+  .img-container::after {
+    content: attr(data-after);
+    position: absolute;
+    z-index: 11;
+    left: 5px;
+    top: 5px;
+    border-radius: 4px;
+    background: rgba(240, 240, 240, 0.6);
+    color: @primary-color;
+    cursor: pointer;
+  }
+  .img-container.float-right::after {
+    left: unset;
+    right: 5px;
+  }
+  .img-container.img-center::after {
+    left: calc(50% - 100px);
+    right: unset;
+  }
 }
-
-// table的dialog
-.ql-toolbar {
-  position: relative;
-}
-#quill-table-dialog {
+/* 图片resize框 */
+.resize-box {
+  height: 8px;
+  width: 8px;
+  background-color: #000;
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  cursor: nwse-resize;
+}
+.resize-left-top {
+  left: -4px;
+  top: -4px;
+}
+.resize-right-bottom {
+  bottom: -4px;
+  right: -4px;
+}
 
-  .table-dialog-content {
-    width: 99px;
-    padding: 1px;
-  }
-  .table-dialog-tr {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-  }
-  .table-dialog-item {
-    width: 16px;
-    height: 16px;
-    border: 1px solid #ccc;
-    margin: 2px;
-  }
-  .item-hover {
-    background-color: #ccc;
-  }
-  p {
-    margin: 0;
-    border-top: 1px solid #ccc;
-    padding: 3px;
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-  }
-  input,
-  button {
-    width: 28px;
-    background: none;
-    outline: none;
-    border: 1px solid #ccc;
-    padding: 0;
-    height: 16px;
-    line-height: 16px;
-    font-size: 12px;
-  }
-  button {
-    margin-left: 2px;
-  }
-  input:focus,
-  button:focus {
-    border: 1px solid #ccc;
-  }
+.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+  z-index: 100;
 }
 
 // 富文本container中的table
@@ -81,7 +93,7 @@
       content: '';
       width: 5px;
       height: 5px;
-      background-color: #0589f3;
+      background-color: @primary-color;
       border-radius: 5px;
     }
   }
@@ -94,7 +106,7 @@
       content: '';
       width: 5px;
       height: 5px;
-      background-color: #0589f3;
+      background-color: @primary-color;
       border-radius: 5px;
     }
   }
@@ -123,14 +135,14 @@ table.quill-better-table {
 
 .qlbt-operation-menu {
   background-color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   font-size: 14px;
   z-index: 100;
   overflow: hidden;
 
   .qlbt-operation-menu-dividing {
     height: 1px;
-    background-color: #efefef;
+    background-color: @editor-border;
   }
 
   .qlbt-operation-menu-subtitle {
@@ -173,8 +185,8 @@ table.quill-better-table {
 
     .qlbt-operation-menu-icon {
       margin-right: 8px;
-      height: 20px;
-      width: 20px;
+      height: 18px;
+      width: 18px;
       font-size: 0;
     }
   }
@@ -215,7 +227,7 @@ table.quill-better-table {
     }
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: -6px;
@@ -225,7 +237,7 @@ table.quill-better-table {
     }
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       right: -6px;
@@ -246,30 +258,59 @@ table.quill-better-table {
   }
 }
 
-// 编辑器中图片
-.ql-container {
-  .img-status {
-    display: none;
+// 代码块UI
+.ql-snow .ql-editor .ql-code-block-container {
+  background-color: @code-color;
+  color: rgb(43, 47, 54);
+  padding: 4px 8px;
+
+  .ql-ui {
+    position: relative;
+    color: rgb(100, 106, 115);
+    // opacity: 0;
+    transition: all 150ms ease-in;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2px;
+    right: 0;
+    top: 0;
+
+    select {
+      outline: none;
+      border: 0;
+      background: transparent;
+      text-align: center;
+      color: rgb(100, 106, 115);
+      &:focus-visible{
+        outline: 0;
+      }
+    }
+    .ql-code-copy {
+      display: flex;
+      align-items: center;
+      padding: 0 3px;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(31,35,41,0.1);
+      }
+    }
+  }
+  .ql-code-block {
+    counter-increment: codeIndex;
+    margin-left: 38px;
+  }
+  .ql-code-block::before {
+    content: counter(codeIndex);
     position: absolute;
+    left: 0;
+    text-align: right;
+    width: 36px;
+    color: rgb(100, 106, 115);
+    word-break: break-word;
+    -webkit-user-select: none!important;
+    white-space: nowrap;
   }
-  div.upload-fail {
-    opacity: 0.5;
-    background-color: #fff;
-  }
-  div.uploading .fail {
-    display: none;
-  }
-  div.uploading .uploading {
-    display: block;
-  }
-  div.upload-fail .uploading {
-    display: none;
-  }
-  div.upload-fail .fail {
-    display: block;
-  }
-  div.upload-fail {
-    color: red;
-  }
-  
+
 }

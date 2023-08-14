@@ -1,5 +1,3 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable max-classes-per-file */
 /*
 调整图片大小
 主要参考quill-image-resize-module，但是原包依赖quill版本较低，会导致包体积大（还有lodash）；另外必须window上有Quill，在建构工具中添加变量会导致和syntax的highlight冲突
@@ -8,14 +6,18 @@ import Quill from 'quill';
 import IconAlignLeft from 'quill/assets/icons/align-left.svg';
 import IconAlignCenter from 'quill/assets/icons/align-center.svg';
 import IconAlignRight from 'quill/assets/icons/align-right.svg';
-import { isMobile } from '../utils';
+import Delete from '../assets/icons/delete.svg';
+import Words from '../assets/icons/words.svg';
+import { isMobile, throttle } from '../utils';
+import { getI18nText } from '../i18n';
+import { genIconDom } from './iconTitle/iconsConfig';
 
 const DefaultOptions = {
   modules: ['DisplaySize', 'Toolbar', 'Resize'],
   overlayStyles: {
     position: 'absolute',
-    boxSizing: 'border-box',
-    border: '1px dashed #444'
+    zIndex: 10,
+    border: '1px dashed #dbc8ff',
   },
   handleStyles: {
     position: 'absolute',
@@ -23,47 +25,45 @@ const DefaultOptions = {
     width: '12px',
     backgroundColor: 'white',
     border: '1px solid #777',
-    boxSizing: 'border-box',
-    opacity: '0.80'
+    opacity: '0.60',
   },
   displayStyles: {
     position: 'absolute',
-    // font: '12px/1.0 Arial, Helvetica, sans-serif',
     padding: '4px 8px',
     textAlign: 'center',
     backgroundColor: 'white',
     color: '#333',
-    border: '1px solid #777',
-    boxSizing: 'border-box',
-    opacity: '0.80',
-    cursor: 'default'
+    border: '1px solid #e7e7e7',
+    opacity: '0.70',
+    cursor: 'default',
   },
   toolbarStyles: {
     position: 'absolute',
     top: '-12px',
-    right: '0',
-    left: '0',
-    height: '0',
-    minWidth: '100px',
-    // font: '12px/1.0 Arial, Helvetica, sans-serif',
+    left: 'calc(50% - 36px)',
     textAlign: 'center',
     color: '#333',
-    boxSizing: 'border-box',
-    cursor: 'default'
+    width: '72px',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
   },
   toolbarButtonStyles: {
-    display: 'inline-block',
+    display: 'flex',
     width: '24px',
     height: '24px',
     background: 'white',
-    border: '1px solid #999',
-    verticalAlign: 'middle'
+    border: '1px solid #e7e7e7',
+    cursor: 'pointer',
+    zIndex: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   toolbarButtonSvgStyles: {
-    fill: '#444',
-    stroke: '#444',
-    strokeWidth: '2'
-  }
+    // fill: '#6918b4',
+    // stroke: '#6918b4',
+    // strokeWidth: '1',
+  },
 };
 
 class BaseModule {
@@ -130,7 +130,7 @@ class DisplaySize extends BaseModule {
       Object.assign(this.display.style, {
         right: '4px',
         bottom: '4px',
-        left: 'auto'
+        left: 'auto',
       });
     } else if (this.img.style.float === 'right') {
       // position off bottom left
@@ -138,7 +138,7 @@ class DisplaySize extends BaseModule {
       Object.assign(this.display.style, {
         right: 'auto',
         bottom: `-${dispRect.height + 4}px`,
-        left: `-${dispRect.width + 4}px`
+        left: `-${dispRect.width + 4}px`,
       });
     } else {
       // position off bottom right
@@ -146,14 +146,14 @@ class DisplaySize extends BaseModule {
       Object.assign(this.display.style, {
         right: `-${dispRect.width + 4}px`,
         bottom: `-${dispRect.height + 4}px`,
-        left: 'auto'
+        left: 'auto',
       });
     }
   };
 
   getCurrentSize = () => [
     this.img.width,
-    Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight)
+    Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight),
   ];
 }
 
@@ -187,13 +187,13 @@ class Resize extends BaseModule {
       { left: handleXOffset, top: handleYOffset }, // top left
       { right: handleXOffset, top: handleYOffset }, // top right
       { right: handleXOffset, bottom: handleYOffset }, // bottom right
-      { left: handleXOffset, bottom: handleYOffset } // bottom left
+      { left: handleXOffset, bottom: handleYOffset }, // bottom left
     ].forEach((pos, idx) => {
       Object.assign(this.boxes[idx].style, pos);
     });
   };
 
-  addBox = cursor => {
+  addBox = (cursor) => {
     // create div element for resize handle
     const box = document.createElement('div');
 
@@ -217,7 +217,7 @@ class Resize extends BaseModule {
     this.boxes.push(box);
   };
 
-  handleMousedown = evt => {
+  handleMousedown = (evt) => {
     // note which box
     this.dragBox = evt.target;
     // note starting mousedown position
@@ -253,7 +253,7 @@ class Resize extends BaseModule {
     }
   };
 
-  handleDrag = evt => {
+  handleDrag = (evt) => {
     if (!this.img) {
       // image not set yet
       return;
@@ -276,8 +276,8 @@ class Resize extends BaseModule {
     this.requestUpdate();
   };
 
-  setCursor = value => {
-    [document.body, this.img].forEach(el => {
+  setCursor = (value) => {
+    [document.body, this.img].forEach((el) => {
       el.style.cursor = value; // eslint-disable-line no-param-reassign
     });
   };
@@ -289,6 +289,12 @@ const MarginStyle = new Parchment.StyleAttributor('margin', 'margin');
 const DisplayStyle = new Parchment.StyleAttributor('display', 'display');
 
 class Toolbar extends BaseModule {
+  constructor(props) {
+    super(props);
+    this.quill = props.quill;
+    this.hide = props.hide;
+    this.options = props.options;
+  }
   onCreate = () => {
     // Setup Toolbar
     this.toolbar = document.createElement('div');
@@ -307,6 +313,7 @@ class Toolbar extends BaseModule {
   onUpdate() {}
 
   _defineAlignments = () => {
+    const index = this.quill.getIndex(Quill.find(this.img)); // the index of image
     this.alignments = [
       {
         icon: IconAlignLeft,
@@ -314,6 +321,8 @@ class Toolbar extends BaseModule {
           DisplayStyle.add(this.img, 'inline');
           FloatStyle.add(this.img, 'left');
           MarginStyle.add(this.img, '0 1em 1em 0');
+          this.quill.formatLine(index + 2, 1, 'align', false); // 左对齐在 Quill 其实是不设置 align，设置 align=left 反而有问题
+          // this.img.parentNode.classList.add('')
         },
         isApplied: () => FloatStyle.value(this.img) === 'left',
       },
@@ -323,6 +332,8 @@ class Toolbar extends BaseModule {
           DisplayStyle.add(this.img, 'block');
           FloatStyle.remove(this.img);
           MarginStyle.add(this.img, 'auto');
+          this.quill.formatLine(index + 2, 1, 'align', 'center');
+          this.img.parentNode.classList.add('img-center');
         },
         isApplied: () => MarginStyle.value(this.img) === 'auto',
       },
@@ -332,22 +343,51 @@ class Toolbar extends BaseModule {
           DisplayStyle.add(this.img, 'inline');
           FloatStyle.add(this.img, 'right');
           MarginStyle.add(this.img, '0 0 1em 1em');
+          this.quill.formatLine(index + 2, 1, 'align', 'right');
+          this.img.parentNode.classList.add('float-right');
         },
         isApplied: () => FloatStyle.value(this.img) === 'right',
+      },
+      {
+        icon: Words,
+        apply: () => {
+          let align;
+          if (MarginStyle.value(this.img) === 'auto') {
+            align = 'center';
+          } else if (FloatStyle.value(this.img)) {
+            align = FloatStyle.value(this.img);
+          }
+          const imgRemarkPre =
+            this.options.imgRemarkPre || getI18nText('imgRemarkPre', this.options.i18n);
+          this.quill.insertText(index + 1, `\n${imgRemarkPre}`, { color: '#999999', size: '12px' });
+          this.quill.insertText(index + 2 + imgRemarkPre.length, '\n', { align });
+          this.quill.setSelection(index + 2 + imgRemarkPre.length, Quill.sources.SILENT);
+          this.img.setAttribute('data-remark', '1');
+        },
+        isApplied: () => this.img.getAttribute('data-remark') === '1',
+      },
+      {
+        icon: Delete,
+        apply: () => {
+          Quill.find(this.img).deleteAt(0);
+          this.hide();
+        },
+        isApplied: () => false,
       },
     ];
   };
 
   _addToolbarButtons = () => {
     const buttons = [];
+    const words = getI18nText(['alignLeft', 'alignCenter', 'alignRight', 'imgRemarkLabel', 'deleteImg'], this.options.i18n)
     this.alignments.forEach((alignment, idx) => {
       const button = document.createElement('span');
       buttons.push(button);
-      button.innerHTML = alignment.icon;
+      button.innerHTML = genIconDom(alignment.icon, words[idx]);
       button.addEventListener('click', () => {
         // deselect all buttons
-        buttons.forEach(bt => {
-          bt.style.filter = '';
+        buttons.forEach((bt, index) => {
+          if (index !== 3) bt.style.filter = ''; // 第 4 位是备注，可以和其他共存
         });
         if (alignment.isApplied()) {
           // If applied, unapply
@@ -425,10 +465,10 @@ class ImageResize {
     this.removeModules();
 
     this.modules = this.moduleClasses.map(
-      ModuleClass => new (knownModules[ModuleClass] || ModuleClass)(this)
+      (ModuleClass) => new (knownModules[ModuleClass] || ModuleClass)(this),
     );
 
-    this.modules.forEach(module => {
+    this.modules.forEach((module) => {
       module.onCreate();
     });
 
@@ -437,20 +477,20 @@ class ImageResize {
 
   onUpdate = () => {
     this.repositionElements();
-    this.modules.forEach(module => {
+    this.modules.forEach((module) => {
       module.onUpdate();
     });
   };
 
   removeModules = () => {
-    this.modules.forEach(module => {
+    this.modules.forEach((module) => {
       module.onDestroy();
     });
 
     this.modules = [];
   };
 
-  handleClick = evt => {
+  handleClick = (evt) => {
     if (evt.target && evt.target.tagName && evt.target.tagName.toUpperCase() === 'IMG') {
       if (this.img === evt.target) {
         // we are already focused on this image
@@ -468,7 +508,7 @@ class ImageResize {
     }
   };
 
-  show = img => {
+  show = (img) => {
     // keep track of this img element
     this.img = img;
 
@@ -496,6 +536,12 @@ class ImageResize {
     Object.assign(this.overlay.style, this.options.overlayStyles);
 
     this.quill.root.parentNode.appendChild(this.overlay);
+    // 编辑器滚动隐藏 overlay
+    this.quill.root.addEventListener('scroll', throttle(() => {
+      if (this.img && this.overlay) {
+        this.hide();
+      }
+    }))
 
     this.repositionElements();
   };
@@ -531,7 +577,7 @@ class ImageResize {
       left: `${imgRect.left - containerRect.left - 1 + parent.scrollLeft}px`,
       top: `${imgRect.top - containerRect.top + parent.scrollTop}px`,
       width: `${imgRect.width}px`,
-      height: `${imgRect.height}px`
+      height: `${imgRect.height}px`,
     });
   };
 
@@ -541,18 +587,18 @@ class ImageResize {
     this.img = undefined;
   };
 
-  setUserSelect = value => {
-    ['userSelect', 'mozUserSelect', 'webkitUserSelect', 'msUserSelect'].forEach(prop => {
+  setUserSelect = (value) => {
+    ['userSelect', 'mozUserSelect', 'webkitUserSelect', 'msUserSelect'].forEach((prop) => {
       // set on contenteditable element and <html>
       this.quill.root.style[prop] = value;
       document.documentElement.style[prop] = value;
     });
   };
 
-  checkImage = evt => {
+  checkImage = (evt) => {
     if (this.img) {
       if (evt.keyCode === 46 || evt.keyCode === 8) {
-        this.quill.find(this.img).deleteAt(0);
+        Quill.find(this.img).deleteAt(0); // find为静态方法，原来这里有 bug 未生效
       }
       this.hide();
     }

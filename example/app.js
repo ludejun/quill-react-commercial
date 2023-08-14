@@ -6,27 +6,27 @@ const App = () => {
     quill.current = quillIns;
   };
   const quillChange = (delta, old, source) => {
-    console.log('quill-change:', delta, old, source);
+    // console.log('quill-change:', delta, old, source);
     setDelta(JSON.stringify(quill.current.getContents()));
   };
-  console.log(window, window.quillReactCommercial);
   const RichTextEditor = window.quillReactCommercial;
 
   return (
     <div className="App">
       <RichTextEditor
+        // i18n={'zh'}
         readOnly={false}
         modules={{
           table: {},
           codeHighlight: true,
-          // imageHandler: {
-          //   imgUploadApi: (formData) =>
-          //     // console.log(apiURL('uploadImg'))
-          //     request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(
-          //       (response) => response.url,
-          //     ),
-          //   uploadFailCB: () => console.error('图片上传失败'),
-          // },
+          imageHandler: {
+            imgUploadApi: (formData) =>
+              // console.log(apiURL('uploadImg'))
+              request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(
+                (response) => response.url,
+              ),
+            uploadFailCB: () => console.error('图片上传失败'),
+          },
         }}
         getQuill={getQuill}
         content={
@@ -35,7 +35,6 @@ const App = () => {
         }
         onChange={quillChange}
         onFocus={(arg) => {}}
-        style={{ background: '#eee', height: 600 }}
       />
       <div style={{ height: 200 }}>{delta}</div>
     </div>

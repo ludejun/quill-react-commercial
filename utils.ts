@@ -1,4 +1,3 @@
-import normalizeUrl from 'normalize-url';
 import Quill from 'quill';
 import Delta from 'quill-delta';
 
@@ -12,18 +11,6 @@ export function isUrl(url: string) {
 // 匹配邮箱地址
 export function isEmail(url: string) {
   return /^\S+@\S+\.\S+$/.test(url);
-}
-
-// 超链接tooltip的保存操作
-export function saveLink(quill: Quill & { theme?: Record<string, any> }, startIndex: number) {
-  const url = (document.getElementById('link-url') as HTMLInputElement).value;
-  if (url && isUrl(url)) {
-    const words = (document.getElementById('link-words') as HTMLInputElement).value || url;
-    quill.insertText(startIndex, words, 'link', normalizeUrl(url, { stripWWW: false }), 'user');
-    if (quill.theme) quill.theme.tooltip.hide();
-  } else {
-    (document.getElementById('link-url') as HTMLInputElement).focus();
-  }
 }
 
 // 是否移动端H5
@@ -78,3 +65,20 @@ export const optionDisableToggle = (quill: Quill, blockList: string[], disable: 
     });
   });
 };
+
+export const throttle = (fn: () => void, delay = 200) => {
+  let timer: number | null | undefined = null;
+  return () => {
+    if (timer) return;
+    timer = setTimeout(() => {
+      fn();
+      timer = null;
+    }, delay);
+  }
+}
+
+export function htmlDecode(str: string) {
+  var div = document.createElement('div');
+  div.innerHTML = str;
+  return div.innerText;
+}

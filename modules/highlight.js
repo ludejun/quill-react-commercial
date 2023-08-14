@@ -20,7 +20,7 @@ import scala from 'highlight.js/lib/languages/scala';
 import matlab from 'highlight.js/lib/languages/matlab';
 import swift from 'highlight.js/lib/languages/swift';
 import dart from 'highlight.js/lib/languages/dart';
-import 'highlight.js/styles/vs2015.css';
+import 'highlight.js/styles/xcode.css';
 
 const highlightInit = () => {
   highlight.registerLanguage('javascript', javascript);

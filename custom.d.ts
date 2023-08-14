@@ -11,3 +11,5 @@ declare module '*.jpg' {
   const content: string;
   export default content;
 }
+
+declare function showTitle(target: HTMLElement, title: string): void;

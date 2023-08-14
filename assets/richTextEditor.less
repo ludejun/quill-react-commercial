@@ -1,34 +1,92 @@
-.ql-container {
-  font-size: 14px;
-  overflow: hidden;
-  .ql-editor {
-    line-height: 1.8;
-    padding-top: 18px;
+@import './theme.less';
+// 整体
+.ql-editor-container {
+  font-family: system-ui, -apple-system;
+  .ql-container {
+    border: 1px solid @editor-border;
+    border-top: 0;
+    font-size: 14px;
+    overflow: hidden;
+    .ql-editor {
+      line-height: 1.8;
+      padding-top: 18px;
+      &:before {
+
+      }
+      &:empty:before {
+        content: attr(data-placeholder);
+        color: red;
+      }
+
+      ol {
+        padding-left: 0.3em;
+      }
+      li {
+        padding-left: 1.2em;
+      }
+      a {
+        color: @link-color;
+      }
+    }
   }
-  .ql-editor ol {
-    padding-left: 0.3em;
+
+  input.text-input[type='text'] {
+    border: 1px solid @sub-color;
+    height: 32px;
+    border-radius: 4px;
+    background-color: unset;
+    padding: 6px 12px;
+    line-height: 18px;
   }
-  .ql-editor li {
-    padding-left: 1.2em;
+  input.text-input[type='text']:active,
+  input.text-input[type='text']:focus {
+    border-color: @primary-color;
+    outline: 0;
   }
-  .ql-tooltip.ql-editing a.ql-preview {
-    display: inline-block;
-    margin-left: 16px;
+  .ql-toolbar.ql-snow {
+    border: 1px solid @editor-border;
+    // button:hover, .ql-picker-item:hover, .ql-picker-label:hover {
+    //   .ql-fill {
+    //     fill: @primary-color;
+    //   }
+    //   .ql-stroke {
+    //     fill: none;
+    //     stroke: @primary-color;
+    //   }
+    // }
+    .ql-picker-label {
+      padding-left: 4px;
+    }
   }
-}
-.ql-container.ql-snow {
-  border: 1px solid #e7e7e7;
-  border-top: 0;
-}
-.ql-toolbar.ql-snow {
-  border: 1px solid #e7e7e7;
+  .flex {
+    display: flex;
+  }
+  .flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+  .flex-center {
+    justify-content: center;
+    align-items: center;
+  }
+  .err-tips {
+    color: @err-color;
+    margin: 0;
+  }
+  .ql-icon {
+    display: inline-flex;
+    align-items: center;
+    text-align: center;
+    vertical-align: -0.125em;
+  }
+  .ql-icon:hover {
+    .ql-fill {
+      fill: @primary-color;
+    }
+  }
 }
 
-/* Set dropdown font-families */
-.ql-toolbar .ql-font .ql-picker-label::before,
-.ql-toolbar .ql-font .ql-picker-item::before {
-  content: attr(data-value) !important;
-}
+// 字体大小
 .ql-toolbar .ql-size .ql-picker-label::before,
 .ql-toolbar .ql-size .ql-picker-item::before {
   content: '14px' !important;
@@ -37,21 +95,22 @@
 .ql-toolbar .ql-size .ql-picker-item[data-value]::before {
   content: attr(data-value) !important;
 }
-.ql-toolbar .ql-font .ql-picker-label[data-value='wsYaHei']::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value='wsYaHei']::before {
-  content: '微软雅黑' !important;
+// Header的显示
+.ql-snow .ql-picker.ql-header .ql-picker-label[data-value]::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value]::before {
+  content: 'H' attr(data-value) !important;
 }
-.ql-toolbar .ql-font .ql-picker-label[data-value='songTi']::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value='songTi']::before {
-  content: '宋体' !important;
+
+// 字体、header 的中英文显示
+.ql-toolbar .ql-picker.ql-font .ql-picker-label::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-item::before,
+.ql-snow .ql-picker.ql-header .ql-picker-item::before,
+.ql-snow .ql-picker.ql-header .ql-picker-label::before {
+  content: attr(data-before);
 }
-.ql-toolbar .ql-font .ql-picker-label[data-value='kaiTi']::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value='kaiTi']::before {
-  content: '楷体' !important;
-}
-.ql-toolbar .ql-font .ql-picker-label[data-value='system']::before,
-.ql-toolbar .ql-font .ql-picker-item[data-value='system']::before {
-  content: '系统字体' !important;
+.ql-toolbar .ql-picker.ql-font .ql-picker-label[data-value]:not([data-before])::before,
+.ql-toolbar .ql-picker.ql-font .ql-picker-item[data-value]:not([data-before])::before {
+  content: attr(data-value);
 }
 
 /* Set content font-families */
@@ -69,66 +128,23 @@
 }
 
 .ql-snow .ql-picker.ql-size {
-  width: 60px;
+  width: 58px;
 }
 .ql-snow .ql-picker.ql-font {
-  width: 84px;
+  width: 108px;
 }
 .ql-snow .ql-picker.ql-header {
   width: 60px;
 }
-// Header的显示
-.ql-snow .ql-picker.ql-header .ql-picker-item::before,
-.ql-snow .ql-picker.ql-header .ql-picker-label::before {
-  content: '正文';
-}
-.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='1']::before,
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='1']::before {
-  content: 'H1';
-}
-.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='2']::before,
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='2']::before {
-  content: 'H2';
-}
-.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='3']::before,
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='3']::before {
-  content: 'H3';
-}
-.ql-snow .ql-picker.ql-header .ql-picker-label[data-value='4']::before,
-.ql-snow .ql-picker.ql-header .ql-picker-item[data-value='4']::before {
-  content: 'H4';
-}
+
 // 区块分割
-.ql-toolbar .ql-formats:not(:last-child) {
-  border-right: 1px solid #e7e7e7;
-  padding-right: 6px;
-  margin-right: 6px;
+.ql-toolbar .ql-formats:not(:last-of-type) {
+  border-right: 1px solid @editor-border;
+  padding-right: 4px;
+  margin-right: 4px;
 }
-
-/* 图片resize框 */
-.resize-box {
-  height: 8px;
-  width: 8px;
-  background-color: #000;
-  position: absolute;
-  cursor: nwse-resize;
-}
-.resize-left-top {
-  left: -4px;
-  top: -4px;
-}
-.resize-right-bottom {
-  bottom: -4px;
-  right: -4px;
-}
-
-.ql-snow .ql-picker.ql-expanded .ql-picker-options {
-  z-index: 100;
-}
-
-// 代码块UI
-.ql-code-block-container .ql-ui {
-  color: #999;
+.ql-toolbar .ql-formats:last-of-type {
+  margin-right: 4px;
 }
 
 // option的disable状态
@@ -138,54 +154,5 @@
   cursor: not-allowed;
   .ql-picker-label {
     cursor: not-allowed;
-  }
-}
-// image upload modal
-.image-tooltip {
-  position: absolute;
-  border: 1px solid #ccc;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  background: #fff;
-  width: 300px;
-  input.ql-image {
-    display: none;
-  }
-  .image-upload-btn {
-    height: 24px;
-    line-height: 24px;
-    background: #ccc;
-    width: 100px;
-    padding: 0 6px;
-    cursor: pointer;
-  }
-  .image-url-form {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    input {
-      border: 0;
-      border-bottom: 1px solid #ccc;
-      width: 200px;
-      outline: none;
-    }
-    span {
-      cursor: pointer;
-    }
-    span:hover {
-      color: #06c;
-    }
-  }
-  .image-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    svg {
-      width: 32px;
-      height: 32px;
-    }
   }
 }

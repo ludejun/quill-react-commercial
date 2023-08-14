@@ -1,0 +1,87 @@
+@import './theme.less';
+
+// table的dialog
+.ql-toolbar {
+  position: relative;
+}
+.ql-table-dialog {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  border: 1px solid @editor-border;
+  background-color: #fff;
+  padding: 8px;
+
+  .table-dialog-tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  .table-dialog-item {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #ccc;
+    margin: 2px;
+  }
+  .item-hover {
+    background-color: @sub-color;
+  }
+  p {
+    margin: 0;
+    padding: 6px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    label {
+      color: @comment-color;
+    }
+  }
+}
+// image upload dialog
+.ql-image-dialog {
+  position: absolute;
+   display: flex;
+  flex-direction: column;
+  z-index: 10;
+  border: 1px solid @editor-border;
+  background-color: #fff;
+  padding: 8px;
+  width: 280px;
+  font-size: 14px;
+
+  input.ql-image-upload {
+    display: none;
+  }
+  button.local-image {
+    width: 132px;
+    height: 28px;
+    background-color: @primary-color;
+    border-radius: 4px;
+    color: #fff;
+  }
+  button.local-image:hover, button.local-image:focus {
+    color: #fff
+  }
+  .url-label {
+    margin: 12px 0 5px;
+    font-size: 12px;
+    color: @comment-color;
+  }
+  .image-url-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    input[type=text] {
+      flex: 1;
+      padding: 6px;
+    }
+    span {
+      cursor: pointer;
+      margin-left: 10px;
+      color: @primary-color;
+    }
+  }
+}

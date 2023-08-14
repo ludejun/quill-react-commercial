@@ -17,38 +17,39 @@ var App = function App() {
     quill.current = quillIns;
   };
   var quillChange = function quillChange(delta, old, source) {
-    console.log('quill-change:', delta, old, source);
+    // console.log('quill-change:', delta, old, source);
     setDelta(JSON.stringify(quill.current.getContents()));
   };
-  console.log(window, window.quillReactCommercial);
   var RichTextEditor = window.quillReactCommercial;
   return /*#__PURE__*/React.createElement("div", {
     className: "App"
-  }, /*#__PURE__*/React.createElement(RichTextEditor, {
+  }, /*#__PURE__*/React.createElement(RichTextEditor
+  // i18n={'zh'}
+  , {
     readOnly: false,
     modules: {
       table: {},
-      codeHighlight: true
-      // imageHandler: {
-      //   imgUploadApi: (formData) =>
-      //     // console.log(apiURL('uploadImg'))
-      //     request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(
-      //       (response) => response.url,
-      //     ),
-      //   uploadFailCB: () => console.error('图片上传失败'),
-      // },
+      codeHighlight: true,
+      imageHandler: {
+        imgUploadApi: function imgUploadApi(formData) {
+          return (
+            // console.log(apiURL('uploadImg'))
+            request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(function (response) {
+              return response.url;
+            })
+          );
+        },
+        uploadFailCB: function uploadFailCB() {
+          return console.error('图片上传失败');
+        }
+      }
     },
-
     getQuill: getQuill,
     content:
     // 初始化笔记内容，而不能直接使用activeNote.content，因为当更新或保存会重新渲染导致内容重置到保存时刻，光标变到开头
     initContent,
     onChange: quillChange,
-    onFocus: function onFocus(arg) {},
-    style: {
-      background: '#eee',
-      height: 600
-    }
+    onFocus: function onFocus(arg) {}
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 200

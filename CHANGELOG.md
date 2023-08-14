@@ -1,5 +1,19 @@
 # Change-Log
 
+### 1.5.0
+- 新增中英文国际化，修改 Table 中英文配置
+- 更换 Table 操作 Icons 为 AntD svg
+- 样式大升级，确定主题色
+- code块的重构，允许 copy，增加行标
+- 升级 Link、Table、Image 的 toorbar handler
+- 上传本地图片和imagePasterDrop靠齐，先出现 base64 图片再上传
+- imagePasterDrop中 tooltip 改为伪元素，去除原div覆盖+id对应的方式，伪元素有个缺点是定位不准
+- 修复图片被选中（click）时，按删除键不能删除的 bug，在 imageResize.checkImage中
+- Link 的 Tooltip 样式重构，新增跳转、取消操作
+- Icon 的 tooltip 提示公共方法
+- 输入中文拼音等输入法时，placeholder 无法消失的 bug
+- readme 中英文升级
+
 ### 1.4.2
 - 更改编辑器内容区的顶部 padding，防止在第一行是 table 时，table 的调节工具行被遮挡；工具行的高度减小
 - 将 markdown 中 onDelete 涉及到图片删除的归到imagePasteDrop.js中

@@ -119,13 +119,6 @@ class TableCell extends Container {
       this.next.children.head.formats &&
       this.next.children.tail.formats
     ) {
-      console.log(
-        'better-table: ',
-        this.children.head,
-        this.children.tail,
-        this.next.children.head,
-        this.next.children.tail,
-      );
       const thisHead = this.children.head.formats()[this.children.head.statics.blotName];
       const thisTail = this.children.tail.formats()[this.children.tail.statics.blotName];
       const nextHead = this.next.children.head.formats()[this.next.children.head.statics.blotName];

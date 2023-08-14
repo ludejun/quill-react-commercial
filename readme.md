@@ -1,14 +1,34 @@
 # quill-react-commercial
 
+[中文](/readme_CN.md)
+
+As an outstanding and popular open-source rich text editor, [Quill](https://github.com/quilljs/quill) has a good data structure, API, and plugin system. However, due to years of difficult updates and outdated plugins, there is an urgent need for a Quill rich text editor that can be used for production, meet the experience and extension, can be customized, and can be oriented towards commercializatio.
+
+![quill-react-commercial](https://cdn.jsdelivr.net/gh/ludejun/quill-react-commercial/example/images/quill-react-commercial.jpg)
 
 
-Quill作为很出众并流行的开源富文本编辑器，有着良好的数据结构、API和插件系统，但是由于多年的更新难产及众多插件的过时、体验差，急需一款能用于生产、满足体验与扩展、能自定义、可以面向商业化的Quill富文本编辑器。
 
-微信小程序的富文本编辑器也使用的Quill底层和数据结构，可以和quill-react-commercial打通编辑和展示。
+## Features
 
-SDK默认使用lib/index.js作为入口，若想要在html中引入等打包后的结果，可以使用dist/文件夹中的文件，参考示例example。
+- Use the latest quill@2.0.0-dev.4. Implement using React Hooks, TS support, and Rollup packaging.
+- Images support local upload and image Url insertion, and can limit the format and size of before.
+- All images support Base64 display, and can be uploaded remotely in the background. If fail, can click to upload again. Images support copying and dragging to insertion.
+- Image support for resizing, aligning, adding notes, deleting, scrolling to remove overlayer.
+- Refactoring Link Tooltip to add more actions.
+- Support for inputing markdown directly.
+- Code blocks support language selection, copying, and code line labeling.
+- Table supports toolbar selection of size, right-click for more options and new icons.
+- Support for multilingual Tooltip prompts when Icon hover.
+- Internationalization: Supports both Chinese and English configurations, and supports Chinese fonts
+- When using IME and other input methods (such as Pinyin), placeholders can disappear in a timely manner
+- Automatically recognize input or copy URLs as LinkBlot.
+- Other bugfix: Unable to input list in table, upload images in table, recognize ordered list, cannot delete blocks such as code and table, unable to save image location, etc.
 
-### 安装
+
+
+
+
+## Install
 
 ```shell
 npm install quill-react-commercial --save
@@ -16,95 +36,103 @@ npm install quill-react-commercial --save
 yarn add quill-react-commercial
 ```
 
-### 快速使用
+## Quick Start
 ```javascript
 import RichTextEditor from 'quill-react-commercial';
 
 <RichTextEditor modules={{ table: {}, codeHighlight: true }} />
 ```
 
-- 如需要umd包，可以采用dist文件夹中打好的，script引入文件后，window.quillReactCommercial即可拿到组件，参考example
+- UMD / CDN: window.quillReactCommercial will get this Component. Demo in `example folder`
+```html
+<script src="../dist/quill-react-commercial.min.js"></script>
+```
 
 
-### API
 
-#### 属性
-##### modules：必需，Object；每一个key不需要时可以为false
+## Usage
+
+### Properties（Refer to TS definition）
+
+##### modules：Required，Object；Each key can be false when not needed
 
 ```js
 {
-  codeHighlight: true, // 是否有代码高亮，默认没有
-  table: {
-    operationMenu: {
-      insertColumnRight: {
+  codeHighlight?: true,
+  table?: {
+    operationMenu?: {
+      insertColumnRight?: {
     		text: 'Insert Column Right',
   		}
-    }, // 需要自定义支持的右键菜单项，当传此值时以此值为准，不然以下方默认值为准
-    backgroundColor: {
-      colors: ['#fff', 'red', 'rgb(0, 0, 0)'], // table cell的可选背景色，默认为：['#fff', '#ECF3FC', '#999']
-      text: '背景色', // 副标题文本，默认值为“背景色”
+    }, // Generally not required 
+    backgroundColors?: {
+      colors?: ['#4a90e2', '#999'], // backgroundcolor of table cell, default: ['#dbc8ff', '#6918b4', '#4a90e2', '#999', '#fff']
+      text?: 'Background Colors', // default: 'Background Colors'
     },
-    toolBarOptions: {
-      dialogRows: 3, // toolbar中table点击后弹框中出现灰色格子行数，默认为3
-      dialogColumns: 4, // 点击后弹框中出现灰色格子列数，默认为4
-      rowLabel: '行数', // 点击后弹框左边输入框label，默认为“行数”
-      columnLabel: '列数', // 点击后弹框右边输入框label，默认为“列数”
-      okLabel: '确认', // 点击后弹框button上lable，默认为“确认”
-    }, // 工具栏上table点击交互配置，默认就有
-  }, // 是否需要支持table，默认没有
-  imageResize: true, // 是否需要图片调整大小，默认为true
-  imageDrop: true, // 是否需要图片拖动添加，默认为true
-  magicUrl: true, // 是否自动识别url、email等，添加超链接，默认为true
-  markdown: true, // 是否自动支持markdown，自动转换为富文本，默认为true
-  link: true, // toolbar是否需要超链接及处理函数，默认为true
+    toolBarOptions?: {
+      dialogRows?: 3, // default: 9
+      dialogColumns?: 4, // default: 9
+      i18?: 'en',
+    }, // when click table in toorbar, the configs of the dialog
+  }, // default: false
+  imageResize?: true, // default: true
+  imageDrop?: true, // default: true
+  magicUrl?: true, // Automatically recognize URLs, emails, etc., and add LinkBlot; default: true
+  markdown?: true, // Automatically support markdown and convert to rich text; default: true
+  link?: true, // default: true
   imageHandler: {
-    imgUploadApi: (formData: FormData) => Promise<string>; // 图片上传API，API返回的应该是结果为URL的Promise
-    uploadSuccCB?: (data: unknown) => void; // 上传成功回调
-    uploadFailCB?: (error: unknown) => void; // 上传失败回调
-  }, // 点击toolbar上图片时的处理函数相关
-  toolbarOptions?: [][]; // 自定义需要的toolbar icons & 顺序
+    imgUploadApi?: (formData: FormData) => Promise<string>; // Image upload API, it should return a Promise with a URL when resolve
+    uploadSuccCB?: (data: unknown) => void; // callback when success
+    uploadFailCB?: (error: unknown) => void; // callback when failure
+    imgRemarkPre?: 'Fig. '; // Leading string for the image remark, and can be deleted
+    maxSize?: 2; // The maximum size for uploading local images, in MB, defaults to 5MB
+    imageAccept?: string; // Acceptable image types for uploading local images, default: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon'
+  },
+  toolbarOptions?: [][]; // Customize the required toolbar icons & order
 }
 ```
 
-modules.table的operationMenu的默认值如下，其他配置参考quill-better-table
+Default value of modules.table.operationMenu
 
 ```js
 {
   insertColumnRight: {
-    text: '右侧插入列',
+    text: 'Insert Column Right',
   },
   insertColumnLeft: {
-    text: '左侧插入列',
+    text: 'Insert Column Left',
   },
   insertRowUp: {
-    text: '上方插入行',
+    text: 'Insert Row Above',
   },
   insertRowDown: {
-    text: '下方插入行',
+    text: 'Insert Row Below',
   },
   mergeCells: {
-    text: '合并单元格',
+    text: 'Merge Selected Cells',
   },
   unmergeCells: {
-    text: '取消单元格合并',
+    text: 'Unmerge Cells',
   },
   deleteColumn: {
-    text: '删除列',
+    text: 'Delete Columns',
   },
   deleteRow: {
-    text: '删除行',
+    text: 'Delete Rows',
   },
   deleteTable: {
-    text: '删除表格',
+    text: 'Delete Table',
   },
 }
 ```
 
-modules.imageHandler 不定义则默认插入图片转为base64后存在Delta中
+![table-en](https://cdn.jsdelivr.net/gh/ludejun/quill-react-commercial/example/images/table-en.jpg)
+
+modules.imageHandler: If not defined, the default inserted image will be converted to base64 and stored in Delta
+![image](https://cdn.jsdelivr.net/gh/ludejun/quill-react-commercial/example/images/image.gif)
 
 
-
-modules.toolbarOptionse为Quill toolbar按数组进行定义的方式，当为列表项时默认选中第一个
+Demo of modules.toolbarOptionse. Details in https://quilljs.com/docs/modules/toolbar/
 
 ```javascript
 const toolbarOptions = [
@@ -117,23 +145,23 @@ const toolbarOptions = [
     ];
 ```
 
-modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
+Default of modules.codeHighlight, and you can change it. Or welcome your PR.
 
 ```javascript
 [
-  { key: 'plain', label: '文本' },
+  { key: 'plain', label: 'Plain' },
   { key: 'javascript', label: 'Javascript' },
   { key: 'java', label: 'Java' },
   { key: 'python', label: 'Python' },
-  { key: 'clike', label: 'C++/C' },
+  { key: 'cpp', label: 'C++/C' },
   { key: 'csharp', label: 'C#' },
   { key: 'php', label: 'PHP' },
   { key: 'sql', label: 'SQL' },
   { key: 'json', label: 'JSON' },
-  { key: 'bash', label: 'Bash' },
+  { key: 'shell', label: 'Shell' },
   { key: 'go', label: 'Go' },
-  { key: 'objectivec', label: 'Objective-C' },
-  { key: 'xml', label: 'HTML/XML' },
+  { key: 'objectivec', label: 'Object-C' },
+  { key: 'xml', label: 'Html/xml' },
   { key: 'css', label: 'CSS' },
   { key: 'ruby', label: 'Ruby' },
   { key: 'swift', label: 'Swift' },
@@ -143,92 +171,72 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 
 
 
-##### placeholder：非必需，string；编辑器placeholder；默认值：“开始笔记（支持直接Markdown输入）...”
+##### placeholder：Option，string; placeholder of editor
 
+**getQuill：Option，function; param is the instance of Quill**
 
-
-**getQuill：非必需，函数；函数参数为当前Quill实例**
-
-
-
-
-**content：非必需，Delta或者string；富文本编辑器初始数据**
-
-当content变化时会重新渲染富文本编辑器
+instance's API：https://quilljs.com/docs/api/
 
 ```jsx
-// Delta格式的content
+const quill = useRef(null);
+const getQuill = (quillIns) => {
+  quill.current = quillIns;
+}; // quill.current will has all quill's API：https://quilljs.com/docs/api/
+```
+
+
+
+**content：Option，Delta / string; initial data of editor**
+
+```jsx
+// Delta
 <RichTextEditor modules={{ table: {}, codeHighlight: true }} getQuill={getQuill} content={JSON.parse("{\"ops\":[{\"insert\":\"Hello quill-react-commercial!\\n\"}]}")} />
 
-// html格式的content
+// string of html
 <RichTextEditor modules={{ table: {}, codeHighlight: true }} getQuill={getQuill} content={'<h1>Hello quill-react-commercial!</h1>'} />
 ```
 
 
 
-**readOnly：非必需，boolean；编辑器是否只读；默认为false**
+**readOnly：Option，boolean；default value: false**
 
-**onChange：非必需，function；编辑器quill实例onChange触发时的callback**
+**onChange：Option，function；（Refer to TS definition）**
 
-**onFocus：非必需，function；编辑器quill实例Focus触发时的callback**
+**onFocus：Option，function；（Refer to TS definition）**
 
-**onBlur：非必需，function；编辑器quill实例Blur触发时的callback**
+**onBlur：Option，function；（Refer to TS definition）**
 
-**title: 非必需，第一行是否为标题input，编辑器tooltip对标题无效**
+**i18n?: 'en' | 'zh';**
 
-其他quill的实例方法，可以在获取实例后参考Quill API
-
-### 安装SDK问题
-
-1. 1.3.7版本之前如svg不能正常展示，在项目的webpack配置中对svg打包进行修改（1.3.7版本之后不用配置）
-```javascript
-// webpack5
-{
-  test: /\.(svg)$/i,
-  type: 'asset/source',
-},
+**style?: CSSProperties;**
 
 
-// webpack4
-{
-  test: /\.(svg)$/i,
-  type: 'svg-inline-loader',
-},
-```
 
-2. 如何切换代码高亮配色样式
+### Other Issues
 
-默认使用highlight.js的vscode2015配色，如需切换配色，可以直接引入对应样式文件
+1. How to switch code highlighting color styles
+
+Default use highlight.js xcode.css. 
+
 ```javascript
 import 'highlight.js/styles/darcula.css';
-// 如不想安装highlight.js，请下载到本地，import本地文件
 ```
-或者
+
+Or
+
 ```html
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/androidstudio.min.css">
 ```
 
-### 开发须知
 
-需要调试编辑器功能时，可以执行 **yarn example** 来打包静态资源给 example/index.html 使用，浏览器打开index.html即可
 
-- 修改example中的JS会自动重新babel，只需要刷新浏览器即可
-- 修改编辑器本身的JS、Less需要重新执行 yarn example
-- index.html中引入的本地的react、react-dom，外网CDN太慢
-- 1.3.7后采用Rollup打包，避免之前tsc和webpack打包导致svg引入需要多余配置的问题
+### How to develop & Welcome your PR.
 
-### 剩余已知bug或体验优化
+When debugging the editor function, you can execute `yarn example` to package static resources for `example/index.html` use, and open index.html in browser.
 
-- 有序列表换行，不要重新开始
-- 复制文章中的图片处理
-- 复制、拖拽图片到编辑器的上传API失败后的重新上传
-- table中不能插入list、header、blockquote、code-block，尝试允许
-- 多主题、多语种支持
-- 图片截取
-- 图片focus时功能menu添加：文字环绕、添加超链接URL、删除、添加备注
-- table多cell内容复制格式错乱
-- 图片的resize框在滚动时不随动
-- 图片上传Modal框URL不合规的UI反馈没有
-- shell/bash的代码高亮难看
-- 在编辑中插入图片并上传成功，但是又删除，服务器上已存在之前上传图片
-- 本地图片上传失败，没有提示
+- Modifying the JS, Less, and other features of the editor itself allows for hot updates, but the browser needs to be refreshed
+- Modifying the JS in the example will not re babel, but requires re executing the `yarn example`
+- Rollup packaging will be used after 1.3.7 to avoid the problem of introducing redundant configuration into SVG caused by previous tsc and webpack packaging
+
+
+

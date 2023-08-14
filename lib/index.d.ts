@@ -1,9 +1,10 @@
-/// <reference types="react" />
+import { CSSProperties, FC } from 'react';
 import Quill, { RangeStatic } from 'quill';
 import Delta from 'quill-delta';
 import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
 import './assets/modules.less';
+import './assets/toolbar.less';
 interface IBetterTable {
     operationMenu?: {
         insertColumnRight?: {
@@ -34,16 +35,14 @@ interface IBetterTable {
             text: string;
         };
     };
-    backgroundColor?: {
+    backgroundColors?: {
         colors?: string[];
         text?: string;
     };
-    toolbarOptions?: boolean | {
+    toolbarOptions?: {
         dialogRows?: number;
         dialogColumns?: number;
-        rowLabel?: string;
-        columnLabel?: string;
-        okLabel?: string;
+        i18n?: 'en' | 'zh';
     };
 }
 interface IModules {
@@ -63,9 +62,12 @@ interface IEditorProps {
     readOnly?: boolean;
     modules?: {
         imageHandler?: {
-            imgUploadApi: (formData: any) => Promise<string>;
+            imgUploadApi?: (formData: any) => Promise<string>;
             uploadSuccCB?: (data: unknown) => void;
             uploadFailCB?: (error: unknown) => void;
+            imgRemarkPre?: string;
+            maxSize?: number;
+            imageAccept?: string;
         };
         toolbarOptions?: [][];
     } & IModules;
@@ -74,6 +76,8 @@ interface IEditorProps {
     onChange?: (delta: Delta, old: Delta) => void;
     onFocus?: (range?: RangeStatic) => void;
     onBlur?: (oldRange?: RangeStatic) => void;
+    i18n?: 'en' | 'zh';
+    style?: CSSProperties;
 }
-declare const RichTextEditor: (props: IEditorProps) => JSX.Element;
+declare const RichTextEditor: FC<IEditorProps>;
 export default RichTextEditor;
