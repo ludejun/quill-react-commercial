@@ -232,7 +232,7 @@ Or
 
 ### How to develop & Welcome your PR.
 
-When debugging the editor function, you can execute `yarn example` to package static resources for `example/index.html` use, and open index.html in browser.
+When debugging the editor function, you can execute `yarn example` to package static resources for `index.html` use, and open index.html in browser.
 
 - Modifying the JS, Less, and other features of the editor itself allows for hot updates, but the browser needs to be refreshed
 - Modifying the JS in the example will not re babel, but requires re executing the `yarn example`

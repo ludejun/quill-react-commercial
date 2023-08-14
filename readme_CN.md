@@ -261,7 +261,7 @@ import 'highlight.js/styles/darcula.css';
 
 ### 开发须知
 
-需要调试编辑器功能时，可以执行 **yarn example** 来打包静态资源给 example/index.html 使用，浏览器打开index.html即可
+需要调试编辑器功能时，可以执行 **yarn example** 来打包静态资源给 index.html 使用，浏览器打开index.html即可
 
 - 修改编辑器本身的JS、Less等可以热更新，但是浏览器的 html 需要刷新
 
