@@ -23,6 +23,12 @@ export default {
       name: 'quillReactCommercial',
     },
     {
+      file: 'example/quill-react-commercial.min.js',
+      format: 'umd',
+      sourcemap: false,
+      name: 'quillReactCommercial',
+    },
+    {
       dir: path.dirname(pkg.main), // 打包输出文件保留原始模块结构
       format: 'cjs',
       name: pkg.name,

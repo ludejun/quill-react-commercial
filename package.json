@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsbuild": "tsc && cp -R assets lib/",
-    "build": "npx babel example/app.js --out-dir ./example/compile --source-maps && rimraf lib && rollup -c",
+    "build": "npx babel example/app.js --out-dir ./example/compile && rimraf lib && rollup -c",
     "babel": "npx babel example/app.js --watch --out-dir ./example/compile --source-maps",
     "example": "npx babel example/app.js --out-dir ./example/compile --source-maps && rimraf lib && rollup -c --watch"
   },
