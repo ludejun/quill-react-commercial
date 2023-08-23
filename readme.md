@@ -11,7 +11,7 @@ As an outstanding and popular open-source rich text editor, [Quill](https://gith
 ## Features
 
 - Use the latest quill@2.0.0-dev.4. Implement using React Hooks, TS support, and Rollup packaging.
-- Images support local upload and image Url insertion, and can limit the format and size of before.
+- Images support local upload and image Url insertion, and can limit the format and size before.
 - All images support Base64 display, and can be uploaded remotely in the background. If fail, can click to upload again. Images support copying and dragging to insertion.
 - Image support for resizing, aligning, adding notes, deleting, scrolling to remove overlayer.
 - Refactoring Link Tooltip to add more actions.
@@ -129,7 +129,7 @@ Default value of modules.table.operationMenu
 ![table-en](https://cdn.jsdelivr.net/gh/ludejun/quill-react-commercial/example/images/table-en.jpg)
 
 modules.imageHandler: If not defined, the default inserted image will be converted to base64 and stored in Delta
-![image](https://cdn.jsdelivr.net/gh/ludejun/quill-react-commercial/example/images/image.gif)
+![image](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/image.gif)
 
 
 Demo of modules.toolbarOptionse. Details in https://quilljs.com/docs/modules/toolbar/

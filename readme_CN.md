@@ -5,7 +5,7 @@ Quill作为很出众并流行的开源富文本编辑器，有着良好的数据
 
 微信小程序的富文本编辑器也使用的Quill底层和数据结构，可以和quill-react-commercial打通编辑和展示。
 
-![quill-react-commercial-zh](/example/images/quill-react-commercial-zh.jpg)
+![quill-react-commercial-zh](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/quill-react-commercial-zh.jpg)
 
 
 
@@ -137,10 +137,10 @@ modules.table的operationMenu的中文默认值如下，其他配置参考quill-
   },
 }
 ```
-![table-en](/example/images/table-en.jpg)
+![table-en](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/table-en.jpg)
 
 modules.imageHandler 不定义则默认插入图片转为base64后存在Delta中
-![image](/example/images/image.gif)
+![image](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/image.gif)
 
 
 modules.toolbarOptionse为Quill toolbar按数组进行定义的方式，当为列表项时默认选中第一个。[更多细节](https://quilljs.com/docs/modules/toolbar/)
