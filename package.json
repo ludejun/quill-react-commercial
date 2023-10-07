@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/ludejun/quill-react-commercial.git"
   },
-  "homepage": "https://ludejun.github.io/quill-react-commercial",
+  "homepage": "https://ludejun.github.io/quill-react-commercial/",
   "license": "ISC",
   "dependencies": {
     "highlight.js": "^10.7.2",

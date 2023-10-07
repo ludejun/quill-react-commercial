@@ -262,12 +262,12 @@ table.quill-better-table {
 .ql-snow .ql-editor .ql-code-block-container {
   background-color: @code-color;
   color: rgb(43, 47, 54);
-  padding: 4px 8px;
+  padding: 2px 8px 20px;
 
   .ql-ui {
     position: relative;
-    color: rgb(100, 106, 115, 0.5);
-    // opacity: 0;
+    color: rgba(100, 106, 115);
+    opacity: 0;
     transition: all 150ms ease-in;
     display: flex;
     justify-content: space-between;
@@ -317,4 +317,9 @@ table.quill-better-table {
     white-space: nowrap;
   }
 
+}
+.ql-snow .ql-editor .ql-code-block-container:hover {
+  .ql-ui {
+    opacity: 1;
+  }
 }

@@ -54,7 +54,7 @@ import RichTextEditor from 'quill-react-commercial';
 
 ### Properties（Refer to TS definition）
 
-##### modules：Required，Object；Each key can be false when not needed
+##### 1. modules：Required，Object；Each key can be false when not needed
 
 ```js
 {
@@ -171,9 +171,9 @@ Default of modules.codeHighlight, and you can change it. Or welcome your PR.
 
 
 
-##### placeholder：Option，string; placeholder of editor
+##### 2. placeholder：Option，string; placeholder of editor
 
-**getQuill：Option，function; param is the instance of Quill**
+**3. getQuill：Option，function; param is the instance of Quill**
 
 instance's API：https://quilljs.com/docs/api/
 
@@ -186,7 +186,7 @@ const getQuill = (quillIns) => {
 
 
 
-**content：Option，Delta / string; initial data of editor**
+**4. content：Option，Delta / string; initial data of editor**
 
 ```jsx
 // Delta
@@ -198,17 +198,17 @@ const getQuill = (quillIns) => {
 
 
 
-**readOnly：Option，boolean；default value: false**
+**5. readOnly：Option，boolean；default value: false**
 
-**onChange：Option，function；（Refer to TS definition）**
+**6. onChange：Option，function；（Refer to TS definition）**
 
-**onFocus：Option，function；（Refer to TS definition）**
+**7. onFocus：Option，function；（Refer to TS definition）**
 
-**onBlur：Option，function；（Refer to TS definition）**
+**8. onBlur：Option，function；（Refer to TS definition）**
 
-**i18n?: 'en' | 'zh';**
+**9. i18n?: 'en' | 'zh'; Option； International；default value: 'en'**
 
-**style?: CSSProperties;**
+**10. style?: CSSProperties;**
 
 
 

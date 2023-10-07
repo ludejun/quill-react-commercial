@@ -66,7 +66,7 @@ import RichTextEditor from 'quill-react-commercial';
 ## 使用
 
 ### 属性
-##### modules：必需，Object；每一个key不需要时可以为false
+##### 1. modules：必需，Object；每一个key不需要时可以为false
 
 ```js
 {
@@ -182,9 +182,9 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
 
 
 
-##### placeholder：非必需，string；编辑器placeholder；中文默认值：“开始笔记（支持直接Markdown输入）...”
+##### 2. placeholder：非必需，string；编辑器placeholder；中文默认值：“开始笔记（支持直接Markdown输入）...”
 
-**getQuill：非必需，函数；函数参数为当前Quill实例**
+**3. getQuill：非必需，函数；函数参数为当前Quill实例**
 
 实例 API：https://quilljs.com/docs/api/
 
@@ -197,7 +197,7 @@ const getQuill = (quillIns) => {
 
 
 
-**content：非必需，Delta或者string；富文本编辑器初始数据**
+**4. content：非必需，Delta或者string；富文本编辑器初始数据**
 
 当content变化时会重新渲染富文本编辑器
 
@@ -211,17 +211,17 @@ const getQuill = (quillIns) => {
 
 
 
-**readOnly：非必需，boolean；编辑器是否只读；默认为false**
+**5. readOnly：非必需，boolean；编辑器是否只读；默认为false**
 
-**onChange：非必需，function；编辑器quill实例onChange触发时的callback**
+**6. onChange：非必需，function；编辑器quill实例onChange触发时的callback**
 
-**onFocus：非必需，function；编辑器quill实例Focus触发时的callback**
+**7. onFocus：非必需，function；编辑器quill实例Focus触发时的callback**
 
-**onBlur：非必需，function；编辑器quill实例Blur触发时的callback**
+**8. onBlur：非必需，function；编辑器quill实例Blur触发时的callback**
 
-**i18n?: 'en' | 'zh';**
+**9. i18n?: 'en' | 'zh'，非必需，string；国际化，默认为 en**
 
-**style?: CSSProperties;**
+**10. style?: CSSProperties;**
 
 其他quill的实例方法，可以在获取实例后参考[Quill API](https://quilljs.com/docs/api/)
 
@@ -283,4 +283,5 @@ import 'highlight.js/styles/darcula.css';
 - table多cell内容复制格式错乱
 - shell/bash的代码高亮难看
 - 在编辑中插入图片并上传成功，但是又删除，服务器上已存在之前上传图片
+- 插入 code 下面没有空行，导致直接点击下面输入无光标
 
