@@ -274,12 +274,11 @@ import 'highlight.js/styles/darcula.css';
   
 
 ### 剩余已知bug或体验优化，需要你的帮助
-
+- 有序列表可以从任意数字开始，颜色变色，存储Delta并能读出展示正确
 - 有序列表换行，不要重新开始
 - 复制文章中的图片处理
 - table中不能插入list、header、blockquote、code-block，尝试允许
 - 图片截取
-- 图片focus时功能menu添加：文字环绕、添加超链接URL、删除、添加备注
 - table多cell内容复制格式错乱
 - shell/bash的代码高亮难看
 - 在编辑中插入图片并上传成功，但是又删除，服务器上已存在之前上传图片

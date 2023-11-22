@@ -7,27 +7,6 @@
     border-top: 0;
     font-size: 14px;
     overflow: hidden;
-    .ql-editor {
-      line-height: 1.8;
-      padding-top: 18px;
-      &:before {
-
-      }
-      &:empty:before {
-        content: attr(data-placeholder);
-        color: red;
-      }
-
-      ol {
-        padding-left: 0.3em;
-      }
-      li {
-        padding-left: 1.2em;
-      }
-      a {
-        color: @link-color;
-      }
-    }
   }
 
   input.text-input[type='text'] {
@@ -83,6 +62,53 @@
     .ql-fill {
       fill: @primary-color;
     }
+  }
+}
+
+.ql-editor {
+  line-height: 1.8;
+  padding-top: 18px;
+  &:before {
+  }
+  &:empty:before {
+    content: attr(data-placeholder);
+    color: red;
+  }
+
+  ol {
+    padding-left: 0;
+  }
+  li {
+    padding-left: 0;
+    .ql-ui {
+      position: static;
+    }
+    > .ql-ui::before {
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
+      width: auto;
+      padding-right: 8px;
+      // color: @link-color;
+    }
+  }
+  li.ql-indent-1:not(.ql-direction-rtl) {
+    padding-left: 20px;
+  }
+  li.ql-indent-2:not(.ql-direction-rtl) {
+    padding-left: 40px;
+  }
+  li.ql-indent-3:not(.ql-direction-rtl) {
+    padding-left: 60px;
+  }
+  li.ql-indent-4:not(.ql-direction-rtl) {
+    padding-left: 80px;
+  }
+  li.ql-indent-5:not(.ql-direction-rtl) {
+    padding-left: 100px;
+  }
+  a {
+    color: @link-color;
   }
 }
 

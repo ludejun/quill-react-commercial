@@ -1,5 +1,8 @@
 # Change-Log
 
+### 1.5.1
+- 修复缩进不生效bug
+- 有序列表样式调整
 ### 1.5.0
 - 新增中英文国际化，修改 Table 中英文配置
 - 更换 Table 操作 Icons 为 AntD svg

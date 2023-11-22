@@ -4,7 +4,7 @@ import { MagicUrl } from './magic-url';
 import MarkdownShortcuts from './markdown-shortcuts';
 import highlightInit from './highlight';
 import QuillBetterTable from './quill-better-table/quill-better-table';
-import Image from './image';
+import Image from './customeFormats/image';
 
 import { toolbarInit, LinkHandler, undoHandler, redoHandler, TableHandler, ImageHandler } from './toolbar';
 import { showTitle } from './iconTitle/title';

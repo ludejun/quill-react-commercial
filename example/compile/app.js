@@ -59,4 +59,3 @@ var App = function App() {
 var domContainer = document.querySelector('#root');
 var root = ReactDOM.createRoot(domContainer);
 root.render( /*#__PURE__*/React.createElement(App, null));
-//# sourceMappingURL=app.js.map
