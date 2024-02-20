@@ -23,5 +23,5 @@
     "index.tsx",
     "./modules/*",
     "custom.d.ts"
-, "modules/customeFormats/image.js"  ]
+, "modules/customeFormats/image.js", "modules/customeFormats/syntax.js"  ]
 }

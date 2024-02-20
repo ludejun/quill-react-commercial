@@ -20,7 +20,7 @@ Quill作为很出众并流行的开源富文本编辑器，有着良好的数据
 
 - 重构Link Tooltip，添加更多操作
 
-- 支持markdown支持输入
+- 支持markdown直接输入
 
 - 代码块支持语言选择、复制、代码行标
 
@@ -274,13 +274,10 @@ import 'highlight.js/styles/darcula.css';
   
 
 ### 剩余已知bug或体验优化，需要你的帮助
-- 有序列表可以从任意数字开始，颜色变色，存储Delta并能读出展示正确
-- 有序列表换行，不要重新开始
 - 复制文章中的图片处理
 - table中不能插入list、header、blockquote、code-block，尝试允许
 - 图片截取
 - table多cell内容复制格式错乱
 - shell/bash的代码高亮难看
 - 在编辑中插入图片并上传成功，但是又删除，服务器上已存在之前上传图片
-- 插入 code 下面没有空行，导致直接点击下面输入无光标
 

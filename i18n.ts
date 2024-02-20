@@ -1,7 +1,7 @@
 export const i18nConfig = {
   en: {
     toolbarHeader: 'Body',
-    toolbarFont: 'System Font',
+    toolbarFont: 'System',
     fontYahei: 'MS Yahei',
     fontSong: 'SimSun',
     fontKai: 'KaiTi',

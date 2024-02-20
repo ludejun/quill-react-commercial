@@ -1,10 +1,9 @@
 import Quill from 'quill';
-const Parchment = Quill.import('parchment');
+// const Parchment = Quill.import('parchment');
 const BaseSyntax = Quill.import('modules/syntax');
 const CodeBlock = Quill.import('formats/code-block');
-import CopyIcon from '../assets/icons/copy.svg';
-import { htmlDecode } from '../utils';
-// const Modules = Quill.import('core/module');
+import CopyIcon from '../../assets/icons/copy.svg';
+import { htmlDecode } from '../../utils';
 
 class QSyntax extends BaseSyntax {
   constructor(quill, options) {

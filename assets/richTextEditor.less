@@ -107,6 +107,9 @@
   li.ql-indent-5:not(.ql-direction-rtl) {
     padding-left: 100px;
   }
+  ol li[data-list=ordered][data-start]:first-child > .ql-ui:before {
+    counter-set: list-0 var(--list-item-start);
+  }
   a {
     color: @link-color;
   }
@@ -157,7 +160,7 @@
   width: 58px;
 }
 .ql-snow .ql-picker.ql-font {
-  width: 108px;
+  width: 80px;
 }
 .ql-snow .ql-picker.ql-header {
   width: 60px;

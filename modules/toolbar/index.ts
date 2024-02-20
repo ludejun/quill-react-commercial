@@ -5,6 +5,7 @@ import { showTitle } from '../iconTitle/title';
 export { LinkHandler } from './link';
 export { default as TableHandler } from './table';
 export { default as ImageHandler } from './image';
+export { default as CodeHandler } from './code';
 
 
 export const toolbarInit = (quill: Quill, i18n: keyof typeof i18nConfig) => {
