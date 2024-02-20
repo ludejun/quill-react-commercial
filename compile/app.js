@@ -13,6 +13,7 @@ var App = function App() {
     delta = _React$useState2[0],
     setDelta = _React$useState2[1];
   var initContent = '';
+  // {"ops":[{"insert":"\n\nawef"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"awfeawef"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"awfe"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"\n\n违法未"},{"attributes":{"list":"ordered"},"insert":"\n"},{"insert":"啊违法"},{"attributes":{"list":"ordered"},"insert":"\n"}]};
   var getQuill = function getQuill(quillIns) {
     quill.current = quillIns;
   };
@@ -23,9 +24,8 @@ var App = function App() {
   var RichTextEditor = window.quillReactCommercial;
   return /*#__PURE__*/React.createElement("div", {
     className: "App"
-  }, /*#__PURE__*/React.createElement(RichTextEditor
-  // i18n={'zh'}
-  , {
+  }, /*#__PURE__*/React.createElement(RichTextEditor, {
+    i18n: 'zh',
     readOnly: false,
     modules: {
       table: {},
