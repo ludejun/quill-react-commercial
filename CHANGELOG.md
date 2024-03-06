@@ -1,5 +1,7 @@
 # Change-Log
 
+### 1.5.3
+- 修复readOnly控制失效Bug
 ### 1.5.2
 - 重写ListItem，有序列表可以从任意数字开始，并能保存到Delta中
 - 修复Link tooltip不显示文本和URL的bug

@@ -102,7 +102,7 @@ interface IEditorProps {
 }
 
 const RichTextEditor: FC<IEditorProps> = (props) => {
-  const { modules = {}, content, i18n = 'en', style = {} } = props;
+  const { modules = {}, content, i18n = 'en', style = {}, readOnly = false } = props;
   const quillModules = useRef<
     IModules & {
       'better-table'?: Record<string, unknown>;
@@ -294,7 +294,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
   }, [modules]);
 
   useEffect(() => {
-    const { placeholder, getQuill, readOnly = false, onChange, onFocus, onBlur } = props;
+    const { placeholder, getQuill, onChange, onFocus, onBlur } = props;
     if (quillModules.current['better-table']) {
       Quill.register(
         {
@@ -465,6 +465,16 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       setContent(content, quillRef.current!);
     }
   }, [content]);
+
+  useEffect(() => {
+    if (quillRef.current) {
+      if (readOnly) {
+        quillRef.current.enable(false);
+      } else {
+        quillRef.current.enable();
+      }
+    }
+  }, [readOnly]);
 
   return (
     <div className="ql-editor-container" style={style}>

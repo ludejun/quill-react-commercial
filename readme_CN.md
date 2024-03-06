@@ -274,6 +274,7 @@ import 'highlight.js/styles/darcula.css';
   
 
 ### 剩余已知bug或体验优化，需要你的帮助
+- 改变selection文字颜色时，编辑器会自动滚到顶部
 - 复制文章中的图片处理
 - table中不能插入list、header、blockquote、code-block，尝试允许
 - 图片截取
