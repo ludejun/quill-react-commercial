@@ -1,6 +1,6 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "A Quill component for React and more maturely.",
   "type": "commonjs",
   "main": "lib/index.js",

@@ -1,5 +1,8 @@
 # Change-Log
 
+### 1.5.4
+- 修改默认语法高亮，从shell到bash
+
 ### 1.5.3
 - 修复readOnly控制失效Bug
 ### 1.5.2
