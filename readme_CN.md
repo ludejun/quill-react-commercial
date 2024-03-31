@@ -10,7 +10,7 @@ Quill作为很出众并流行的开源富文本编辑器，有着良好的数据
 
 
 ## 特性
-- 使用最新的quill@2.0.0-dev.4，方便向后兼容。使用React Hooks实现，TS支持，Rollup打包。
+- 使用最新的quill@2.0.0-rc.4，方便向后兼容。使用React Hooks实现，TS支持，Rollup打包。
 
 - 图片支持本地上传和图片Url插入，可以限制上传图片格式和大小
 
@@ -52,6 +52,7 @@ yarn add quill-react-commercial
 
 ```javascript
 import RichTextEditor from 'quill-react-commercial';
+import 'quill-react-commercial/lib/index.css';
 
 <RichTextEditor modules={{ table: {}, codeHighlight: true, i18n={'zh'} }} />
 ```

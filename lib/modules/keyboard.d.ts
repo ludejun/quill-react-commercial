@@ -1,4 +1,3 @@
-import { RangeStatic } from "quill";
 export declare const keyboardBinds: {
     'list autofill': {
         key: string;
@@ -17,7 +16,7 @@ export declare const keyboardBinds: {
     'code backspace': {
         key: string;
         format: string[];
-        handler(range: RangeStatic, context: {
+        handler(range: any, context: {
             line: {
                 parent: {
                     cachedText?: string;

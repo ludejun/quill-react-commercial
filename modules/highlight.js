@@ -2,7 +2,7 @@
 import highlight from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import bash from 'highlight.js/lib/languages/bash';
-import shell from 'highlight.js/lib/languages/vim'; // 使用vim代替shell，shell缺少很多命令行，这些不是标准的bash命令
+import vim from 'highlight.js/lib/languages/vim'; // 使用vim代替shell，shell缺少很多命令行，这些不是标准的bash命令
 import cpp from 'highlight.js/lib/languages/cpp'; // C++
 import csharp from 'highlight.js/lib/languages/csharp'; // C#
 import css from 'highlight.js/lib/languages/css';
@@ -32,7 +32,7 @@ const highlightInit = () => {
   highlight.registerLanguage('sql', sql);
   highlight.registerLanguage('json', json);
   highlight.registerLanguage('bash', bash);
-  highlight.registerLanguage('shell', shell);
+  highlight.registerLanguage('shell', vim);
   highlight.registerLanguage('css', css);
   highlight.registerLanguage('go', go);
   highlight.registerLanguage('objectivec', objectivec);

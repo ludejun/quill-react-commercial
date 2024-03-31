@@ -1,5 +1,11 @@
 # Change-Log
 
+### 1.5.4
+- 修改默认语法高亮，从shell到bash
+- 升级Quill从quill@2.0.0-dev.4 -> quill@2.0.0-rc.4
+- 将quill.snow.css从quill/dist/quill.snow.css引入改为本地，直接引node_modules打包一直有问题，打不进去
+- 将css从js包中移除
+
 ### 1.5.3
 - 修复readOnly控制失效Bug
 ### 1.5.2

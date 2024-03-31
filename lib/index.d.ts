@@ -1,7 +1,7 @@
 import { CSSProperties, FC } from 'react';
 import Quill, { RangeStatic } from 'quill';
 import Delta from 'quill-delta';
-import 'quill/dist/quill.snow.css';
+import './assets/quill.snow.css';
 import './assets/richTextEditor.less';
 import './assets/modules.less';
 import './assets/toolbar.less';

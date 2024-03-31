@@ -24,7 +24,7 @@ import {
 } from './modules/index';
 import { optionDisableToggle, setContent, throttle } from './utils';
 import { getI18nText, i18nConfig } from './i18n';
-import 'quill/dist/quill.snow.css';
+import './assets/quill.snow.css';
 import './assets/richTextEditor.less';
 import './assets/modules.less';
 import './assets/toolbar.less';
@@ -211,7 +211,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
                   { key: 'php', label: 'PHP' },
                   { key: 'sql', label: 'SQL' },
                   { key: 'json', label: 'JSON' },
-                  { key: 'shell', label: 'Shell' },
+                  { key: 'bash', label: 'Bash' },
                   { key: 'go', label: 'Go' },
                   { key: 'objectivec', label: 'Object-C' },
                   { key: 'xml', label: 'Html/xml' },
