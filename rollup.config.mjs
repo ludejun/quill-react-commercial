@@ -8,6 +8,10 @@ import path from 'path';
 import strip from '@rollup/plugin-strip';
 // import url from '@rollup/plugin-url';
 import svg from 'rollup-plugin-svg';
+import cssOnly from 'rollup-plugin-css-only';
+import less from 'rollup-plugin-less';
+import css from 'rollup-plugin-import-css';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
@@ -46,7 +50,9 @@ export default {
       declaration: true,
       declarationDir: 'lib',
     }),
-    postcss(),
+    postcss({
+      extract: true,
+    }),
     // image(), // 将所有图片打包成base64
     // strip(), // Remove debugger statements and functions like assert.equal and console.log from your code 生产环境打开
     // url(), // 将所有图片打包成js文件
