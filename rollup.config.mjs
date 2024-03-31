@@ -34,7 +34,7 @@ export default {
     }, // 给 github actions 和 github pages 使用
     {
       dir: path.dirname(pkg.main), // 打包输出文件保留原始模块结构
-      format: 'cjs',
+      format: 'es',
       name: pkg.name,
       exports: 'named', // 指定导出模式（自动、默认、命名、无）
       preserveModules: true, // 保留模块结构

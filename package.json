@@ -1,8 +1,8 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "A Quill component for React and more maturely.",
-  "type": "commonjs",
+  "type": "module",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

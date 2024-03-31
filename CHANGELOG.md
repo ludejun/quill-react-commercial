@@ -1,5 +1,8 @@
 # Change-Log
 
+### 1.5.5
+- 打包结果改为es
+
 ### 1.5.4
 - 修改默认语法高亮，从shell到bash
 - 升级Quill从quill@2.0.0-dev.4 -> quill@2.0.0-rc.4
