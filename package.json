@@ -1,6 +1,6 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.5.5",
+  "version": "1.5.7",
   "description": "A Quill component for React and more maturely.",
   "type": "module",
   "main": "lib/index.js",
@@ -39,8 +39,10 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^23.0.2",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
     "@rollup/plugin-strip": "^3.0.1",
     "@rollup/plugin-typescript": "8.3.3",
     "@types/quill": "^2.0.9",
@@ -58,6 +60,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-svg": "^2.0.0",
+    "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.4.1",
     "typescript": "^3.7.5"
   },
