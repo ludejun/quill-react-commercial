@@ -1,6 +1,6 @@
 {
   "name": "quill-react-commercial",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "description": "A Quill component for React and more maturely.",
   "type": "module",
   "main": "lib/index.js",
@@ -21,7 +21,7 @@
   "dependencies": {
     "highlight.js": "^10.7.2",
     "normalize-url": "^8.0.0",
-    "quill": "2.0.0-rc.4"
+    "quill": "2.0.0-rc.5"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

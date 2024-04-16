@@ -2278,10 +2278,10 @@ p-timeout@^3.2.0:
   dependencies:
     p-finally "^1.0.0"
 
-parchment@3.0.0-rc.0:
-  version "3.0.0-rc.0"
-  resolved "https://registry.yarnpkg.com/parchment/-/parchment-3.0.0-rc.0.tgz#d193c530f15ba9a9ebcf637e19a810e995bb86d3"
-  integrity sha512-JyVx3qaAkFPOCrJpENNYnQkxBYRbo9oPEU2LMJX4g1czXmwtzLDWztFRe90BXrw/LBRLDfZpHcL8TvIGkS1vIA==
+parchment@3.0.0-rc.1:
+  version "3.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/parchment/-/parchment-3.0.0-rc.1.tgz#7af30c2c146afce257040cae2061c7a73d9b30a8"
+  integrity sha512-UiXun/99vbUgfPgAIuyZzqRN1YARfMz3ktAoTOxDWnrK/OMQlshPh0TKrNhePxxDWCGz/xVsexMtsaEQy+fmXQ==
 
 parchment@^1.1.2:
   version "1.1.4"
@@ -2620,14 +2620,14 @@ quill-delta@^5.1.0:
     lodash.clonedeep "^4.5.0"
     lodash.isequal "^4.5.0"
 
-quill@2.0.0-rc.4:
-  version "2.0.0-rc.4"
-  resolved "https://registry.yarnpkg.com/quill/-/quill-2.0.0-rc.4.tgz#f25ad27666a3eb62cf579ee91d7f4a1bd3af11f9"
-  integrity sha512-Fzz7JBH91zLK4sRMysAxXpZrredhFjCGjK4FWkcujQPOV+P8LSMUsuHcPg2g8ZU9Fu6dtRTrRTc/XBYBP9jWGg==
+quill@2.0.0-rc.5:
+  version "2.0.0-rc.5"
+  resolved "https://registry.yarnpkg.com/quill/-/quill-2.0.0-rc.5.tgz#c7112ae4b9b610d11a9c7bab220c88553b2df95d"
+  integrity sha512-3jpk3Jb+TETSZ+3owQqneMDVe30qWmp7vXEVkj9Z5b+qp443HKF/jVu86U+uSW1vB2dphFYgHXhh71c/oq4ohQ==
   dependencies:
     eventemitter3 "^5.0.1"
     lodash-es "^4.17.21"
-    parchment "3.0.0-rc.0"
+    parchment "3.0.0-rc.1"
     quill-delta "^5.1.0"
 
 randombytes@^2.1.0:

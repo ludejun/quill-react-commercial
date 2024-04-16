@@ -24,7 +24,7 @@ import {
 } from './modules/index';
 import { optionDisableToggle, setContent, throttle } from './utils';
 import { getI18nText, i18nConfig } from './i18n';
-import './assets/quill.snow.css';
+import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
 import './assets/modules.less';
 import './assets/toolbar.less';

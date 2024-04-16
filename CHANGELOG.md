@@ -1,5 +1,9 @@
 # Change-Log
 
+### 1.5.8
+- 更改quill.snow.css引入方式
+- 升级quill@2.0.0-rc.5
+
 ### 1.5.5 / 1.5.6 / 1.5.7
 - 打包结果改为es
 - 改变rollup配置，解决升级quill产生的bugs
