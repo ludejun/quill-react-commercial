@@ -1,8 +1,6 @@
 import React, { useRef, useEffect, CSSProperties, FC } from 'react';
-import Quill, { RangeStatic, Sources } from 'quill';
+import Quill, { Range, EmitterSource } from 'quill';
 import Delta from 'quill-delta';
-import IconUndo from 'quill/assets/icons/undo.svg';
-import IconRedo from 'quill/assets/icons/redo.svg';
 import {
   highlightInit,
   // Image,
@@ -20,10 +18,12 @@ import {
   // QSyntax,
   // ListItem,
   // CodeHandler,
-  keyboardBinds
+  keyboardBindsFn,
 } from './modules/index';
 import { optionDisableToggle, setContent, throttle } from './utils';
 import { getI18nText, i18nConfig } from './i18n';
+import IconUndo from 'quill/assets/icons/undo.svg';
+import IconRedo from 'quill/assets/icons/redo.svg';
 import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
 import './assets/modules.less';
@@ -95,8 +95,9 @@ interface IEditorProps {
   getQuill?: (quill: Quill, uploadedImgsList?: string[]) => void;
   content?: Delta | string;
   onChange?: (delta: Delta, old: Delta) => void;
-  onFocus?: (range?: RangeStatic) => void;
-  onBlur?: (oldRange?: RangeStatic) => void;
+  onFocus?: (range?: Range) => void;
+  onBlur?: (oldRange?: Range) => void;
+  onSave?: () => void;
   i18n?: 'en' | 'zh';
   style?: CSSProperties;
 }
@@ -294,7 +295,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
   }, [modules]);
 
   useEffect(() => {
-    const { placeholder, getQuill, onChange, onFocus, onBlur } = props;
+    const { placeholder, getQuill, onChange, onFocus, onBlur, onSave } = props;
     if (quillModules.current['better-table']) {
       Quill.register(
         {
@@ -371,7 +372,9 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         keyboard: {
           bindings: {
             ...QuillBetterTable.keyboardBindings,
-            ...keyboardBinds,
+            ...keyboardBindsFn({
+              save: onSave,
+            }),
           },
         },
 
@@ -391,7 +394,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
 
     quillRef.current.on(
       'selection-change',
-      (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
+      (range: Range, oldRange: Range, source: EmitterSource) => {
         if (range == null || !quillRef.current?.hasFocus()) return;
 
         // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
@@ -412,14 +415,14 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
     getQuill && getQuill(quillRef.current, uploadedImgsList.current);
 
     if (onChange) {
-      quillRef.current.on('text-change', (delta: Delta, old: Delta, source: Sources) => {
+      quillRef.current.on('text-change', (delta: Delta, old: Delta, source: EmitterSource) => {
         source === 'user' && onChange(delta, old);
       });
     }
     if (onFocus || onBlur) {
       quillRef.current.on(
         'selection-change',
-        (range: RangeStatic, oldRange: RangeStatic, source: Sources) => {
+        (range: Range, oldRange: Range, source: EmitterSource) => {
           const hasFocus = range && !oldRange;
           const hasBlur = !range && oldRange;
           if (onFocus && hasFocus) onFocus(range);

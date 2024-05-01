@@ -11,7 +11,7 @@ import { ListItem } from './customeFormats/listItem';
 import { toolbarInit, LinkHandler, undoHandler, redoHandler, TableHandler, ImageHandler, CodeHandler } from './toolbar';
 import { showTitle } from './iconTitle/title';
 import QSyntax from './customeFormats/syntax';
-import { keyboardBinds } from './keyboard';
+import { keyboardBindsFn } from './keyboard';
 
 Quill.register(Image, true); // 允许图片的样式保存在Delta中
 Quill.register(ListItem, true); // 允许图片的样式保存在Delta中
@@ -42,7 +42,7 @@ export {
   QSyntax,
   toolbarInit,
   showTitle,
-  keyboardBinds,
+  keyboardBindsFn,
   LinkHandler,
   TableHandler,
   ImageHandler,

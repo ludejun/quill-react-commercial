@@ -9,5 +9,5 @@ import { ListItem } from './customeFormats/listItem';
 import { toolbarInit, LinkHandler, undoHandler, redoHandler, TableHandler, ImageHandler, CodeHandler } from './toolbar';
 import { showTitle } from './iconTitle/title';
 import QSyntax from './customeFormats/syntax';
-import { keyboardBinds } from './keyboard';
-export { highlightInit, ImageDrop, Image, ListItem, ImageResize, MagicUrl, MarkdownShortcuts, QuillBetterTable, QSyntax, toolbarInit, showTitle, keyboardBinds, LinkHandler, TableHandler, ImageHandler, undoHandler, redoHandler, CodeHandler, };
+import { keyboardBindsFn } from './keyboard';
+export { highlightInit, ImageDrop, Image, ListItem, ImageResize, MagicUrl, MarkdownShortcuts, QuillBetterTable, QSyntax, toolbarInit, showTitle, keyboardBindsFn, LinkHandler, TableHandler, ImageHandler, undoHandler, redoHandler, CodeHandler, };

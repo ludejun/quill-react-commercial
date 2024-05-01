@@ -1,5 +1,8 @@
 # Change-Log
 
+### 1.5.9
+- 添加保存快捷键回调
+
 ### 1.5.8
 - 更改quill.snow.css引入方式
 - 升级quill@2.0.0-rc.5

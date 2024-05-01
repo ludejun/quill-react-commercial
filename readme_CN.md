@@ -10,7 +10,7 @@ Quill作为很出众并流行的开源富文本编辑器，有着良好的数据
 
 
 ## 特性
-- 使用最新的quill@2.0.0-rc.4，方便向后兼容。使用React Hooks实现，TS支持，Rollup打包。
+- 使用最新的quill@2.0.0-rc.5，方便向后兼容。使用React Hooks实现，TS支持，Rollup打包。
 
 - 图片支持本地上传和图片Url插入，可以限制上传图片格式和大小
 
@@ -275,7 +275,6 @@ import 'highlight.js/styles/darcula.css';
   
 
 ### 剩余已知bug或体验优化，需要你的帮助
-- 改变selection文字颜色时，编辑器会自动滚到顶部
 - 复制文章中的图片处理
 - table中不能插入list、header、blockquote、code-block，尝试允许
 - 图片截取

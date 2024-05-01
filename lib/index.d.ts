@@ -1,5 +1,5 @@
 import { CSSProperties, FC } from 'react';
-import Quill, { RangeStatic } from 'quill';
+import Quill, { Range } from 'quill';
 import Delta from 'quill-delta';
 import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
@@ -74,8 +74,9 @@ interface IEditorProps {
     getQuill?: (quill: Quill, uploadedImgsList?: string[]) => void;
     content?: Delta | string;
     onChange?: (delta: Delta, old: Delta) => void;
-    onFocus?: (range?: RangeStatic) => void;
-    onBlur?: (oldRange?: RangeStatic) => void;
+    onFocus?: (range?: Range) => void;
+    onBlur?: (oldRange?: Range) => void;
+    onSave?: () => void;
     i18n?: 'en' | 'zh';
     style?: CSSProperties;
 }

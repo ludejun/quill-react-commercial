@@ -1,4 +1,5 @@
-export declare const keyboardBinds: {
+import { Range } from 'quill';
+export declare const keyboardBindsFn: (options: any) => {
     'list autofill': {
         key: string;
         collapsed: boolean;
@@ -11,12 +12,12 @@ export declare const keyboardBinds: {
             table: boolean;
             'table-cell-line': boolean;
         };
-        handler(range: any, context: any): void;
+        handler(range: Range, context: any): void;
     };
     'code backspace': {
         key: string;
         format: string[];
-        handler(range: any, context: {
+        handler(range: Range, context: {
             line: {
                 parent: {
                     cachedText?: string;
@@ -26,5 +27,10 @@ export declare const keyboardBinds: {
             prefix: string;
             offset: number;
         }): boolean;
+    };
+    save: {
+        key: string;
+        shortKey: boolean;
+        handler(range: Range, context: any): boolean;
     };
 };
