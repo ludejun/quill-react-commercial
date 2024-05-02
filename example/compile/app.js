@@ -25,7 +25,7 @@ var App = function App() {
   return /*#__PURE__*/React.createElement("div", {
     className: "App"
   }, /*#__PURE__*/React.createElement(RichTextEditor, {
-    i18n: 'zh',
+    i18n: 'en',
     readOnly: false,
     modules: {
       table: {},
@@ -59,4 +59,3 @@ var App = function App() {
 var domContainer = document.querySelector('#root');
 var root = ReactDOM.createRoot(domContainer);
 root.render( /*#__PURE__*/React.createElement(App, null));
-//# sourceMappingURL=app.js.map

@@ -10,7 +10,7 @@ As an outstanding and popular open-source rich text editor, [Quill](https://gith
 
 ## Features
 
-- Use the latest quill@2.0.0-rc.5. Implement using React Hooks, TS support, and Rollup packaging.
+- Use the latest quill@2.0.1. Implement using React Hooks, TS support, and Rollup packaging.
 - Images support local upload and image Url insertion, and can limit the format and size before.
 - All images support Base64 display, and can be uploaded remotely in the background. If fail, can click to upload again. Images support copying and dragging to insertion.
 - Image support for resizing, aligning, adding notes, deleting, scrolling to remove overlayer.
