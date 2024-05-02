@@ -25,7 +25,7 @@ var App = function App() {
   return /*#__PURE__*/React.createElement("div", {
     className: "App"
   }, /*#__PURE__*/React.createElement(RichTextEditor, {
-    i18n: 'zh',
+    i18n: 'en',
     readOnly: false,
     modules: {
       table: {},
