@@ -170,7 +170,7 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
   { key: 'php', label: 'PHP' },
   { key: 'sql', label: 'SQL' },
   { key: 'json', label: 'JSON' },
-  { key: 'shell', label: 'Shell' },
+  { key: 'bash', label: 'Bash' },
   { key: 'go', label: 'Go' },
   { key: 'objectivec', label: 'Object-C' },
   { key: 'xml', label: 'Html/xml' },
