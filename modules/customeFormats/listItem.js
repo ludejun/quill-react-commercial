@@ -3,7 +3,7 @@ const QuillListItem = Quill.import('formats/list');
 const ListContainer = Quill.import('formats/list');
 
 const ATTRIBUTES = ['data-list', 'data-start'];
-export class ListItem extends QuillListItem {
+export default class ListItem extends QuillListItem {
   // 通过Delta数据重构Dom
   static create(value) {
     const node = super.create();
@@ -26,6 +26,7 @@ export class ListItem extends QuillListItem {
     return domNode.getAttribute('data-list') || undefined;
   }
 
+  // 配合formarts使用，将formats中生成的string存放在Delta的attributes中
   // 在CSS中使用变量，拼接样式，使用全局变量var，先定义变量：--list-item-start
   format(name, value) {
     if (name === this.statics.blotName && value) {

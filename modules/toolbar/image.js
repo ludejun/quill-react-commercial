@@ -47,7 +47,7 @@ class ImageHandler extends Module {
     const toolbarContainer = this.toolbar.container;
     if (!this.imageDialog) {
       this.imageDialog = document.createElement('div');
-      this.imageDialog.classList.add('ql-image-dialog');
+      this.imageDialog.classList.add('ql-image-dialog', 'ql-toolbar-dialog');
       const words = getI18nText(['imageDialogLocal', 'imageDialogUrlLabel', 'iamgeDialogInsert'], this.options.i18n);
       this.imageDialog.innerHTML = `
       <input type="file" class="ql-image-upload" accept="${

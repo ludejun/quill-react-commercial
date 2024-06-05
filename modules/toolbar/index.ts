@@ -1,12 +1,13 @@
 import Quill from 'quill';
 import { i18nConfig } from '../../i18n';
 import { showTitle } from '../iconTitle/title';
+import { throttle } from '../../utils';
 
 export { LinkHandler } from './link';
 export { default as TableHandler } from './table';
 export { default as ImageHandler } from './image';
 export { default as CodeHandler } from './code';
-
+export { default as DividerHandler } from './divider';
 
 export const toolbarInit = (quill: Quill, i18n: keyof typeof i18nConfig) => {
   const container = quill.getModule('toolbar').container;
@@ -32,12 +33,32 @@ export const toolbarInit = (quill: Quill, i18n: keyof typeof i18nConfig) => {
   setDataSet('.ql-toolbar .ql-font .ql-picker-item[data-value="kaiTi"]', 'fontKai');
 
   window.showTitle = showTitle; // 全局添加 Icon hover 显示tootip函数
-}
+};
 
 export const undoHandler = (quill: Quill) => {
   quill?.history?.undo();
-}
+};
 
 export const redoHandler = (quill: Quill) => {
   quill?.history?.redo();
-}
+};
+
+export const inputHandler = (input, changeCallback) => {
+  if (input) {
+    // 阻止冒泡关闭Dialog
+    input.onclick = (e) => {
+      e.stopPropagation();
+    };
+    // input.onmousedown = (e) => {
+    //   console.log(4444, e)
+    //   e.stopPropagation();
+    // };
+    // input.onmouseup = (e) => {
+    //   console.log(6556, e);
+    //   e.stopPropagation();
+    // };
+    input.oninput = throttle(() => {
+      if (changeCallback) changeCallback(input.value);
+    }, 400);
+  }
+};

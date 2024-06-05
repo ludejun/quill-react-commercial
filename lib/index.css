@@ -104,7 +104,7 @@ XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
 }
 
 /*!
- * Quill Editor v2.0.1
+ * Quill Editor v2.0.2
  * https://quilljs.com
  * Copyright (c) 2017-2024, Slab
  * Copyright (c) 2014, Jason Chen
@@ -544,7 +544,7 @@ table.quill-better-table tr:first-child {
 .ql-toolbar {
   position: relative;
 }
-.ql-table-dialog {
+.ql-toolbar-dialog {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -552,6 +552,7 @@ table.quill-better-table tr:first-child {
   border: 1px solid #e7e7e7;
   background-color: #fff;
   padding: 8px;
+  font-size: 14px;
 }
 .ql-table-dialog .table-dialog-tr {
   display: flex;
@@ -580,15 +581,7 @@ table.quill-better-table tr:first-child {
   color: #999;
 }
 .ql-image-dialog {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  z-index: 10;
-  border: 1px solid #e7e7e7;
-  background-color: #fff;
-  padding: 8px;
   width: 280px;
-  font-size: 14px;
 }
 .ql-image-dialog input.ql-image-upload {
   display: none;
@@ -614,7 +607,7 @@ table.quill-better-table tr:first-child {
   align-items: center;
   margin-bottom: 10px;
 }
-.ql-image-dialog .image-url-form input[type=text] {
+.ql-image-dialog .image-url-form input[type='text'] {
   flex: 1;
   padding: 6px;
 }
@@ -622,4 +615,26 @@ table.quill-better-table tr:first-child {
   cursor: pointer;
   margin-left: 10px;
   color: #6918b4;
+}
+.ql-divider-dialog {
+  width: 200px;
+}
+.ql-divider-dialog .divider-item {
+  height: 20px;
+}
+.ql-divider-dialog .divider-item:hover {
+  background-color: #eee;
+  cursor: pointer;
+}
+.ql-divider-dialog .divider-setting {
+  margin-top: 10px;
+  align-items: center;
+}
+.ql-divider-dialog .divider-setting label {
+  white-space: nowrap;
+}
+.ql-divider-dialog .divider-color {
+  margin-left: 4px;
+  flex: 1;
+  min-width: 60px;
 }

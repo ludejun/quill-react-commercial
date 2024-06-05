@@ -10,7 +10,7 @@ Quill作为很出众并流行的开源富文本编辑器，有着良好的数据
 
 
 ## 特性
-- 使用最新的quill@2.0.1，方便向后兼容。使用React Hooks实现，TS支持，Rollup打包。
+- 使用最新的quill@2.0.2，方便向后兼容。使用React Hooks实现，TS支持，Rollup打包。
 
 - 图片支持本地上传和图片Url插入，可以限制上传图片格式和大小
 
@@ -148,12 +148,12 @@ modules.toolbarOptionse为Quill toolbar按数组进行定义的方式，当为�
 
 ```javascript
 const toolbarOptions = [
-      ['undo', 'redo'],
+      ['undo', 'redo', 'clean'],
       [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', '14px', '18px', '36px'] }],
       [{ color: [] }, { background: [] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
-      ['blockquote', 'code-block', 'link','image', { script: 'sub' }, { script: 'super' }, 'table', 'clean'],
+      ['blockquote', 'code-block', 'link','image', { script: 'sub' }, { script: 'super' }, 'table', 'divider'],
     ];
 ```
 
@@ -194,6 +194,9 @@ const quill = useRef(null);
 const getQuill = (quillIns) => {
   quill.current = quillIns;
 }; // quill.current将拥有所有 quill 的 API：https://quilljs.com/docs/api/
+// 例子
+const content = quill.current?.getContent(); // 获取编辑器的的Delta类型内容
+const text = quill.current?.getText(); // 获取编辑器的纯文本内容
 ```
 
 

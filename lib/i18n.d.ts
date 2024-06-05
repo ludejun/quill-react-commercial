@@ -11,6 +11,7 @@ export declare const i18nConfig: {
         iamgeDialogInsert: string;
         imageDialogTypeErr: string;
         imageDialogSizeErr: string;
+        dividerDialogColorLabel: string;
         placeholder: string;
         alignLeft: string;
         alignRight: string;
@@ -40,6 +41,7 @@ export declare const i18nConfig: {
         iamgeDialogInsert: string;
         imageDialogTypeErr: string;
         imageDialogSizeErr: string;
+        dividerDialogColorLabel: string;
         placeholder: string;
         alignLeft: string;
         alignRight: string;

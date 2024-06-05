@@ -11,6 +11,7 @@ export const i18nConfig = {
     iamgeDialogInsert: 'Insert',
     imageDialogTypeErr: 'File type is error, please upload again!',
     imageDialogSizeErr: 'Image size cannot exceed $M',
+    dividerDialogColorLabel: 'Primary Color:',
 
     placeholder: 'Start Note(Support input markdown)...',
     alignLeft: 'Left align',
@@ -43,6 +44,7 @@ export const i18nConfig = {
     iamgeDialogInsert: '插入',
     imageDialogTypeErr: '图片格式错误，请重新上传！',
     imageDialogSizeErr: '图片大小不能超过$M',
+    dividerDialogColorLabel: '主色：',
 
     placeholder: '开始笔记（支持直接Markdown输入）...',
     alignLeft: '居左',

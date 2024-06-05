@@ -5,16 +5,15 @@ import { MagicUrl } from './magic-url';
 import MarkdownShortcuts from './markdown-shortcuts';
 import highlightInit from './highlight';
 import QuillBetterTable from './quill-better-table/quill-better-table';
-import Image from './customeFormats/image';
-import { ListItem } from './customeFormats/listItem';
+import { Image, ListItem, QSyntax, DividerBlot } from './customeFormats';
 
-import { toolbarInit, LinkHandler, undoHandler, redoHandler, TableHandler, ImageHandler, CodeHandler } from './toolbar';
+import { toolbarInit, LinkHandler, undoHandler, redoHandler, TableHandler, ImageHandler, CodeHandler, DividerHandler } from './toolbar';
 import { showTitle } from './iconTitle/title';
-import QSyntax from './customeFormats/syntax';
 import { keyboardBindsFn } from './keyboard';
 
 Quill.register(Image, true); // 允许图片的样式保存在Delta中
-Quill.register(ListItem, true); // 允许图片的样式保存在Delta中
+Quill.register(ListItem, true); // 允许列表的起始值和类型保存在Delta中
+Quill.register(DividerBlot, true); // 允许普通分隔线和样式保存在Delta中
 Quill.register(
   {
     'modules/imageResize': ImageResize,
@@ -26,6 +25,7 @@ Quill.register(
     'modules/imageHandler': ImageHandler,
     'modules/codeHandler': CodeHandler,
     'modules/qSyntax': QSyntax,
+    'modules/dividerHandler': DividerHandler,
   },
   true,
 );
@@ -33,8 +33,6 @@ Quill.register(
 export {
   highlightInit,
   ImageDrop,
-  Image,
-  ListItem,
   ImageResize,
   MagicUrl,
   MarkdownShortcuts,
@@ -49,4 +47,5 @@ export {
   undoHandler,
   redoHandler,
   CodeHandler,
+  DividerHandler,
 };

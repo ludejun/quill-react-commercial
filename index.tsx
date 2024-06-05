@@ -24,6 +24,7 @@ import { optionDisableToggle, setContent, throttle } from './utils';
 import { getI18nText, i18nConfig } from './i18n';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
+import IconDivider from './assets/icons/divider.svg';
 import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
 import './assets/modules.less';
@@ -116,6 +117,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       };
       qSyntax?: any;
       codeHandler?: boolean | string;
+      dividerHandler?: boolean | {};
     }
   >({});
   const toolbarHandlers = useRef<Record<string, unknown>>({});
@@ -259,6 +261,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       quillModules.current.codeHandler = true;
       toolbarHandlers.current.undo = () => undoHandler(quillRef.current!);
       toolbarHandlers.current.redo = () => redoHandler(quillRef.current!);
+      quillModules.current.dividerHandler = {i18n};
     }
 
     // 设置自定义字体/大小
@@ -292,6 +295,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
     const icons = Quill.import('ui/icons');
     icons.undo = IconUndo;
     icons.redo = IconRedo;
+    icons.divider = IconDivider;
   }, [modules]);
 
   useEffect(() => {
@@ -352,6 +356,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         { script: 'sub' },
         { script: 'super' },
         quillModules.current['better-table'] ? 'table' : undefined,
+        'divider'
       ],
     ];
 

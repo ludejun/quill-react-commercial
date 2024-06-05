@@ -4,7 +4,7 @@
 .ql-toolbar {
   position: relative;
 }
-.ql-table-dialog {
+.ql-toolbar-dialog {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -12,6 +12,16 @@
   border: 1px solid @editor-border;
   background-color: #fff;
   padding: 8px;
+  font-size: 14px;
+}
+.ql-table-dialog {
+  // position: absolute;
+  // display: flex;
+  // flex-direction: column;
+  // z-index: 10;
+  // border: 1px solid @editor-border;
+  // background-color: #fff;
+  // padding: 8px;
 
   .table-dialog-tr {
     display: flex;
@@ -42,15 +52,15 @@
 }
 // image upload dialog
 .ql-image-dialog {
-  position: absolute;
-   display: flex;
-  flex-direction: column;
-  z-index: 10;
-  border: 1px solid @editor-border;
-  background-color: #fff;
-  padding: 8px;
+  // position: absolute;
+  //  display: flex;
+  // flex-direction: column;
+  // z-index: 10;
+  // border: 1px solid @editor-border;
+  // background-color: #fff;
+  // padding: 8px;
   width: 280px;
-  font-size: 14px;
+  // font-size: 14px;
 
   input.ql-image-upload {
     display: none;
@@ -62,8 +72,9 @@
     border-radius: 4px;
     color: #fff;
   }
-  button.local-image:hover, button.local-image:focus {
-    color: #fff
+  button.local-image:hover,
+  button.local-image:focus {
+    color: #fff;
   }
   .url-label {
     margin: 12px 0 5px;
@@ -74,7 +85,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    input[type=text] {
+    input[type='text'] {
       flex: 1;
       padding: 6px;
     }
@@ -83,5 +94,27 @@
       margin-left: 10px;
       color: @primary-color;
     }
+  }
+}
+.ql-divider-dialog {
+  width: 200px;
+  .divider-item {
+    height: 20px;
+  }
+  .divider-item:hover {
+    background-color: #eee;
+    cursor: pointer;
+  }
+  .divider-setting {
+    margin-top: 10px;
+    align-items: center;
+    label {
+      white-space: nowrap;
+    }
+  }
+  .divider-color {
+    margin-left: 4px;
+    flex: 1;
+    min-width: 60px;
   }
 }

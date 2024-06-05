@@ -60,7 +60,7 @@ class TableHandler extends Module {
     const toolbarContainer = this.toolbar.container;
     if (!this.tableDialog) {
       this.tableDialog = document.createElement('div');
-      this.tableDialog.classList.add('ql-table-dialog');
+      this.tableDialog.classList.add('ql-table-dialog', 'ql-toolbar-dialog');
       const { dialogRows, dialogColumns } = this.options; // 生成dialogRows * dialogColumns的格子弹框
       const tableDialogLabel = getI18nText('tableDialogLabel', this.options.i18n);
       const dialogContent = `${TableHandler.genNumArr(

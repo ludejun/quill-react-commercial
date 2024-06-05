@@ -2,7 +2,7 @@
 
 [中文](/readme_CN.md)
 
-As an outstanding and popular open-source rich text editor, [Quill](https://github.com/quilljs/quill) has a good data structure, API, and plugin system. However, due to years of difficult updates and outdated plugins, there is an urgent need for a Quill rich text editor that can be used for production, meet the experience and extension, can be customized, and can be oriented towards commercializatio.
+As an outstanding and popular open-source rich text editor, [Quill](https://github.com/quilljs/quill) has a good data structure, API, and plugin system. However, due to years of difficult updates and outdated plugins, there is an urgent need for a Quill rich text editor that can be used for production, meet the experience and extension, can be customized, and can be oriented towards commercialization.
 
 ![quill-react-commercial](https://cdn.jsdelivr.net/gh/ludejun/quill-react-commercial/example/images/quill-react-commercial.jpg)
 
@@ -10,7 +10,7 @@ As an outstanding and popular open-source rich text editor, [Quill](https://gith
 
 ## Features
 
-- Use the latest quill@2.0.1. Implement using React Hooks, TS support, and Rollup packaging.
+- Use the latest quill@2.0.2. Implement using React Hooks, TS support, and Rollup packaging.
 - Images support local upload and image Url insertion, and can limit the format and size before.
 - All images support Base64 display, and can be uploaded remotely in the background. If fail, can click to upload again. Images support copying and dragging to insertion.
 - Image support for resizing, aligning, adding notes, deleting, scrolling to remove overlayer.
@@ -137,12 +137,12 @@ Demo of modules.toolbarOptionse. Details in https://quilljs.com/docs/modules/too
 
 ```javascript
 const toolbarOptions = [
-      ['undo', 'redo'],
+      ['undo', 'redo', 'clean'],
       [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', '14px', '18px', '36px'] }],
       [{ color: [] }, { background: [] }],
       ['bold', 'italic', 'underline', 'strike'],
       [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
-      ['blockquote', 'code-block', 'link','image', { script: 'sub' }, { script: 'super' }, 'table', 'clean'],
+      ['blockquote', 'code-block', 'link','image', { script: 'sub' }, { script: 'super' }, 'table', 'divider'],
     ];
 ```
 
@@ -183,6 +183,9 @@ const quill = useRef(null);
 const getQuill = (quillIns) => {
   quill.current = quillIns;
 }; // quill.current will has all quill's API：https://quilljs.com/docs/api/
+// example
+const content = quill.current?.getContent(); // get the content of editor
+const text = quill.current?.getText(); // get all text of editor
 ```
 
 

@@ -82,3 +82,10 @@ export function htmlDecode(str: string) {
   div.innerHTML = str;
   return div.innerText;
 }
+
+export const isColor = (value: string) => {
+  const isRgb =
+    /^rgb\((\s*\d{1,3}\s*,\s*){2}\d{1,3}\s*\)$|^rgba\((\s*\d{1,3}\s*,\s*){2}\d{1,3}\s*,\s*\d*\.\d+\s*\)$/i;
+  const isHex = /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/;
+  return isRgb.test(value) || isHex.test(value);
+}

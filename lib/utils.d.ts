@@ -7,3 +7,4 @@ export declare function setContent(content: Delta | string, quill: Quill): void;
 export declare const optionDisableToggle: (quill: Quill, blockList: string[], disable: boolean) => void;
 export declare const throttle: (fn: () => void, delay?: number) => () => void;
 export declare function htmlDecode(str: string): string;
+export declare const isColor: (value: string) => boolean;
