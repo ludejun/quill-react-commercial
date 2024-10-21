@@ -40,16 +40,17 @@ var App = function App() {
           );
         },
         uploadFailCB: function uploadFailCB() {
-          return console.error('图片上传失败');
+          return console.error('Image upload fail!');
         }
       }
     },
     getQuill: getQuill,
-    content:
-    // 初始化笔记内容，而不能直接使用activeNote.content，因为当更新或保存会重新渲染导致内容重置到保存时刻，光标变到开头
-    initContent,
+    content: initContent,
     onChange: quillChange,
-    onFocus: function onFocus(arg) {}
+    onFocus: function onFocus(arg) {},
+    onSave: function onSave() {
+      return console.log("'CMD+S' used.");
+    }
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 200
@@ -59,3 +60,4 @@ var App = function App() {
 var domContainer = document.querySelector('#root');
 var root = ReactDOM.createRoot(domContainer);
 root.render( /*#__PURE__*/React.createElement(App, null));
+//# sourceMappingURL=app.js.map

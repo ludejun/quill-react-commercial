@@ -49,24 +49,44 @@ export const keyboardBindsFn = (options) => {
       handler(
         range: Range,
         context: {
-          line: { parent: { cachedText?: string } };
+          line: {
+            parent: {
+              domNode: HTMLDivElement;
+            };
+          };
           suffix: string;
           prefix: string;
           offset: number;
         },
       ) {
         if (this.quill) {
-          const [line] = this.quill.getLine(range.index);
-          const isEmpty = !line.children.head.text || line.children.head.text.trim() === '';
+          // const [line] = this.quill.getLine(range.index);
+          // const isEmpty = !line.children.head.text || line.children.head.text.trim() === '';
           const format = this.quill.getFormat(range);
-          const allCode = context?.line?.parent?.cachedText;
-          // 当是起始，代码块且整块中已无字符，或引用/列表且当前行为空，去除当前行格式；其他情况执行默认Backspace的handler
-          if (
-            range.index === 0 &&
-            context.suffix === '' &&
-            ((format['code-block'] && (allCode === '\n' || allCode === '')) ||
-              (!format['code-block'] && isEmpty))
+          const allCode = context?.line?.parent?.domNode?.innerHTML
+            .replace(/<select>(.+)<\/span><\/span>/, '')
+            .replace(/<[^<>]+>/g, ''); // parent指代码块 div.ql-code-block-container
+
+          // // 当是起始，代码块且整块中已无字符，或引用/列表且当前行为空，去除当前行格式；其他情况执行默认Backspace的handler
+          // if (
+          //   range.index === 0 &&
+          //   context.suffix === '' &&
+          //   ((format['code-block'] && (allCode === '\n' || allCode === '')) ||
+          //     (!format['code-block'] && isEmpty))
+          // ) {
+          //   this.quill.removeFormat(range.index, range.length);
+          //   return false;
+          // }
+
+          // 只要光标在list、引用的开头删除，直接移除格式；去除原只能文档开头的条件
+          if ((format['list'] || format['blockquote']) && context.prefix === '') {
+            this.quill.removeFormat(range.index, range.length);
+            return false;
+          } else if (
+            format['code-block'] &&
+            (allCode === '\n' || allCode === '' || allCode === undefined)
           ) {
+            // 光标在Code块中，只要块内内容为空，直接移除格式
             this.quill.removeFormat(range.index, range.length);
             return false;
           }

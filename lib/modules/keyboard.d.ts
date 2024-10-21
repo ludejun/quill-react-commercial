@@ -20,7 +20,7 @@ export declare const keyboardBindsFn: (options: any) => {
         handler(range: Range, context: {
             line: {
                 parent: {
-                    cachedText?: string;
+                    domNode: HTMLDivElement;
                 };
             };
             suffix: string;

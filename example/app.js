@@ -26,16 +26,14 @@ const App = () => {
               request(apiURL('uploadImg'), ajaxFormPostOptions(formData)).then(
                 (response) => response.url,
               ),
-            uploadFailCB: () => console.error('图片上传失败'),
+            uploadFailCB: () => console.error('Image upload fail!'),
           },
         }}
         getQuill={getQuill}
-        content={
-          // 初始化笔记内容，而不能直接使用activeNote.content，因为当更新或保存会重新渲染导致内容重置到保存时刻，光标变到开头
-          initContent
-        }
+        content={initContent}
         onChange={quillChange}
         onFocus={(arg) => {}}
+        onSave={() => console.log(`'CMD+S' used.`)}
       />
       <div style={{ height: 200 }}>{delta}</div>
     </div>

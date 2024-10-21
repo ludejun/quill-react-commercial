@@ -1,5 +1,9 @@
 # Change-Log
 
+# 1.6.1
+- fearure：点击高亮Code Icon支持取消Code格式
+- hotfix：有序列表、引用有字时无法删除
+
 ### 1.6.0
 - quill升级到2.0.2
 - 添加自定义Divider格式，设置多个默认分割线，允许保存Delta及重新渲染
