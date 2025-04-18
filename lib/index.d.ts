@@ -69,7 +69,7 @@ interface IEditorProps {
             maxSize?: number;
             imageAccept?: string;
         };
-        toolbarOptions?: [][];
+        toolbarOptions?: Array<(string | { [key: string]: string })[]>;
     } & IModules;
     getQuill?: (quill: Quill, uploadedImgsList?: string[]) => void;
     content?: Delta | string;
