@@ -6,8 +6,6 @@ As an outstanding and popular open-source rich text editor, [Quill](https://gith
 
 ![quill-react-commercial](https://cdn.jsdelivr.net/gh/ludejun/quill-react-commercial/example/images/quill-react-commercial.jpg)
 
-
-
 ## Features
 
 - Use the latest quill@2.0.2. Implement using React Hooks, TS support, and Rollup packaging.
@@ -24,10 +22,6 @@ As an outstanding and popular open-source rich text editor, [Quill](https://gith
 - Automatically recognize input or copy URLs as LinkBlot.
 - Other bugfix: Unable to input list in table, upload images in table, recognize ordered list, cannot delete blocks such as code and table, unable to save image location, etc.
 
-
-
-
-
 ## Install
 
 ```shell
@@ -37,19 +31,19 @@ yarn add quill-react-commercial
 ```
 
 ## Quick Start
+
 ```javascript
 import RichTextEditor from 'quill-react-commercial';
 import 'quill-react-commercial/lib/index.css';
 
-<RichTextEditor modules={{ table: {}, codeHighlight: true }} />
+<RichTextEditor modules={{ table: {}, codeHighlight: true }} />;
 ```
 
 - UMD / CDN: window.quillReactCommercial will get this Component. Demo in `example folder`
+
 ```html
 <script src="../dist/quill-react-commercial.min.js"></script>
 ```
-
-
 
 ## Usage
 
@@ -65,7 +59,7 @@ import 'quill-react-commercial/lib/index.css';
       insertColumnRight?: {
     		text: 'Insert Column Right',
   		}
-    }, // Generally not required 
+    }, // Generally not required
     backgroundColors?: {
       colors?: ['#4a90e2', '#999'], // backgroundcolor of table cell, default: ['#dbc8ff', '#6918b4', '#4a90e2', '#999', '#fff']
       text?: 'Background Colors', // default: 'Background Colors'
@@ -87,7 +81,7 @@ import 'quill-react-commercial/lib/index.css';
     uploadFailCB?: (error: unknown) => void; // callback when failure
     imgRemarkPre?: 'Fig. '; // Leading string for the image remark, and can be deleted
     maxSize?: 2; // The maximum size for uploading local images, in MB, defaults to 5MB
-    imageAccept?: string; // Acceptable image types for uploading local images, default: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon'
+    imageAccept?: string; // Acceptable image types for uploading local images, default: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/webp'
   },
   toolbarOptions?: [][]; // Customize the required toolbar icons & order
 }
@@ -132,18 +126,36 @@ Default value of modules.table.operationMenu
 modules.imageHandler: If not defined, the default inserted image will be converted to base64 and stored in Delta
 ![image](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/image.gif)
 
-
 Demo of modules.toolbarOptionse. Details in https://quilljs.com/docs/modules/toolbar/
 
 ```javascript
 const toolbarOptions = [
-      ['undo', 'redo', 'clean'],
-      [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', '14px', '18px', '36px'] }],
-      [{ color: [] }, { background: [] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
-      ['blockquote', 'code-block', 'link','image', { script: 'sub' }, { script: 'super' }, 'table', 'divider'],
-    ];
+  ['undo', 'redo', 'clean'],
+  [
+    { font: ['wsYaHei', 'songTi', 'serif', 'arial'] },
+    { size: ['12px', '14px', '18px', '36px'] },
+  ],
+  [{ color: [] }, { background: [] }],
+  ['bold', 'italic', 'underline', 'strike'],
+  [
+    { list: 'ordered' },
+    { list: 'bullet' },
+    { list: 'check' },
+    { indent: '-1' },
+    { indent: '+1' },
+    { align: [] },
+  ],
+  [
+    'blockquote',
+    'code-block',
+    'link',
+    'image',
+    { script: 'sub' },
+    { script: 'super' },
+    'table',
+    'divider',
+  ],
+];
 ```
 
 Default of modules.codeHighlight, and you can change it. Or welcome your PR.
@@ -167,10 +179,8 @@ Default of modules.codeHighlight, and you can change it. Or welcome your PR.
   { key: 'ruby', label: 'Ruby' },
   { key: 'swift', label: 'Swift' },
   { key: 'scala', label: 'Scala' },
-]
+];
 ```
-
-
 
 ##### 2. placeholder：Option，string; placeholder of editor
 
@@ -188,8 +198,6 @@ const content = quill.current?.getContent(); // get the content of editor
 const text = quill.current?.getText(); // get all text of editor
 ```
 
-
-
 **4. content：Option，Delta / string; initial data of editor**
 
 ```jsx
@@ -199,8 +207,6 @@ const text = quill.current?.getText(); // get all text of editor
 // string of html
 <RichTextEditor modules={{ table: {}, codeHighlight: true }} getQuill={getQuill} content={'<h1>Hello quill-react-commercial!</h1>'} />
 ```
-
-
 
 **5. readOnly：Option，boolean；default value: false**
 
@@ -216,12 +222,13 @@ const text = quill.current?.getText(); // get all text of editor
 
 **11. onSave: Option, function;**
 
+**12. theme?: 'snow' | 'bubble'; default value: 'snow'**
 
 ### Other Issues
 
 1. How to switch code highlighting color styles
 
-Default use highlight.js xcode.css. 
+Default use highlight.js xcode.css.
 
 ```javascript
 import 'highlight.js/styles/darcula.css';
@@ -230,10 +237,11 @@ import 'highlight.js/styles/darcula.css';
 Or
 
 ```html
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/androidstudio.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/androidstudio.min.css"
+/>
 ```
-
-
 
 ### How to develop & Welcome your PR.
 
@@ -242,6 +250,3 @@ When debugging the editor function, you can execute `yarn example` to package st
 - Modifying the JS, Less, and other features of the editor itself allows for hot updates, but the browser needs to be refreshed
 - Modifying the JS in the example will not re babel, but requires re executing the `yarn example`
 - Rollup packaging will be used after 1.3.7 to avoid the problem of introducing redundant configuration into SVG caused by previous tsc and webpack packaging
-
-
-

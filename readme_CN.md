@@ -1,42 +1,38 @@
 # quill-react-commercial
 
+Quill 作为很出众并流行的开源富文本编辑器，有着良好的数据结构、API 和插件系统，但是由于多年的更新难产及众多插件的过时、体验差，急需一款能用于生产、满足体验与扩展、能自定义、可以面向商业化的 Quill 富文本编辑器。
 
-Quill作为很出众并流行的开源富文本编辑器，有着良好的数据结构、API和插件系统，但是由于多年的更新难产及众多插件的过时、体验差，急需一款能用于生产、满足体验与扩展、能自定义、可以面向商业化的Quill富文本编辑器。
-
-微信小程序的富文本编辑器也使用的Quill底层和数据结构，可以和quill-react-commercial打通编辑和展示。
+微信小程序的富文本编辑器也使用的 Quill 底层和数据结构，可以和 quill-react-commercial 打通编辑和展示。
 
 ![quill-react-commercial-zh](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/quill-react-commercial-zh.jpg)
 
-
-
 ## 特性
-- 使用最新的quill@2.0.2，方便向后兼容。使用React Hooks实现，TS支持，Rollup打包。
 
-- 图片支持本地上传和图片Url插入，可以限制上传图片格式和大小
+- 使用最新的quill@2.0.2，方便向后兼容。使用 React Hooks 实现，TS 支持，Rollup 打包。
 
-- 所有图片支持Base64显示，后台上传远端，上传失败点击重新上传。图片支持复制和拖拽进入。
+- 图片支持本地上传和图片 Url 插入，可以限制上传图片格式和大小
+
+- 所有图片支持 Base64 显示，后台上传远端，上传失败点击重新上传。图片支持复制和拖拽进入。
 
 - 图片支持调整大小，调整对齐，添加备注，删除，滚动删除浮层
 
-- 重构Link Tooltip，添加更多操作
+- 重构 Link Tooltip，添加更多操作
 
-- 支持markdown直接输入
+- 支持 markdown 直接输入
 
 - 代码块支持语言选择、复制、代码行标
 
-- Table支持toolbar选择大小，右键更多选项和图标
+- Table 支持 toolbar 选择大小，右键更多选项和图标
 
-- Icon hover时支持多语言Tooltip提示
+- Icon hover 时支持多语言 Tooltip 提示
 
 - 国际化：支持中英文配置，支持中文字体
 
-- IME等其他输入法输入时（如拼音），placeholder可以及时消失
+- IME 等其他输入法输入时（如拼音），placeholder 可以及时消失
 
-- 自动识别输入或者复制URL为LinkBlot
+- 自动识别输入或者复制 URL 为 LinkBlot
 
-- 其他bugfix：table中无法输入列表，table中图片上传，有序列表识别，code、table等block无法删除，图片位置无法保存等
-
-  
+- 其他 bugfix：table 中无法输入列表，table 中图片上传，有序列表识别，code、table 等 block 无法删除，图片位置无法保存等
 
 ## 安装
 
@@ -45,8 +41,6 @@ npm install quill-react-commercial --save
 # or
 yarn add quill-react-commercial
 ```
-
-
 
 ## 快速使用
 
@@ -57,17 +51,17 @@ import 'quill-react-commercial/lib/index.css';
 <RichTextEditor modules={{ table: {}, codeHighlight: true, i18n={'zh'} }} />
 ```
 
-- 如需要umd包，可以采用dist文件夹中打好的，script引入文件后，window.quillReactCommercial即可拿到组件，参考example中的demo
+- 如需要 umd 包，可以采用 dist 文件夹中打好的，script 引入文件后，window.quillReactCommercial 即可拿到组件，参考 example 中的 demo
+
 ```html
 <script src="../dist/quill-react-commercial.min.js"></script>
 ```
 
-
-
 ## 使用
 
 ### 属性
-##### 1. modules：必需，Object；每一个key不需要时可以为false
+
+##### 1. modules：必需，Object；每一个 key 不需要时可以为 false
 
 ```js
 {
@@ -105,7 +99,7 @@ import 'quill-react-commercial/lib/index.css';
 }
 ```
 
-modules.table的operationMenu的中文默认值如下，其他配置参考quill-better-table
+modules.table 的 operationMenu 的中文默认值如下，其他配置参考 quill-better-table
 
 ```js
 {
@@ -138,23 +132,42 @@ modules.table的operationMenu的中文默认值如下，其他配置参考quill-
   },
 }
 ```
+
 ![table-en](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/table-en.jpg)
 
-modules.imageHandler 不定义则默认插入图片转为base64后存在Delta中
+modules.imageHandler 不定义则默认插入图片转为 base64 后存在 Delta 中
 ![image](https://raw.githubusercontent.com/ludejun/quill-react-commercial/master/example/images/image.gif)
 
-
-modules.toolbarOptionse为Quill toolbar按数组进行定义的方式，当为列表项时默认选中第一个。[更多细节](https://quilljs.com/docs/modules/toolbar/)
+modules.toolbarOptionse 为 Quill toolbar 按数组进行定义的方式，当为列表项时默认选中第一个。[更多细节](https://quilljs.com/docs/modules/toolbar/)
 
 ```javascript
 const toolbarOptions = [
-      ['undo', 'redo', 'clean'],
-      [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', '14px', '18px', '36px'] }],
-      [{ color: [] }, { background: [] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }, { indent: '-1' }, { indent: '+1' }, { align: [] }],
-      ['blockquote', 'code-block', 'link','image', { script: 'sub' }, { script: 'super' }, 'table', 'divider'],
-    ];
+  ['undo', 'redo', 'clean'],
+  [
+    { font: ['wsYaHei', 'songTi', 'serif', 'arial'] },
+    { size: ['12px', '14px', '18px', '36px'] },
+  ],
+  [{ color: [] }, { background: [] }],
+  ['bold', 'italic', 'underline', 'strike'],
+  [
+    { list: 'ordered' },
+    { list: 'bullet' },
+    { list: 'check' },
+    { indent: '-1' },
+    { indent: '+1' },
+    { align: [] },
+  ],
+  [
+    'blockquote',
+    'code-block',
+    'link',
+    'image',
+    { script: 'sub' },
+    { script: 'super' },
+    'table',
+    'divider',
+  ],
+];
 ```
 
 modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
@@ -178,14 +191,12 @@ modules.codeHighlight 传入数组时可以自定义支持语言，默认为：
   { key: 'ruby', label: 'Ruby' },
   { key: 'swift', label: 'Swift' },
   { key: 'scala', label: 'Scala' },
-]
+];
 ```
 
+##### 2. placeholder：非必需，string；编辑器 placeholder；中文默认值：“开始笔记（支持直接 Markdown 输入）...”
 
-
-##### 2. placeholder：非必需，string；编辑器placeholder；中文默认值：“开始笔记（支持直接Markdown输入）...”
-
-**3. getQuill：非必需，函数；函数参数为当前Quill实例**
+**3. getQuill：非必需，函数；函数参数为当前 Quill 实例**
 
 实例 API：https://quilljs.com/docs/api/
 
@@ -199,11 +210,9 @@ const content = quill.current?.getContent(); // 获取编辑器的的Delta类型
 const text = quill.current?.getText(); // 获取编辑器的纯文本内容
 ```
 
+**4. content：非必需，Delta 或者 string；富文本编辑器初始数据**
 
-
-**4. content：非必需，Delta或者string；富文本编辑器初始数据**
-
-当content变化时会重新渲染富文本编辑器
+当 content 变化时会重新渲染富文本编辑器
 
 ```jsx
 // Delta格式的content
@@ -213,27 +222,28 @@ const text = quill.current?.getText(); // 获取编辑器的纯文本内容
 <RichTextEditor modules={{ table: {}, codeHighlight: true }} getQuill={getQuill} content={'<h1>Hello quill-react-commercial!</h1>'} />
 ```
 
+**5. readOnly：非必需，boolean；编辑器是否只读；默认为 false**
 
+**6. onChange：非必需，function；编辑器 quill 实例 onChange 触发时的 callback**
 
-**5. readOnly：非必需，boolean；编辑器是否只读；默认为false**
+**7. onFocus：非必需，function；编辑器 quill 实例 Focus 触发时的 callback**
 
-**6. onChange：非必需，function；编辑器quill实例onChange触发时的callback**
-
-**7. onFocus：非必需，function；编辑器quill实例Focus触发时的callback**
-
-**8. onBlur：非必需，function；编辑器quill实例Blur触发时的callback**
+**8. onBlur：非必需，function；编辑器 quill 实例 Blur 触发时的 callback**
 
 **9. i18n?: 'en' | 'zh'，非必需，string；国际化，默认为 en**
 
 **10. style?: CSSProperties;**
 
-其他quill的实例方法，可以在获取实例后参考[Quill API](https://quilljs.com/docs/api/)
+**11. onSave: Option, function;**
 
+**12. theme?: 'snow' | 'bubble'; 默认值: 'snow'**
 
+其他 quill 的实例方法，可以在获取实例后参考[Quill API](https://quilljs.com/docs/api/)
 
-### 安装SDK问题
+### 安装 SDK 问题
 
-1. 1.3.7版本之前如svg不能正常展示，在项目的webpack配置中对svg打包进行修改（1.3.7版本之后不用配置）
+1. 1.3.7 版本之前如 svg 不能正常展示，在项目的 webpack 配置中对 svg 打包进行修改（1.3.7 版本之后不用配置）
+
 ```javascript
 // webpack5
 {
@@ -251,37 +261,39 @@ const text = quill.current?.getText(); // 获取编辑器的纯文本内容
 
 2. 如何切换代码高亮配色样式
 
-默认使用highlight.js的xcode配色，如需切换配色，可以直接引入对应样式文件
+默认使用 highlight.js 的 xcode 配色，如需切换配色，可以直接引入对应样式文件
+
 ```javascript
 import 'highlight.js/styles/darcula.css';
 // 如不想安装highlight.js，请下载到本地，import本地文件
 ```
+
 或者
+
 ```html
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/androidstudio.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/androidstudio.min.css"
+/>
 ```
-
-
 
 ### 开发须知
 
-需要调试编辑器功能时，可以执行 **yarn example** 来打包静态资源给 index.html 使用，浏览器打开index.html即可
+需要调试编辑器功能时，可以执行 **yarn example** 来打包静态资源给 index.html 使用，浏览器打开 index.html 即可
 
-- 修改编辑器本身的JS、Less等可以热更新，但是浏览器的 html 需要刷新
+- 修改编辑器本身的 JS、Less 等可以热更新，但是浏览器的 html 需要刷新
 
-- 修改example中的JS不会重新babel，需要重新执行 yarn example
+- 修改 example 中的 JS 不会重新 babel，需要重新执行 yarn example
 
-- index.html中引入的本地的react、react-dom，外网CDN太慢
+- index.html 中引入的本地的 react、react-dom，外网 CDN 太慢
 
-- 1.3.7后采用Rollup打包，避免之前tsc和webpack打包导致svg引入需要多余配置的问题
+- 1.3.7 后采用 Rollup 打包，避免之前 tsc 和 webpack 打包导致 svg 引入需要多余配置的问题
 
-  
+### 剩余已知 bug 或体验优化，需要你的帮助
 
-### 剩余已知bug或体验优化，需要你的帮助
 - 复制文章中的图片处理
-- table中不能插入list、header、blockquote、code-block，尝试允许
+- table 中不能插入 list、header、blockquote、code-block，尝试允许
 - 图片截取
-- table多cell内容复制格式错乱
-- shell/bash的代码高亮难看
+- table 多 cell 内容复制格式错乱
+- shell/bash 的代码高亮难看
 - 在编辑中插入图片并上传成功，但是又删除，服务器上已存在之前上传图片
-

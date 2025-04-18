@@ -101,10 +101,18 @@ interface IEditorProps {
   onSave?: () => void;
   i18n?: 'en' | 'zh';
   style?: CSSProperties;
+  theme?: 'bubble' | 'snow';
 }
 
 const RichTextEditor: FC<IEditorProps> = (props) => {
-  const { modules = {}, content, i18n = 'en', style = {}, readOnly = false } = props;
+  const {
+    modules = {},
+    content,
+    i18n = 'en',
+    style = {},
+    readOnly = false,
+    theme = 'snow',
+  } = props;
   const quillModules = useRef<
     IModules & {
       'better-table'?: Record<string, unknown>;
@@ -126,7 +134,9 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       theme?: Record<string, any>;
     }
   >();
-  const editorId = useRef<string>(new Date().getTime() + (100 * Math.random()).toFixed(0));
+  const editorId = useRef<string>(
+    new Date().getTime() + (100 * Math.random()).toFixed(0),
+  );
   const uploadedImgsList = useRef<string[]>([]); // 已上传图片，主要给onComplete使用，可以用来判断哪些已上传图片实际并没有被使用
 
   // 处理外部传入的modules
@@ -261,7 +271,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       quillModules.current.codeHandler = true;
       toolbarHandlers.current.undo = () => undoHandler(quillRef.current!);
       toolbarHandlers.current.redo = () => redoHandler(quillRef.current!);
-      quillModules.current.dividerHandler = {i18n};
+      quillModules.current.dividerHandler = { i18n };
     }
 
     // 设置自定义字体/大小
@@ -339,7 +349,14 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         { size: ['12px', false, '18px', '36px'] },
         { header: [false, 1, 2, 3, 4] },
       ],
-      ['bold', 'italic', 'underline', 'strike', { color: [] }, { background: [] }],
+      [
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        { color: [] },
+        { background: [] },
+      ],
       [
         { list: 'ordered' },
         { list: 'bullet' },
@@ -356,7 +373,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         { script: 'sub' },
         { script: 'super' },
         quillModules.current['better-table'] ? 'table' : undefined,
-        'divider'
+        'divider',
       ],
     ];
 
@@ -391,8 +408,10 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       },
       placeholder: placeholder || (getI18nText('placeholder', i18n) as string),
       readOnly,
-      bounds: document.querySelector(`#editor${editorId.current}`) as HTMLElement,
-      theme: 'snow',
+      bounds: document.querySelector(
+        `#editor${editorId.current}`,
+      ) as HTMLElement,
+      theme,
     });
 
     toolbarInit(quillRef.current, i18n);
@@ -404,7 +423,13 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
 
         // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
         if (modules.table && quillRef.current) {
-          const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
+          const disableInTable = [
+            'header',
+            'blockquote',
+            'code-block',
+            'hr',
+            'list',
+          ];
           const format = quillRef.current.getFormat() || {};
           if (format && format['table-cell-line']) {
             optionDisableToggle(quillRef.current, disableInTable, true);
@@ -420,9 +445,12 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
     getQuill && getQuill(quillRef.current, uploadedImgsList.current);
 
     if (onChange) {
-      quillRef.current.on('text-change', (delta: Delta, old: Delta, source: EmitterSource) => {
-        source === 'user' && onChange(delta, old);
-      });
+      quillRef.current.on(
+        'text-change',
+        (delta: Delta, old: Delta, source: EmitterSource) => {
+          source === 'user' && onChange(delta, old);
+        },
+      );
     }
     if (onFocus || onBlur) {
       quillRef.current.on(
@@ -437,11 +465,16 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
     }
 
     // 解决中文拼音输入时placeholder无法消失的问题
-    const dom = document.getElementById(`editor${editorId.current}`)!.querySelector('.ql-editor');
+    const dom = document
+      .getElementById(`editor${editorId.current}`)!
+      .querySelector('.ql-editor');
     dom!.addEventListener(
       'input',
       throttle(() => {
-        if ((dom as HTMLElement).innerText !== '\n' && dom!.classList.contains('ql-blank')) {
+        if (
+          (dom as HTMLElement).innerText !== '\n' &&
+          dom!.classList.contains('ql-blank')
+        ) {
           quillRef.current!.root.setAttribute('data-placeholder', '');
         } else if ((dom as HTMLElement).innerText === '\n') {
           quillRef.current!.root.setAttribute(

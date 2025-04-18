@@ -79,6 +79,7 @@ interface IEditorProps {
     onSave?: () => void;
     i18n?: 'en' | 'zh';
     style?: CSSProperties;
+    theme?: 'bubble' | 'snow';
 }
 declare const RichTextEditor: FC<IEditorProps>;
 export default RichTextEditor;

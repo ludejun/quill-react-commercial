@@ -30,7 +30,7 @@ class ImageHandler extends Module {
         this.imageDialogClose();
       });
     }
-    window.addEventListener('resize', () =>{
+    window.addEventListener('resize', () => {
       this.imageDialogClose();
     });
   }
@@ -48,10 +48,14 @@ class ImageHandler extends Module {
     if (!this.imageDialog) {
       this.imageDialog = document.createElement('div');
       this.imageDialog.classList.add('ql-image-dialog', 'ql-toolbar-dialog');
-      const words = getI18nText(['imageDialogLocal', 'imageDialogUrlLabel', 'iamgeDialogInsert'], this.options.i18n);
+      const words = getI18nText(
+        ['imageDialogLocal', 'imageDialogUrlLabel', 'iamgeDialogInsert'],
+        this.options.i18n,
+      );
       this.imageDialog.innerHTML = `
       <input type="file" class="ql-image-upload" accept="${
-        this.options.imageAccept || 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon'
+        this.options.imageAccept ||
+        'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/webp'
       }" />
       <button class="local-image">${words[0]}</button>
       <p class="err-tips err-file"></p>
@@ -62,12 +66,13 @@ class ImageHandler extends Module {
       <p class="err-tips err-url"></p>
       `;
 
-      
-      this.fileInput = this.imageDialog.querySelector('input.ql-image-upload[type=file]');
+      this.fileInput = this.imageDialog.querySelector(
+        'input.ql-image-upload[type=file]',
+      );
       const urlInput = this.imageDialog.querySelector('input.text-input');
       urlInput.onclick = (e) => {
         e.stopPropagation();
-      } // 阻止冒泡导致 imageDialog 消失
+      }; // 阻止冒泡导致 imageDialog 消失
       this.imageDialog.querySelector('.url-submit').onclick = (e) => {
         e.stopPropagation();
         const url = urlInput.value;
@@ -129,14 +134,17 @@ class ImageHandler extends Module {
   beforeUpload(file) {
     if (this.imageDialog) {
       const tips = this.imageDialog.querySelector('.err-tips.err-file');
-      const words = getI18nText(['imageDialogTypeErr', 'imageDialogSizeErr'], this.options.i18n);
+      const words = getI18nText(
+        ['imageDialogTypeErr', 'imageDialogSizeErr'],
+        this.options.i18n,
+      );
       // 判断文件的后缀，至于用户强制改变文件后缀，这里不做考虑
       if (!file.type.startsWith('image/')) {
         tips.innerText = words[0];
         this.showImageDialog();
         return;
       }
-      const isLt5M = file.size / 1024 /1024 < (this.options.maxSize || 5);
+      const isLt5M = file.size / 1024 / 1024 < (this.options.maxSize || 5);
       if (!isLt5M) {
         tips.innerText = words[1].replace('$', this.options.maxSize || 5);
         this.showImageDialog();
@@ -148,10 +156,10 @@ class ImageHandler extends Module {
       reader.onload = (e) => {
         const base64Str = e.target.result;
         this.insertImage(base64Str);
-      }
+      };
     }
   }
-  
+
   imageDialogClose() {
     if (this.imageDialog) {
       this.imageDialog.remove();
@@ -161,11 +169,15 @@ class ImageHandler extends Module {
     const parent = clickDom.offsetParent;
     const width = 280;
     if (parent.offsetWidth - clickDom.offsetLeft + 6 > width) {
-      return `top:${clickDom.offsetTop + 24}px;left:${clickDom.offsetLeft + 6}px;`;
+      return `top:${clickDom.offsetTop + 24}px;left:${
+        clickDom.offsetLeft + 6
+      }px;`;
     } else {
-      return `top:${clickDom.offsetTop + 24}px;left:${parent.offsetWidth - width}px;`;
+      return `top:${clickDom.offsetTop + 24}px;left:${
+        parent.offsetWidth - width
+      }px;`;
     }
-  }
+  };
 
   insertImage = (url) => {
     this.imageDialogClose();
