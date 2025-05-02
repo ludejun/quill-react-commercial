@@ -216,7 +216,7 @@ const text = quill.current?.getText(); // get all text of editor
 
 **8. onBlur：Option，function；（Refer to TS definition）**
 
-**9. i18n?: 'en' | 'zh'; Option； International；default value: 'en'**
+**9. i18n?: 'en' | 'zh' | 'es'; Option； International；default value: 'en'**
 
 **10. style?: CSSProperties;**
 
