@@ -230,7 +230,7 @@ const text = quill.current?.getText(); // 获取编辑器的纯文本内容
 
 **8. onBlur：非必需，function；编辑器 quill 实例 Blur 触发时的 callback**
 
-**9. i18n?: 'en' | 'zh'，非必需，string；国际化，默认为 en**
+**9. i18n?: 'en' | 'zh' | 'es'，非必需，string；国际化，默认为 en**
 
 **10. style?: CSSProperties;**
 

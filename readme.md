@@ -17,7 +17,7 @@ As an outstanding and popular open-source rich text editor, [Quill](https://gith
 - Code blocks support language selection, copying, and code line labeling.
 - Table supports toolbar selection of size, right-click for more options and new icons.
 - Support for multilingual Tooltip prompts when Icon hover.
-- Internationalization: Supports both Chinese and English configurations, and supports Chinese fonts
+- Internationalization: Supports Chinese, English, and Spanish languages, including Chinese font compatibility.
 - When using IME and other input methods (such as Pinyin), placeholders can disappear in a timely manner
 - Automatically recognize input or copy URLs as LinkBlot.
 - Other bugfix: Unable to input list in table, upload images in table, recognize ordered list, cannot delete blocks such as code and table, unable to save image location, etc.
@@ -216,7 +216,7 @@ const text = quill.current?.getText(); // get all text of editor
 
 **8. onBlur：Option，function；（Refer to TS definition）**
 
-**9. i18n?: 'en' | 'zh'; Option； International；default value: 'en'**
+**9. i18n?: 'en' | 'zh' | 'es'; Option； International；default value: 'en'**
 
 **10. style?: CSSProperties;**
 

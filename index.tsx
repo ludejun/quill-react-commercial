@@ -67,7 +67,7 @@ interface IBetterTable {
   toolbarOptions?: {
     dialogRows?: number;
     dialogColumns?: number;
-    i18n?: 'en' | 'zh';
+    i18n?: 'en' | 'zh' | 'es';
   };
 }
 interface IModules {
@@ -99,7 +99,7 @@ interface IEditorProps {
   onFocus?: (range?: Range) => void;
   onBlur?: (oldRange?: Range) => void;
   onSave?: () => void;
-  i18n?: 'en' | 'zh';
+  i18n?: 'en' | 'zh' | 'es';
   style?: CSSProperties;
   theme?: 'bubble' | 'snow';
 }
@@ -187,6 +187,36 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
                     },
                     deleteTable: {
                       text: '删除表格',
+                    },
+                  }
+                : i18n === 'es'
+                ? {
+                    insertColumnRight: {
+                      text: 'Insertar columna a la derecha',
+                    },
+                    insertColumnLeft: {
+                      text: 'Insertar columna a la izquierda',
+                    },
+                    insertRowUp: {
+                      text: 'Insertar fila arriba',
+                    },
+                    insertRowDown: {
+                      text: 'Insertar fila abajo',
+                    },
+                    mergeCells: {
+                      text: 'Combinar celdas',
+                    },
+                    unmergeCells: {
+                      text: 'Separar celdas',
+                    },
+                    deleteColumn: {
+                      text: 'Eliminar columna',
+                    },
+                    deleteRow: {
+                      text: 'Eliminar fila',
+                    },
+                    deleteTable: {
+                      text: 'Eliminar tabla',
                     },
                   }
                 : {}),

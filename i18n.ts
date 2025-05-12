@@ -65,6 +65,39 @@ export const i18nConfig = {
     imgRemarkLabel: '添加备注',
     deleteImg: '删除图片',
   },
+  es: {
+    toolbarHeader: 'Texto',
+    toolbarFont: 'Sistema',
+    fontYahei: 'MS Yahei',
+    fontSong: 'SimSun',
+    fontKai: 'KaiTi',
+    tableDialogLabel: 'Desliza y haz clic',
+    imageDialogLocal: 'Subir imagen',
+    imageDialogUrlLabel: 'O introduce la URL de la imagen',
+    iamgeDialogInsert: 'Insertar',
+    imageDialogTypeErr: '¡El tipo de archivo es incorrecto, por favor súbelo de nuevo!',
+    imageDialogSizeErr: 'El tamaño de la imagen no puede exceder $M',
+    dividerDialogColorLabel: 'Color principal:',
+
+    placeholder: 'Empieza la nota (admite Markdown)...',
+    alignLeft: 'Alinear a la izquierda',
+    alignRight: 'Alinear a la derecha',
+    alignCenter: 'Alinear al centro',
+    tableBackground: 'Colores de fondo',
+
+    linkWords: 'Texto',
+    linkUrl: 'Enlace',
+    linkSave: 'Guardar',
+    linkTarget: 'Enlazar a URL',
+    linkClear: 'Eliminar enlace',
+    linkUrlErr: '¡Introduce una URL correcta!',
+
+    imgStatusUploading: ' Subiendo imagen... ',
+    imgStatusFail: ' Error al subir. Haz clic para volver a intentarlo ',
+    imgRemarkPre: 'Fig. ',
+    imgRemarkLabel: 'Agregar comentario',
+    deleteImg: 'Eliminar imagen',
+  },
 };
 
 export const getI18nText = (
