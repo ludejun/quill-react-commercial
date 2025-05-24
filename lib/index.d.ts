@@ -42,7 +42,7 @@ interface IBetterTable {
     toolbarOptions?: {
         dialogRows?: number;
         dialogColumns?: number;
-        i18n?: 'en' | 'zh';
+        i18n?: 'en' | 'zh' | 'es';
     };
 }
 interface IModules {
@@ -69,7 +69,7 @@ interface IEditorProps {
             maxSize?: number;
             imageAccept?: string;
         };
-        toolbarOptions?: Array<(string | { [key: string]: string })[]>;
+        toolbarOptions?: [][];
     } & IModules;
     getQuill?: (quill: Quill, uploadedImgsList?: string[]) => void;
     content?: Delta | string;
@@ -77,7 +77,7 @@ interface IEditorProps {
     onFocus?: (range?: Range) => void;
     onBlur?: (oldRange?: Range) => void;
     onSave?: () => void;
-    i18n?: 'en' | 'zh';
+    i18n?: 'en' | 'zh' | 'es';
     style?: CSSProperties;
     theme?: 'bubble' | 'snow';
 }

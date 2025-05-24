@@ -1,5 +1,9 @@
 # Change-Log
 
+# 1.6.3
+
+- feat: add spanish (es) translation support to i18n
+
 # 1.6.2
 
 - Add LICENSE file like Quill
