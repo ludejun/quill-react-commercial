@@ -3,7 +3,22 @@
 All notable changes to this project are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
-## Unreleased
+## 2.0.0 — 2026-09-23
+
+### Breaking
+
+- **`exports` now defines the package surface.** Only the package root and
+  `quill-react-commercial/lib/index.css` are reachable. Deep imports into other
+  paths — none of which were ever documented — no longer resolve.
+- **The tarball ships `lib/` only.** `src`, `dist`, `example/` and the build
+  configs are gone, which takes the published package from 9.4 MB / 98 files to
+  ~151 kB / 74 files. Anything that imported from those paths breaks.
+- **Runtime dependencies are external in the ESM build.** `quill`,
+  `quill-delta`, `highlight.js` and `normalize-url` are resolved by the consumer
+  instead of being bundled in, so a project that already uses Quill now gets one
+  copy rather than two. Assets taken from inside those packages (Quill's toolbar
+  icons and stylesheet) are still inlined.
+- **Node >= 18** is declared in `engines`.
 
 ### Fixed
 
