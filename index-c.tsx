@@ -5,20 +5,9 @@ import QuillBetterTable from 'quill-better-table';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
 import Delta from 'quill-delta';
-import {
-  ImageDrop,
-  ImageResize,
-  MagicUrl,
-  MarkdownShortcuts,
-  ToolbarTable,
-} from './modules/index';
+import { ImageDrop, ImageResize, MagicUrl, MarkdownShortcuts, ToolbarTable } from './modules/index';
 // import { MagicUrl } from './modules/magic-url';
-import {
-  imageUpload,
-  linkHandler,
-  undoHandler,
-  redoHandler,
-} from './modules/toolbarHandler';
+import { imageUpload, linkHandler, undoHandler, redoHandler } from './modules/toolbarHandler';
 import { setContent } from './utils';
 import 'quill/dist/quill.snow.css';
 import 'quill-better-table/dist/quill-better-table.css';
@@ -74,11 +63,11 @@ interface IBetterTable {
 interface IModules {
   table?: boolean | IBetterTable;
   codeHighlight?: boolean | { key: string; label: string }[];
-  imageResize?: boolean | {};
-  imageDrop?: boolean | {};
+  imageResize?: boolean | Record<string, unknown>;
+  imageDrop?: boolean | Record<string, unknown>;
   magicUrl?: boolean;
   markdown?: boolean;
-  link?: boolean | {};
+  link?: boolean | Record<string, unknown>;
 }
 interface IEditorProps {
   placeholder?: string;
@@ -211,13 +200,11 @@ class RichTextEditor extends React.Component<IEditorProps> {
 
       // 默认添加图片缩放功能
       if (imageResize) {
-        this.quillModules.imageResize =
-          typeof imageResize !== 'boolean' ? imageResize : {};
+        this.quillModules.imageResize = typeof imageResize !== 'boolean' ? imageResize : {};
       }
       // 默认图片拖拽/复制到富文本
       if (imageDrop) {
-        this.quillModules.imageDrop =
-          typeof imageDrop !== 'boolean' ? imageDrop : {};
+        this.quillModules.imageDrop = typeof imageDrop !== 'boolean' ? imageDrop : {};
       }
       // 默认支持自动识别URL
       this.quillModules.magicUrl = magicUrl;
@@ -232,7 +219,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
           this,
           imgUploadApi,
           uploadSuccCB,
-          uploadFailCB
+          uploadFailCB,
         );
       }
       this.toolbarHandlers.undo = undoHandler;
@@ -245,9 +232,9 @@ class RichTextEditor extends React.Component<IEditorProps> {
     // const fontMapping = { 微软雅黑: 'wsYaHei', 宋体: 'songTi', 楷体: 'kaiTi'};
     let sizeList = ['12px', '14px', '18px', '36px'];
     if (toolbarOptions) {
-      toolbarOptions.forEach(formats => {
+      toolbarOptions.forEach((formats) => {
         if (Array.isArray(formats)) {
-          formats.forEach(format => {
+          formats.forEach((format) => {
             if (typeof format === 'object') {
               if (format.font && Array.isArray(format.font)) {
                 fontList = format.font;
@@ -288,7 +275,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         {
           'modules/better-table': QuillBetterTable,
         },
-        true
+        true,
       );
     }
 
@@ -300,7 +287,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         'modules/markdownShortcuts': MarkdownShortcuts,
         'modules/toolbarTable': ToolbarTable,
       },
-      true
+      true,
     );
 
     const lineBreakMatcher = () => {
@@ -388,7 +375,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
         // }
         console.log(4444, this.quill.getFormat());
         const format = this.quill.getFormat();
-        if (format.hasOwnProperty('link')) {
+        if (Object.prototype.hasOwnProperty.call(format, 'link')) {
           this.quill.theme.tooltip.root.classList.add('ql-editing');
           document.getElementById('link-url').value = format.link;
           const [leaf, offset] = this.quill.getLeaf(range.index);
@@ -404,7 +391,7 @@ class RichTextEditor extends React.Component<IEditorProps> {
               document.getElementById('link-words').value,
               'link',
               document.getElementById('link-url').value,
-              'user'
+              'user',
             );
             this.quill.theme.tooltip.hide();
           };

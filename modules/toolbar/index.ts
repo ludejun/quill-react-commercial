@@ -2,6 +2,8 @@ import Quill from 'quill';
 import { i18nConfig } from '../../i18n';
 import { showTitle } from '../iconTitle/title';
 import { throttle } from '../../utils';
+import { quillModule } from '../../quillTypes';
+import type { ToolbarModule } from '../../quillTypes';
 
 export { LinkHandler } from './link';
 export { default as TableHandler } from './table';
@@ -10,7 +12,7 @@ export { default as CodeHandler } from './code';
 export { default as DividerHandler } from './divider';
 
 export const toolbarInit = (quill: Quill, i18n: keyof typeof i18nConfig) => {
-  const container = quill.getModule('toolbar').container;
+  const container = quillModule<ToolbarModule>(quill, 'toolbar').container;
 
   // 设置 toolbar 中的 i18n 的 label，css 中使用 data-before 来作为 content
   const setDataSet = (cssQuery: string, i18nKey: keyof (typeof i18nConfig)['en']) => {
@@ -43,10 +45,13 @@ export const redoHandler = (quill: Quill) => {
   quill?.history?.redo();
 };
 
-export const inputHandler = (input, changeCallback) => {
+export const inputHandler = (
+  input: HTMLInputElement | null | undefined,
+  changeCallback?: (value: string) => void,
+) => {
   if (input) {
     // 阻止冒泡关闭Dialog
-    input.onclick = (e) => {
+    input.onclick = (e: MouseEvent) => {
       e.stopPropagation();
     };
     // input.onmousedown = (e) => {

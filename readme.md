@@ -131,10 +131,7 @@ Demo of modules.toolbarOptionse. Details in https://quilljs.com/docs/modules/too
 ```javascript
 const toolbarOptions = [
   ['undo', 'redo', 'clean'],
-  [
-    { font: ['wsYaHei', 'songTi', 'serif', 'arial'] },
-    { size: ['12px', '14px', '18px', '36px'] },
-  ],
+  [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', '14px', '18px', '36px'] }],
   [{ color: [] }, { background: [] }],
   ['bold', 'italic', 'underline', 'strike'],
   [

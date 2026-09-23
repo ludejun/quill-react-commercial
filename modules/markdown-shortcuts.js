@@ -232,13 +232,16 @@ class MarkdownShortcuts {
     // Handler that looks for insert deltas that match specific characters
     this.quill.on('text-change', (delta, oldContents, source) => {
       for (let i = 0; i < delta.ops.length; i++) {
-        if (delta.ops[i].hasOwnProperty('insert')) {
+        if (Object.prototype.hasOwnProperty.call(delta.ops[i], 'insert')) {
           if (delta.ops[i].insert === ' ') {
             this.onSpace();
           } else if (delta.ops[i].insert === '\n') {
             this.onEnter();
           }
-        } else if (delta.ops[i].hasOwnProperty('delete') && source === 'user') {
+        } else if (
+          Object.prototype.hasOwnProperty.call(delta.ops[i], 'delete') &&
+          source === 'user'
+        ) {
           this.onDelete();
         }
       }
@@ -270,7 +273,11 @@ class MarkdownShortcuts {
           'plus-ul',
           'asterisk-ul',
         ];
-        if (matchedText && !format['code-block'] && !(format['table-cell-line'] && disableInTable.includes(match.name))) {
+        if (
+          matchedText &&
+          !format['code-block'] &&
+          !(format['table-cell-line'] && disableInTable.includes(match.name))
+        ) {
           // We need to replace only matched text not the whole line
           match.action(text, selection, match.pattern, lineStart);
           return;

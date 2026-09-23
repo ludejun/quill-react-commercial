@@ -143,10 +143,7 @@ modules.toolbarOptionse 为 Quill toolbar 按数组进行定义的方式，当�
 ```javascript
 const toolbarOptions = [
   ['undo', 'redo', 'clean'],
-  [
-    { font: ['wsYaHei', 'songTi', 'serif', 'arial'] },
-    { size: ['12px', '14px', '18px', '36px'] },
-  ],
+  [{ font: ['wsYaHei', 'songTi', 'serif', 'arial'] }, { size: ['12px', '14px', '18px', '36px'] }],
   [{ color: [] }, { background: [] }],
   ['bold', 'italic', 'underline', 'strike'],
   [

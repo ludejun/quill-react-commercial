@@ -1,6 +1,7 @@
 // https://stackblitz.com/edit/typescript-hpk9vc?file=index.ts
 // https://stackoverflow.com/questions/65501672/quilljs-copycode-module-failed-to-execute-insertbefore-on-node/65577686#65577686
 import Quill from 'quill';
+import { quillImport, quillRegister } from '../quillTypes';
 
 const copyContentIntoClipboard = (rawData: string) => {
   const encodedContent = encodeURIComponent(rawData);
@@ -21,9 +22,9 @@ class CodeCopy {
   unusedBadges: HTMLElement[] = [];
   reference: {
     [index: string]: {
-      parent: HTMLElement | null,
-      copyBadge: HTMLElement | null,
-    },
+      parent: HTMLElement | null;
+      copyBadge: HTMLElement | null;
+    };
   } = {};
 
   constructor(quill: Quill, options: any) {
@@ -42,8 +43,11 @@ class CodeCopy {
   }
 
   registerCodeBlock = () => {
+    // The CopyMode class below is declared inside this method so it can reach
+    // the module instance; `this` inside it belongs to the blot, not the module.
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
-    const CodeBlock = Quill.import('formats/code-block');
+    const CodeBlock = quillImport<new (...args: any[]) => any>('formats/code-block');
     let counter = 0;
     class CopyMode extends CodeBlock {
       domNode!: HTMLElement;
@@ -59,17 +63,17 @@ class CodeCopy {
       remove() {
         const index = this.domNode.getAttribute('data-index');
         if (index) {
-           if (self.reference[index] && self.reference[index]['copyBadge']) {
-             const copyBadge = self.reference[index]['copyBadge'];
-             copyBadge!.style.display = 'none';
-             self.unusedBadges.push(copyBadge!);
-           }
-           delete self.reference[index];
+          if (self.reference[index] && self.reference[index]['copyBadge']) {
+            const copyBadge = self.reference[index]['copyBadge'];
+            copyBadge!.style.display = 'none';
+            self.unusedBadges.push(copyBadge!);
+          }
+          delete self.reference[index];
         }
         super.remove();
       }
     }
-    Quill.register(CopyMode, true);
+    quillRegister(CopyMode);
   };
 
   addCopyBadge = (obj: any) => {
@@ -118,4 +122,3 @@ class CodeCopy {
 }
 
 Quill.register('modules/codeCopy', CodeCopy);
-

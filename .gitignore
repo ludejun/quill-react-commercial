@@ -38,3 +38,9 @@ lib-cov
 
 # IDE
 .idea
+# test coverage
+/coverage
+
+# build output (published from CI)
+/lib
+/dist

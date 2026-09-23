@@ -2,7 +2,9 @@
 @import './theme.less';
 // 整体
 .ql-editor-container {
-  font-family: system-ui, -apple-system;
+  font-family:
+    system-ui,
+    -apple-system;
   .ql-container {
     border: 1px solid @editor-border;
     border-top: 0;
@@ -108,7 +110,7 @@
   li.ql-indent-5:not(.ql-direction-rtl) {
     padding-left: 100px;
   }
-  ol li[data-list=ordered][data-start]:first-child > .ql-ui:before {
+  ol li[data-list='ordered'][data-start]:first-child > .ql-ui:before {
     counter-set: list-0 var(--list-item-start);
   }
   a {

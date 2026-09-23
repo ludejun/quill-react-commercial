@@ -80,7 +80,7 @@ class TableHandler extends Module {
         .join('')}
         <p><label>${tableDialogLabel}</label><span><span id="table-row-number">0</span> X <span id="table-col-number">0</span></span></p>
       `;
-      
+
       this.tableDialog.innerHTML = dialogContent;
     } else {
       this.itemBackgroundChange(-1, 0); // 每次打开都清空之前被 hover 过的格子
@@ -96,7 +96,7 @@ class TableHandler extends Module {
       this.tableDialog.remove();
     }
   }
-  dialogPosition = (clickDom) =>{
+  dialogPosition = (clickDom) => {
     const parent = clickDom.offsetParent;
     const width = 200;
     if (parent.offsetWidth - clickDom.offsetLeft + 6 > width) {
@@ -104,7 +104,7 @@ class TableHandler extends Module {
     } else {
       return `top:${clickDom.offsetTop + 24}px;left:${parent.offsetWidth - width}px;`;
     }
-  }
+  };
 
   createTable(row, column) {
     this.tableDialogClose();

@@ -42,7 +42,10 @@ class DividerBlot extends BlockEmbed {
   format(name, value) {
     if (name === 'style' && value) {
       const data = value.split('-');
-      this.domNode.setAttribute(name, styleConfig(isColor(data[1]) ? data[1] : defaultColor)[data[0]]);
+      this.domNode.setAttribute(
+        name,
+        styleConfig(isColor(data[1]) ? data[1] : defaultColor)[data[0]],
+      );
     } else {
       super.format(name, value);
     }

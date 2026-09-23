@@ -1,5 +1,7 @@
 import Quill from 'quill';
 import Delta from 'quill-delta';
+import { quillModule, optionalQuillModule } from './quillTypes';
+import type { ImageResizeModule, ToolbarModule } from './quillTypes';
 
 // 匹配URL地址，可以不含协议
 export function isUrl(url: string) {
@@ -14,6 +16,10 @@ export function isEmail(url: string) {
 }
 
 // 是否移动端H5
+// The two regexes below come verbatim from detectmobilebrowsers.com; the
+// redundant escapes are part of the upstream source and rewriting them by hand
+// risks changing what the pattern matches.
+/* eslint-disable no-useless-escape */
 export function isMobile() {
   if (
     /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
@@ -28,11 +34,12 @@ export function isMobile() {
 
   return false;
 }
+/* eslint-enable no-useless-escape */
 
 // 设置content
 export function setContent(content: Delta | string, quill: Quill) {
   // console.log(6666, quill.getModule('imageResize'));
-  quill.getModule('imageResize')?.hide(); // 在设置新值时，需要将上一个笔记可能遗留的imageResize图层弄消失，不然focus图片后的图层可能会保留
+  optionalQuillModule<ImageResizeModule>(quill, 'imageResize')?.hide(); // 在设置新值时，需要将上一个笔记可能遗留的imageResize图层弄消失，不然focus图片后的图层可能会保留
   if (content) {
     if (typeof content === 'object') {
       quill.setContents(content);
@@ -46,10 +53,10 @@ export function setContent(content: Delta | string, quill: Quill) {
 
 // toolbar的option在disable中切换
 export const optionDisableToggle = (quill: Quill, blockList: string[], disable: boolean) => {
-  const toolbar = quill.getModule('toolbar');
+  const toolbar = quillModule<ToolbarModule>(quill, 'toolbar');
   blockList.forEach((item) => {
-    const btns = toolbar.container.querySelectorAll(`.ql-${item}`);
-    btns.forEach((btn: HTMLButtonElement) => {
+    const btns = toolbar.container?.querySelectorAll<HTMLButtonElement>(`.ql-${item}`);
+    btns?.forEach((btn) => {
       if (btn.className.indexOf('ql-picker') >= 0) {
         const picker = btn.querySelector('.ql-picker-options') as HTMLElement;
         if (disable) {
@@ -74,13 +81,15 @@ export const throttle = (fn: () => void, delay = 200) => {
       fn();
       timer = null;
     }, delay);
-  }
-}
+  };
+};
 
 export function htmlDecode(str: string) {
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   div.innerHTML = str;
-  return div.innerText;
+  // textContent, not innerText: this decodes code-block lines, and innerText
+  // collapses runs of whitespace, which would eat the indentation.
+  return div.textContent ?? '';
 }
 
 export const isColor = (value: string) => {
@@ -88,4 +97,4 @@ export const isColor = (value: string) => {
     /^rgb\((\s*\d{1,3}\s*,\s*){2}\d{1,3}\s*\)$|^rgba\((\s*\d{1,3}\s*,\s*){2}\d{1,3}\s*,\s*\d*\.\d+\s*\)$/i;
   const isHex = /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/;
   return isRgb.test(value) || isHex.test(value);
-}
+};

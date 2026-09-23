@@ -2,7 +2,9 @@
 export const showTitle = (target: HTMLElement, title: string) => {
   const { offsetLeft, offsetTop, offsetHeight, offsetParent } = target;
   const position = `left:${offsetLeft}px;top:${offsetTop + offsetHeight + 6}px;`;
-  const tooltip = document.getElementsByClassName('quill-icon-tooltip') as unknown as HTMLDivElement[];
+  const tooltip = document.getElementsByClassName(
+    'quill-icon-tooltip',
+  ) as unknown as HTMLDivElement[];
 
   if (tooltip.length > 0) {
     tooltip[0].innerText = title;

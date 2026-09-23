@@ -379,7 +379,10 @@ class Toolbar extends BaseModule {
 
   _addToolbarButtons = () => {
     const buttons = [];
-    const words = getI18nText(['alignLeft', 'alignCenter', 'alignRight', 'imgRemarkLabel', 'deleteImg'], this.options.i18n)
+    const words = getI18nText(
+      ['alignLeft', 'alignCenter', 'alignRight', 'imgRemarkLabel', 'deleteImg'],
+      this.options.i18n,
+    );
     this.alignments.forEach((alignment, idx) => {
       const button = document.createElement('span');
       buttons.push(button);
@@ -537,11 +540,14 @@ class ImageResize {
 
     this.quill.root.parentNode.appendChild(this.overlay);
     // 编辑器滚动隐藏 overlay
-    this.quill.root.addEventListener('scroll', throttle(() => {
-      if (this.img && this.overlay) {
-        this.hide();
-      }
-    }))
+    this.quill.root.addEventListener(
+      'scroll',
+      throttle(() => {
+        if (this.img && this.overlay) {
+          this.hide();
+        }
+      }),
+    );
 
     this.repositionElements();
   };

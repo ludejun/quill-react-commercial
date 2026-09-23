@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, CSSProperties, FC } from 'react';
 import Quill, { Range, EmitterSource } from 'quill';
 import Delta from 'quill-delta';
+import { quillImport, quillRegister } from './quillTypes';
+import type { QuillIcons, WhitelistedAttributor } from './quillTypes';
 import {
   highlightInit,
   // Image,
@@ -73,11 +75,11 @@ interface IBetterTable {
 interface IModules {
   table?: boolean | IBetterTable;
   codeHighlight?: boolean | { key: string; label: string }[];
-  imageResize?: boolean | {};
-  imageDrop?: boolean | {};
+  imageResize?: boolean | Record<string, unknown>;
+  imageDrop?: boolean | Record<string, unknown>;
   magicUrl?: boolean;
   markdown?: boolean;
-  link?: boolean | {};
+  link?: boolean | Record<string, unknown>;
 }
 interface IEditorProps {
   placeholder?: string;
@@ -125,18 +127,12 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       };
       qSyntax?: any;
       codeHandler?: boolean | string;
-      dividerHandler?: boolean | {};
+      dividerHandler?: boolean | Record<string, unknown>;
     }
   >({});
   const toolbarHandlers = useRef<Record<string, unknown>>({});
-  const quillRef = useRef<
-    Quill & {
-      theme?: Record<string, any>;
-    }
-  >();
-  const editorId = useRef<string>(
-    new Date().getTime() + (100 * Math.random()).toFixed(0),
-  );
+  const quillRef = useRef<Quill | undefined>(undefined);
+  const editorId = useRef<string>(new Date().getTime() + (100 * Math.random()).toFixed(0));
   const uploadedImgsList = useRef<string[]>([]); // 已上传图片，主要给onComplete使用，可以用来判断哪些已上传图片实际并没有被使用
 
   // 处理外部传入的modules
@@ -190,36 +186,36 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
                     },
                   }
                 : i18n === 'es'
-                ? {
-                    insertColumnRight: {
-                      text: 'Insertar columna a la derecha',
-                    },
-                    insertColumnLeft: {
-                      text: 'Insertar columna a la izquierda',
-                    },
-                    insertRowUp: {
-                      text: 'Insertar fila arriba',
-                    },
-                    insertRowDown: {
-                      text: 'Insertar fila abajo',
-                    },
-                    mergeCells: {
-                      text: 'Combinar celdas',
-                    },
-                    unmergeCells: {
-                      text: 'Separar celdas',
-                    },
-                    deleteColumn: {
-                      text: 'Eliminar columna',
-                    },
-                    deleteRow: {
-                      text: 'Eliminar fila',
-                    },
-                    deleteTable: {
-                      text: 'Eliminar tabla',
-                    },
-                  }
-                : {}),
+                  ? {
+                      insertColumnRight: {
+                        text: 'Insertar columna a la derecha',
+                      },
+                      insertColumnLeft: {
+                        text: 'Insertar columna a la izquierda',
+                      },
+                      insertRowUp: {
+                        text: 'Insertar fila arriba',
+                      },
+                      insertRowDown: {
+                        text: 'Insertar fila abajo',
+                      },
+                      mergeCells: {
+                        text: 'Combinar celdas',
+                      },
+                      unmergeCells: {
+                        text: 'Separar celdas',
+                      },
+                      deleteColumn: {
+                        text: 'Eliminar columna',
+                      },
+                      deleteRow: {
+                        text: 'Eliminar fila',
+                      },
+                      deleteTable: {
+                        text: 'Eliminar tabla',
+                      },
+                    }
+                  : {}),
             color: {
               colors: ['#dbc8ff', '#6918b4', '#4a90e2', '#999', '#fff'], // 背景色值, ['white', 'red', 'yellow', 'blue'] as default
               text: getI18nText('tableBackground', i18n), // subtitle, 'Background Colors' as default
@@ -268,25 +264,19 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
 
       // 默认添加图片缩放功能
       if (imageResize) {
-        quillModules.current.imageResize =
-          imageResize === false
-            ? imageResize
-            : {
-                i18n,
-                ...(typeof imageResize === 'object' ? imageResize : null),
-              };
+        quillModules.current.imageResize = {
+          i18n,
+          ...(typeof imageResize === 'object' ? imageResize : null),
+        };
       }
       // 默认图片拖拽/复制到富文本
       if (imageDrop) {
-        quillModules.current.imageDrop =
-          imageDrop === false
-            ? imageDrop
-            : {
-                i18n,
-                imageHandler,
-                uploadedImgsList: uploadedImgsList.current,
-                ...(typeof imageDrop === 'object' ? imageDrop : null),
-              };
+        quillModules.current.imageDrop = {
+          i18n,
+          imageHandler,
+          uploadedImgsList: uploadedImgsList.current,
+          ...(typeof imageDrop === 'object' ? imageDrop : null),
+        };
       }
       // 默认支持自动识别URL
       quillModules.current.magicUrl = magicUrl;
@@ -324,15 +314,15 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         }
       });
     }
-    const SizeStyle = Quill.import('attributors/style/size');
+    const SizeStyle = quillImport<WhitelistedAttributor>('attributors/style/size');
     SizeStyle.whitelist = sizeList;
-    Quill.register(SizeStyle, true);
-    const FontStyle = Quill.import('formats/font');
+    quillRegister(SizeStyle);
+    const FontStyle = quillImport<WhitelistedAttributor>('formats/font');
     FontStyle.whitelist = fontList;
-    Quill.register(FontStyle, true);
+    quillRegister(FontStyle);
 
     // 设置重做撤销Icon
-    const icons = Quill.import('ui/icons');
+    const icons = quillImport<QuillIcons>('ui/icons');
     icons.undo = IconUndo;
     icons.redo = IconRedo;
     icons.divider = IconDivider;
@@ -379,14 +369,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         { size: ['12px', false, '18px', '36px'] },
         { header: [false, 1, 2, 3, 4] },
       ],
-      [
-        'bold',
-        'italic',
-        'underline',
-        'strike',
-        { color: [] },
-        { background: [] },
-      ],
+      ['bold', 'italic', 'underline', 'strike', { color: [] }, { background: [] }],
       [
         { list: 'ordered' },
         { list: 'bullet' },
@@ -405,9 +388,13 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         quillModules.current['better-table'] ? 'table' : undefined,
         'divider',
       ],
-    ];
+    ]
+      // Disabled controls are left as `undefined` above; Quill 2 calls
+      // Object.keys() on every entry and throws on the holes, so drop them.
+      .map((group) => group.filter((control) => control !== undefined))
+      .filter((group) => group.length > 0);
 
-    quillRef.current = new Quill(`#editor${editorId.current}`, {
+    const quill = new Quill(`#editor${editorId.current}`, {
       debug: false,
       modules: {
         // formula: true, // todo 公式，暂不支持
@@ -425,7 +412,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
           bindings: {
             ...QuillBetterTable.keyboardBindings,
             ...keyboardBindsFn({
-              save: onSave,
+              onSave,
             }),
           },
         },
@@ -438,76 +425,55 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       },
       placeholder: placeholder || (getI18nText('placeholder', i18n) as string),
       readOnly,
-      bounds: document.querySelector(
-        `#editor${editorId.current}`,
-      ) as HTMLElement,
+      bounds: document.querySelector(`#editor${editorId.current}`) as HTMLElement,
       theme,
     });
+    quillRef.current = quill;
 
-    toolbarInit(quillRef.current, i18n);
+    toolbarInit(quill, i18n);
 
-    quillRef.current.on(
-      'selection-change',
-      (range: Range, oldRange: Range, source: EmitterSource) => {
-        if (range == null || !quillRef.current?.hasFocus()) return;
+    quill.on('selection-change', (range: Range, _oldRange: Range, _source: EmitterSource) => {
+      if (range == null || !quill.hasFocus()) return;
 
-        // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
-        if (modules.table && quillRef.current) {
-          const disableInTable = [
-            'header',
-            'blockquote',
-            'code-block',
-            'hr',
-            'list',
-          ];
-          const format = quillRef.current.getFormat() || {};
-          if (format && format['table-cell-line']) {
-            optionDisableToggle(quillRef.current, disableInTable, true);
-          } else {
-            optionDisableToggle(quillRef.current, disableInTable, false);
-          }
+      // 当新建table或者选中table时，禁止部分toolbar options，添加table时触发的source=api
+      if (modules.table && quill) {
+        const disableInTable = ['header', 'blockquote', 'code-block', 'hr', 'list'];
+        const format = quill.getFormat() || {};
+        if (format && format['table-cell-line']) {
+          optionDisableToggle(quill, disableInTable, true);
+        } else {
+          optionDisableToggle(quill, disableInTable, false);
         }
-      },
-    );
+      }
+    });
 
-    content && setContent(content, quillRef.current); // 设置初始内容
+    content && setContent(content, quill); // 设置初始内容
 
-    getQuill && getQuill(quillRef.current, uploadedImgsList.current);
+    getQuill && getQuill(quill, uploadedImgsList.current);
 
     if (onChange) {
-      quillRef.current.on(
-        'text-change',
-        (delta: Delta, old: Delta, source: EmitterSource) => {
-          source === 'user' && onChange(delta, old);
-        },
-      );
+      quill.on('text-change', (delta: Delta, old: Delta, source: EmitterSource) => {
+        source === 'user' && onChange(delta, old);
+      });
     }
     if (onFocus || onBlur) {
-      quillRef.current.on(
-        'selection-change',
-        (range: Range, oldRange: Range, source: EmitterSource) => {
-          const hasFocus = range && !oldRange;
-          const hasBlur = !range && oldRange;
-          if (onFocus && hasFocus) onFocus(range);
-          if (onBlur && hasBlur) onBlur(oldRange);
-        },
-      );
+      quill.on('selection-change', (range: Range, oldRange: Range, _source: EmitterSource) => {
+        const hasFocus = range && !oldRange;
+        const hasBlur = !range && oldRange;
+        if (onFocus && hasFocus) onFocus(range);
+        if (onBlur && hasBlur) onBlur(oldRange);
+      });
     }
 
     // 解决中文拼音输入时placeholder无法消失的问题
-    const dom = document
-      .getElementById(`editor${editorId.current}`)!
-      .querySelector('.ql-editor');
+    const dom = document.getElementById(`editor${editorId.current}`)!.querySelector('.ql-editor');
     dom!.addEventListener(
       'input',
       throttle(() => {
-        if (
-          (dom as HTMLElement).innerText !== '\n' &&
-          dom!.classList.contains('ql-blank')
-        ) {
-          quillRef.current!.root.setAttribute('data-placeholder', '');
+        if ((dom as HTMLElement).innerText !== '\n' && dom!.classList.contains('ql-blank')) {
+          quill.root.setAttribute('data-placeholder', '');
         } else if ((dom as HTMLElement).innerText === '\n') {
-          quillRef.current!.root.setAttribute(
+          quill.root.setAttribute(
             'data-placeholder',
             placeholder || (getI18nText('placeholder', i18n) as string),
           ); // 输入拼音又删除的情况，需要将placeholder再展示出来
@@ -515,14 +481,11 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       }, 100),
     );
     // 当把placeholder置为空，当内容删为空时，placeholder无法出来
-    quillRef.current.on(
+    quill.on(
       'text-change',
       throttle(() => {
-        if (
-          quillRef.current!.getText() === '\n' &&
-          quillRef.current!.root.getAttribute('data-placeholder') === ''
-        ) {
-          quillRef.current!.root.setAttribute(
+        if (quill.getText() === '\n' && quill.root.getAttribute('data-placeholder') === '') {
+          quill.root.setAttribute(
             'data-placeholder',
             placeholder || (getI18nText('placeholder', i18n) as string),
           );
