@@ -1,6 +1,6 @@
 {
   "name": "quill-react-commercial",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A production-ready Quill 2 rich text editor for React: tables, image upload & resize, code highlighting with copy, markdown shortcuts, magic URL and i18n.",
   "type": "module",
   "main": "lib/index.js",

@@ -12,6 +12,8 @@ export const i18nConfig = {
     imageDialogTypeErr: 'File type is error, please upload again!',
     imageDialogSizeErr: 'Image size cannot exceed $M',
     dividerDialogColorLabel: 'Primary Color:',
+    videoDialogUrlLabel: 'Video url (YouTube, Vimeo, Bilibili or any embed url)',
+    videoDialogInsert: 'Insert',
 
     placeholder: 'Start Note(Support input markdown)...',
     alignLeft: 'Left align',
@@ -45,6 +47,8 @@ export const i18nConfig = {
     imageDialogTypeErr: '图片格式错误，请重新上传！',
     imageDialogSizeErr: '图片大小不能超过$M',
     dividerDialogColorLabel: '主色：',
+    videoDialogUrlLabel: '视频地址（YouTube、Vimeo、Bilibili 或任意 embed 地址）',
+    videoDialogInsert: '插入',
 
     placeholder: '开始笔记（支持直接Markdown输入）...',
     alignLeft: '居左',
@@ -78,6 +82,8 @@ export const i18nConfig = {
     imageDialogTypeErr: '¡El tipo de archivo es incorrecto, por favor súbelo de nuevo!',
     imageDialogSizeErr: 'El tamaño de la imagen no puede exceder $M',
     dividerDialogColorLabel: 'Color principal:',
+    videoDialogUrlLabel: 'URL del vídeo (YouTube, Vimeo, Bilibili o cualquier URL de inserción)',
+    videoDialogInsert: 'Insertar',
 
     placeholder: 'Empieza la nota (admite Markdown)...',
     alignLeft: 'Alinear a la izquierda',

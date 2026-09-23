@@ -52,6 +52,9 @@ built with commercial use in mind.
 - Images support **resizing, alignment, captions and deletion**, and the resize overlay is dismissed
   on scroll.
 - A **rebuilt link tooltip** with more actions than Quill's default.
+- **Video embeds** from YouTube, Vimeo and Bilibili: paste the page URL you copied from the address
+  bar and it is converted to the embed URL for you. Videos stay `<iframe>` when the content is saved
+  — Quill's own `video` format turns them back into a link.
 - **Markdown shortcuts** work as you type.
 - **Code blocks** offer language selection, one-click copy and line numbers.
 - **Tables** get a size picker in the toolbar, a right-click menu with more operations, and new icons.
@@ -128,6 +131,8 @@ Every key can be set to `false` to turn that module off.
   magicUrl?: true,    // auto-detect URLs and emails and wrap them in a link; default: true
   markdown?: true,    // convert markdown syntax to rich text as you type; default: true
   link?: true,        // default: true
+  video?: true,       // video embed button; default: true
+                      // or { width?: '100%', height?: '360' } for the inserted iframe
   imageHandler: {
     imgUploadApi?: (formData: FormData) => Promise<string>; // upload endpoint; resolve with the image URL
     uploadSuccCB?: (data: unknown) => void; // called on success
@@ -185,6 +190,7 @@ const toolbarOptions = [
     'code-block',
     'link',
     'image',
+    'video',
     { script: 'sub' },
     { script: 'super' },
     'table',

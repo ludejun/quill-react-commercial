@@ -47,6 +47,7 @@
 - 所有图片**先以 Base64 渲染、后台异步上传**；上传失败的图片保持可点击，随时重传。图片也支持粘贴和拖拽插入。
 - 图片支持**缩放、对齐、添加备注、删除**，页面滚动时自动收起缩放浮层。
 - **重写的链接 Tooltip**，操作比 Quill 默认的更丰富。
+- **视频嵌入**，支持 YouTube、Vimeo、Bilibili：直接粘地址栏里复制的页面链接即可，会自动转成 embed 地址。保存内容时视频仍是 `<iframe>` —— Quill 自带的 `video` 格式会把它变回一个链接。
 - 支持**直接输入 Markdown 语法**，边写边转换。
 - **代码块**支持语言选择、一键复制和代码行号。
 - **表格**在工具栏中用网格选择尺寸，右键菜单提供更多操作，并配了新图标。
@@ -118,6 +119,8 @@ import 'quill-react-commercial/lib/index.css';
   imageResize?: true, // 默认：true
   imageDrop?: true,   // 默认：true
   magicUrl?: true,    // 自动识别 URL、邮箱并转为链接；默认：true
+  video?: true,       // 视频嵌入按钮；默认：true
+                      // 也可传 { width?: '100%', height?: '360' } 指定 iframe 尺寸
   markdown?: true,    // 边输入边把 Markdown 语法转为富文本；默认：true
   link?: true,        // 默认：true
   imageHandler: {
@@ -173,6 +176,7 @@ const toolbarOptions = [
     'code-block',
     'link',
     'image',
+    'video',
     { script: 'sub' },
     { script: 'super' },
     'table',
