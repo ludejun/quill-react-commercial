@@ -1,10 +1,10 @@
 {
   "presets": [
     ["@babel/preset-env", { "targets": "defaults, not dead" }],
-    ["@babel/preset-react", { "runtime": "automatic" }],
+    ["@babel/preset-react", { "runtime": "classic" }],
     "@babel/preset-typescript"
   ],
-  "plugins": [
-    ["@babel/plugin-proposal-decorators", { "version": "legacy" }]
-  ]
+  "plugins": [["@babel/plugin-proposal-decorators", { "version": "legacy" }]],
+  "comments": false,
+  "sourceType": "script"
 }
