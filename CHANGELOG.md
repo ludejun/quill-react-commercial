@@ -1,244 +1,295 @@
-# Change-Log
+# Changelog
 
-# 1.6.3
+All notable changes to this project are documented here. Versions follow
+[Semantic Versioning](https://semver.org/).
 
-- feat: add spanish (es) translation support to i18n
+## Unreleased
 
-# 1.6.2
+### Fixed
 
-- Add LICENSE file like Quill
-- support webp format when upload imgs
-- fix: error when divider is deleted from toolbarOptions
-- Add theme support: bubble & snow
+- `onSave` never fired. The editor called `keyboardBindsFn({ save: onSave })` while that function
+  reads `options.onSave`, so <kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>S</kbd> was silently a no-op.
+- Rendering with the table and code-highlight modules turned off threw
+  `Cannot convert undefined or null to object`. Disabled controls were left in the toolbar config as
+  `undefined`, and Quill 2 calls `Object.keys()` on every entry.
+- `htmlDecode` used `innerText`, which collapses runs of whitespace and so destroyed the indentation
+  of decoded code blocks. It now uses `textContent`.
 
-# 1.6.1
+### Changed
 
-- fearure：点击高亮 Code Icon 支持取消 Code 格式
-- hotfix：有序列表、引用有字时无法删除
+- The published tarball dropped from 9.4 MB / 98 files to ~151 kB / 74 files: `files` now limits it
+  to `lib`, the READMEs, the changelog and the licence.
+- `types` and `exports` are declared in `package.json`, and real `.d.ts` files are emitted from
+  `tsconfig.build.json`. Previously `tsc` ran with both `noEmit` and `declaration` set.
+- Runtime dependencies (`quill`, `quill-delta`, `highlight.js`, `normalize-url`) stay external in
+  the ESM bundle, so consumers get one copy rather than a bundled duplicate. Assets pulled out of
+  those packages are still inlined.
+- Toolchain: TypeScript 3.9 → 5.9, Rollup 3 → 4, Babel 7 → 8. TypeScript 3.9 could not parse the
+  type definitions Quill 2 ships, which is why the bugs above went unnoticed.
+- The project now uses pnpm; `package-lock.json` and `yarn.lock` were removed.
+- `lib/` and `dist/` are no longer tracked in git — they are rebuilt by `prepublishOnly`.
 
-### 1.6.0
+### Added
 
-- quill 升级到 2.0.2
-- 添加自定义 Divider 格式，设置多个默认分割线，允许保存 Delta 及重新渲染
+- ESLint 9 flat config (typescript-eslint, react, react-hooks) and Prettier.
+- Vitest and Testing Library, with 40 tests covering the utilities, the i18n tables, the keyboard
+  bindings and the mounted editor — including regressions for the two bugs above.
+- `CONTRIBUTING.md`, in English and Chinese.
 
-### 1.5.9
+## 1.6.3
 
-- 添加保存快捷键回调
-- quill 升级到 2.0.1
+- Add Spanish (`es`) translations to the i18n tables.
 
-### 1.5.8
+## 1.6.2
 
-- 更改 quill.snow.css 引入方式
-- 升级quill@2.0.0-rc.5
+- Add a LICENSE file, matching Quill's.
+- Accept WebP when uploading images.
+- Fix an error thrown when `divider` was removed from `toolbarOptions`.
+- Add theme support: `bubble` and `snow`.
 
-### 1.5.5 / 1.5.6 / 1.5.7
+## 1.6.1
 
-- 打包结果改为 es
-- 改变 rollup 配置，解决升级 quill 产生的 bugs
+- Clicking the highlighted code icon now clears the code format.
+- Fix ordered lists and blockquotes that could not be deleted once they contained text.
 
-### 1.5.4
+## 1.6.0
 
-- 修改默认语法高亮，从 shell 到 bash
-- 升级 Quill 从quill@2.0.0-dev.4 -> quill@2.0.0-rc.4
-- 将 quill.snow.css 从 quill/dist/quill.snow.css 引入改为本地，直接引 node_modules 打包一直有问题，打不进去
-- 将 css 从 js 包中移除
+- Upgrade Quill to 2.0.2.
+- Add a custom divider format with several built-in styles, persisted to the Delta and re-rendered
+  correctly.
 
-### 1.5.3
+## 1.5.9
 
-- 修复 readOnly 控制失效 Bug
+- Add a save-shortcut callback.
+- Upgrade Quill to 2.0.1.
 
-### 1.5.2
+## 1.5.8
 
-- 重写 ListItem，有序列表可以从任意数字开始，并能保存到 Delta 中
-- 修复 Link tooltip 不显示文本和 URL 的 bug
-- 减小“系统字体”框的宽度
-- 当插入的 Code 块下无内容，自动添加一个空行，方便继续编辑
-- 默认 modules 改变注册地
+- Change how `quill.snow.css` is imported.
+- Upgrade to quill@2.0.0-rc.5.
 
-### 1.5.1
+## 1.5.5 / 1.5.6 / 1.5.7
 
-- 修复缩进不生效 bug
-- 有序列表样式调整
+- Emit ES modules from the build.
+- Rework the Rollup config to fix the breakage introduced by the Quill upgrade.
 
-### 1.5.0
+## 1.5.4
 
-- 新增中英文国际化，修改 Table 中英文配置
-- 更换 Table 操作 Icons 为 AntD svg
-- 样式大升级，确定主题色
-- code 块的重构，允许 copy，增加行标
-- 升级 Link、Table、Image 的 toorbar handler
-- 上传本地图片和 imagePasterDrop 靠齐，先出现 base64 图片再上传
-- imagePasterDrop 中 tooltip 改为伪元素，去除原 div 覆盖+id 对应的方式，伪元素有个缺点是定位不准
-- 修复图片被选中（click）时，按删除键不能删除的 bug，在 imageResize.checkImage 中
-- Link 的 Tooltip 样式重构，新增跳转、取消操作
-- Icon 的 tooltip 提示公共方法
-- 输入中文拼音等输入法时，placeholder 无法消失的 bug
-- readme 中英文升级
+- Switch the default shell highlighting from `shell` to `bash`.
+- Upgrade Quill from 2.0.0-dev.4 to 2.0.0-rc.4.
+- Vendor `quill.snow.css` locally: importing it from `quill/dist/` never bundled reliably.
+- Move CSS out of the JS bundle.
 
-### 1.4.2
+## 1.5.3
 
-- 更改编辑器内容区的顶部 padding，防止在第一行是 table 时，table 的调节工具行被遮挡；工具行的高度减小
-- 将 markdown 中 onDelete 涉及到图片删除的归到 imagePasteDrop.js 中
-- 完善开发依赖项
-- 修改选中 link 时 tooltip 的实现，修复当光标在 link 最起始处 tooltip 无法正常展示的 bug
-- 去掉 Title
-- 修改样式
-- bugfix：当 content 变为空时，不能及时渲染出来，还保留上次内容的 bug
+- Fix `readOnly` having no effect.
 
-### 1.4.1
+## 1.5.2
 
-- 1.4.0 样式问题修复
+- Rewrite `ListItem` so an ordered list can start at any number and that number survives in the Delta.
+- Fix the link tooltip not showing the text and URL.
+- Narrow the "system font" picker.
+- Insert a trailing empty line after a code block so typing can continue below it.
+- Move where the default modules are registered.
 
-### 1.4.0
+## 1.5.1
 
-- 图片的位置状态保存及复现（Delta 中保存位置）
-- 超链接 tooltip 当不输入文本保存自动带入 URL，并自动对 URL 进行标准化
-- bugfix：当最开始是 code 块、list、引用块时，无法使用 Backspace 删除样式
-- bugfix：多次插入本地图片时，由于每次都是 addEventListener 添加事件导致多次插入
-- bugfix：无法插入自定义数字 Table，变成 1 格的 table
-- 删除 quill-magic-url 依赖
+- Fix indentation having no effect.
+- Adjust ordered-list styling.
 
-### 1.3.9
+## 1.5.0
 
-- 为 Title 添加受控和非受控方式，value & defaultValue
+- Add English/Chinese internationalisation, including the table configuration.
+- Replace the table operation icons with Ant Design SVGs.
+- Overhaul the styling and settle on a primary colour.
+- Rebuild code blocks: copy support and line numbers.
+- Upgrade the link, table and image toolbar handlers.
+- Align local image upload with paste/drop: show the Base64 preview first, then upload.
+- Switch the paste/drop tooltip to a pseudo-element instead of an overlaid div keyed by id. The
+  trade-off is slightly less precise positioning.
+- Fix a selected (clicked) image not being removable with Delete, in `imageResize.checkImage`.
+- Rebuild the link tooltip styling and add "go to" and "remove" actions.
+- Extract a shared helper for icon tooltips.
+- Fix the placeholder not disappearing while typing with an IME such as Pinyin.
+- Rework both READMEs.
 
-### 1.3.7 / 1.3.8
+## 1.4.2
 
-- 采用 Rollup 打包，放弃 tsc/webpack 打包，使 svg 配置更简单，对 npm 包更友好
-- 删除 readme 中 svg 不显示的 webpack 配置建议
+- Increase the top padding of the content area so a table on the first line does not hide its resize
+  bar, and shrink that bar.
+- Move the image-deletion part of the markdown `onDelete` handling into `imagePasteDrop.js`.
+- Tidy up the dev dependencies.
+- Rework how the link tooltip is positioned, fixing it not appearing when the cursor sits at the very
+  start of a link.
+- Remove the title.
+- Styling adjustments.
+- Fix stale content staying on screen when `content` was set to empty.
 
-### 1.3.6
+## 1.4.1
 
-- Title Input 添加 onFocus、onBlur 回调
+- Fix the styling regressions from 1.4.0.
 
-### 1.3.5
+## 1.4.0
 
-- 添加 Title 属性，参考印象笔记将 Title 内置到编辑器中
+- Persist and restore image alignment in the Delta.
+- The link tooltip falls back to the URL when no text is entered, and normalises the URL.
+- Fix being unable to remove formatting with Backspace when the document starts with a code block,
+  list or blockquote.
+- Fix repeated inserts when adding local images several times: the listener was re-registered on
+  every insert.
+- Fix inserting a table with a custom size producing a single-cell table.
+- Drop the `quill-magic-url` dependency.
 
-### 1.3.4
+## 1.3.9
 
-- 修复 1.3.3 添加的错误 dom
+- Make the title both controlled and uncontrolled: `value` and `defaultValue`.
 
-### 1.3.3
+## 1.3.7 / 1.3.8
 
-- 添加 onFocus & onBlur 属性
+- Build with Rollup instead of tsc/webpack, which makes the SVG handling simpler and the npm package
+  friendlier.
+- Drop the webpack SVG workaround from the README.
 
-### 1.3.2
+## 1.3.6
 
-- 修复图片复制及拖拽到编辑器上传失败后反复上传 bug
-- 给出页面滚动导致图片失败 tooltip 错位的初步方案
-- 给图片复制及拖拽的 base64 文件 Blob 定义默认文件名和格式
+- Add `onFocus` and `onBlur` to the title input.
 
-### 1.3.1
+## 1.3.5
 
-- 图片复制及拖拽到编辑器的处理 Module 重构，重新换思路，先更快的给用户 Base64 展示，后台上传
-- 图片复制及拖拽支持 API 上传，及上传状态展示
-- 图片上传 Modal 框 close icon 的样式调整
+- Add a title prop, modelled on Evernote's built-in title.
 
-### 1.3.0
+## 1.3.4
 
-- 上传图片添加 Modal 框，支持选择网络图片 URL
-- 修复 editor-change 监听导致 Link Modal、图片 Modal 框不可 focus 的 bug，删除 editor-change 监听
-- 修改 readme.md
+- Fix the malformed DOM added in 1.3.3.
 
-### 1.2.9
+## 1.3.3
 
-- 禁止在 table 中使用 header、list、code、引用等块，并修改 list 触发器、markdown 触发器使这些格式在 tabl-cell 中不生效
-- 修改 markdown 触发器，增加删除块级，修复 hr 不生效
-- 修改 markdown 触发器，禁止在代码块中生效
-- 修改代码高亮中 shell 函数，实际使用 vim 高亮规则，shell 的 keywords 中缺少很多常规命令行，这些命令行不在标准 shell 中：https://github.com/highlightjs/highlight.js/issues/630#issuecomment-61978331
+- Add the `onFocus` and `onBlur` props.
 
-### 1.2.8
+## 1.3.2
 
-- 修改 boundary 边界为编辑器实例本身，原为 document.body
-- 修改部分样式
+- Fix images pasted or dragged in re-uploading in a loop after a failed upload.
+- First pass at keeping the failure tooltip aligned when the page scrolls.
+- Give the Base64 blobs produced by paste/drop a default filename and type.
 
-### 1.2.7
+## 1.3.1
 
-- 升级 quill-magic-url，使能自动识别 URL
-- 修改列表样式、缩进等
-- 默认 table 列宽变为 120
-- 修改触发 list 的 keyboard.bindings.'list autofill'.prefix
-- 修改触发 list 的 markdown 的正则
-- 点击 URL 出来的弹框添加跳转功能
+- Rebuild the paste/drop module around a different approach: show the Base64 preview immediately and
+  upload in the background.
+- Support API upload, with upload status, for pasted and dragged images.
+- Adjust the close icon in the image upload modal.
 
-### 1.2.6
+## 1.3.0
 
-- 添加 ChangeLog
-- readme 中添加开发须知
-- 修改 Heading 样式，变为简写：H1、H2、H3、H4、正文
+- Add an upload modal that also accepts an image URL.
+- Remove the `editor-change` listener, which was stealing focus from the link and image modals.
+- Update `readme.md`.
 
-### 1.2.5
+## 1.2.9
 
-- table 中支持 List，解决下一个 cell 的有序列表数字继承上一个列表的 bug
-- 有序列表只能输入“1. ”才会触发，改变比如输入“30. ”会变为“1. ”开始的有序列表的行为
+- Disallow headers, lists, code blocks and blockquotes inside tables, and stop the list and markdown
+  triggers from firing in a table cell.
+- Extend the markdown triggers to delete block formats, and fix `hr` not working.
+- Stop the markdown triggers from firing inside code blocks.
+- Highlight `shell` using the `vim` rules: highlight.js's shell keywords are missing many everyday
+  commands, because they are not part of standard shell
+  ([highlightjs/highlight.js#630](https://github.com/highlightjs/highlight.js/issues/630#issuecomment-61978331)).
 
-### 1.2.4
+## 1.2.8
 
-- 添加 example/本地 demo 启动 CLI
-- 修改 umd webpack 打包去除 react
-- 修复在 react 项目中直接 import dist 文件报 hooks 不能使用 bug
+- Use the editor instance as the boundary instead of `document.body`.
+- Styling adjustments.
 
-### 1.2.3
+## 1.2.7
 
-- 解决转函数组件后代码高亮报错 bug，需要先执行 highlight 初始化函数
-- 去除多编辑器的 imageResize 浮层不消失 bug
-- utils 改 ts
-- better-table 放在本地，运行并修改部分源代码以支持在 table 中加入 List，解决报错
+- Upgrade `quill-magic-url` so URLs are recognised automatically.
+- Adjust list styling and indentation.
+- Default table column width is now 120.
+- Adjust the `keyboard.bindings['list autofill'].prefix` trigger.
+- Adjust the markdown regex that triggers a list.
+- Add a "go to" action to the popup shown when clicking a URL.
 
-### 1.2.2
+## 1.2.6
 
-解决上传图片 bug
+- Add this changelog.
+- Document the development workflow in the README.
+- Shorten the heading labels to H1, H2, H3, H4, Body.
 
-### 1.2.1
+## 1.2.5
 
-解决 1.2.0 导出 bug
+- Support lists inside tables, fixing ordered lists in one cell continuing the numbering from the
+  previous cell.
+- An ordered list now starts at the number you typed — typing "30. " no longer produces a list
+  starting at 1.
 
-### 1.2.0
+## 1.2.4
 
-大升级：
+- Add a CLI for the local `example/` demo.
+- Exclude React from the UMD webpack build.
+- Fix the "hooks can't be used" error when importing the dist file directly in a React project.
 
-- 解决所有 ts error
-- 添加 umd 打包和 ts 打包
-- 使用函数组件和 hooks 重构
-- 更新 readme
+## 1.2.3
 
-### 1.1.2
+- Fix the code highlighting error after the move to function components: the highlight initialiser
+  has to run first.
+- Fix the `imageResize` overlay not disappearing with multiple editors on one page.
+- Convert `utils` to TypeScript.
+- Vendor `better-table` locally and patch it to allow lists inside tables.
 
-采用 TSC 打包到 lib 文件夹
+## 1.2.2
 
-### 1.1.0
+- Fix image upload.
 
-改变 main 引用，默认使用源码而不是打包结果
+## 1.2.1
 
-### 1.0.9
+- Fix the export broken in 1.2.0.
 
-上传图片函数升级 & 添加系统字体 & 添加 Heading
+## 1.2.0
 
-### 1.0.8
+Major release:
 
-更新上传图片 API 的返回 Promise
+- Resolve every TypeScript error.
+- Add UMD and TypeScript builds.
+- Rebuild the component with hooks.
+- Update the README.
 
-### 1.0.6、1.0.7
+## 1.1.2
 
-改变图片 Base64 为图片上传 API：解决图片上传传入 API 及 response 处理方法
+- Build to `lib/` with tsc.
 
-### 1.0.5
+## 1.1.0
 
-bugfix: 同一页面多个编辑器，样式错乱
+- Change `main` to point at the source rather than the build output.
 
-### 1.0.4、1.0.3
+## 1.0.9
 
-props 中添加初始值、readOnly，修复 toolbarOptions 自定义控制 bug
+- Improve the image upload function, add system fonts and headings.
 
-### 1.0.2
+## 1.0.8
 
-codeHighlight config bugfix & api update
+- The image upload API now returns a Promise.
 
-### 1.0.1
+## 1.0.6 / 1.0.7
 
-add user-defined toolbar & update readme & publish
+- Replace Base64 images with an upload API, covering how the API is passed in and how the response
+  is handled.
 
-### 1.0.0
+## 1.0.5
 
-UMD 打包可使用的 Quill 富文本编辑器
+- Fix broken styling when several editors share a page.
+
+## 1.0.3 / 1.0.4
+
+- Add initial value and `readOnly` props; fix custom `toolbarOptions`.
+
+## 1.0.2
+
+- Fix the `codeHighlight` config and update the API.
+
+## 1.0.1
+
+- Add a user-defined toolbar, update the README, publish.
+
+## 1.0.0
+
+- A Quill rich text editor, usable as a UMD bundle.

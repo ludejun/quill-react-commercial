@@ -362,37 +362,39 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       return newDelta;
     };
 
-    const toolbarOptions = modules.toolbarOptions || [
-      ['undo', 'redo', 'clean'],
+    const toolbarOptions =
+      modules.toolbarOptions ||
       [
-        { font: ['system', 'wsYaHei', 'songTi', 'serif', 'arial'] },
-        { size: ['12px', false, '18px', '36px'] },
-        { header: [false, 1, 2, 3, 4] },
-      ],
-      ['bold', 'italic', 'underline', 'strike', { color: [] }, { background: [] }],
-      [
-        { list: 'ordered' },
-        { list: 'bullet' },
-        { list: 'check' },
-        { indent: '-1' },
-        { indent: '+1' },
-        { align: [] },
-      ],
-      [
-        'blockquote',
-        modules.codeHighlight ? 'code-block' : undefined,
-        modules.link !== false ? 'link' : undefined,
-        'image',
-        { script: 'sub' },
-        { script: 'super' },
-        quillModules.current['better-table'] ? 'table' : undefined,
-        'divider',
-      ],
-    ]
-      // Disabled controls are left as `undefined` above; Quill 2 calls
-      // Object.keys() on every entry and throws on the holes, so drop them.
-      .map((group) => group.filter((control) => control !== undefined))
-      .filter((group) => group.length > 0);
+        ['undo', 'redo', 'clean'],
+        [
+          { font: ['system', 'wsYaHei', 'songTi', 'serif', 'arial'] },
+          { size: ['12px', false, '18px', '36px'] },
+          { header: [false, 1, 2, 3, 4] },
+        ],
+        ['bold', 'italic', 'underline', 'strike', { color: [] }, { background: [] }],
+        [
+          { list: 'ordered' },
+          { list: 'bullet' },
+          { list: 'check' },
+          { indent: '-1' },
+          { indent: '+1' },
+          { align: [] },
+        ],
+        [
+          'blockquote',
+          modules.codeHighlight ? 'code-block' : undefined,
+          modules.link !== false ? 'link' : undefined,
+          'image',
+          { script: 'sub' },
+          { script: 'super' },
+          quillModules.current['better-table'] ? 'table' : undefined,
+          'divider',
+        ],
+      ]
+        // Disabled controls are left as `undefined` above; Quill 2 calls
+        // Object.keys() on every entry and throws on the holes, so drop them.
+        .map((group) => group.filter((control) => control !== undefined))
+        .filter((group) => group.length > 0);
 
     const quill = new Quill(`#editor${editorId.current}`, {
       debug: false,
