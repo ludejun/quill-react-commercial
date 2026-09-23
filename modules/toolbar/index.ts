@@ -10,6 +10,7 @@ export { default as TableHandler } from './table';
 export { default as ImageHandler } from './image';
 export { default as CodeHandler } from './code';
 export { default as DividerHandler } from './divider';
+export { default as VideoHandler } from './video';
 
 export const toolbarInit = (quill: Quill, i18n: keyof typeof i18nConfig) => {
   const container = quillModule<ToolbarModule>(quill, 'toolbar').container;

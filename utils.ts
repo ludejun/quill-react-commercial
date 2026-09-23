@@ -98,3 +98,66 @@ export const isColor = (value: string) => {
   const isHex = /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/;
   return isRgb.test(value) || isHex.test(value);
 };
+
+/** Parse a possibly protocol-less URL; `undefined` when it is not a URL at all. */
+const parseUrl = (raw: string): URL | undefined => {
+  try {
+    return new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`);
+  } catch {
+    return undefined;
+  }
+};
+
+/** YouTube start offsets come as `90`, `1m30s`, `1h2m3s`. Returns seconds. */
+const parseTimeParam = (value: string | null): number | undefined => {
+  if (!value) return undefined;
+  if (/^\d+$/.test(value)) return Number(value);
+  const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(value);
+  if (!match || !match.slice(1).some(Boolean)) return undefined;
+  const [h, m, s] = match.slice(1).map((part) => Number(part || 0));
+  return h * 3600 + m * 60 + s;
+};
+
+const YOUTUBE_HOSTS = ['youtube.com', 'm.youtube.com', 'youtube-nocookie.com', 'youtu.be'];
+const bareHost = (host: string) => host.replace(/^www\./, '');
+
+/**
+ * Turn a page URL that a user would copy from the address bar into one that can
+ * actually be embedded in an iframe. YouTube, Vimeo and Bilibili are handled;
+ * anything else — including URLs that are already embed URLs — is returned
+ * unchanged, so a self-hosted player or any other provider still works.
+ */
+export function toEmbedUrl(url: string): string {
+  const parsed = parseUrl(url.trim());
+  if (!parsed) return url;
+  const host = bareHost(parsed.hostname);
+
+  if (YOUTUBE_HOSTS.includes(host)) {
+    // Already an embed URL: leave it alone.
+    if (parsed.pathname.startsWith('/embed/')) return url;
+    const id =
+      host === 'youtu.be'
+        ? parsed.pathname.slice(1)
+        : parsed.searchParams.get('v') ||
+          /^\/(?:shorts|live|v)\/([^/?#]+)/.exec(parsed.pathname)?.[1];
+    if (!id) return url;
+    const start = parseTimeParam(parsed.searchParams.get('t'));
+    return `https://www.youtube.com/embed/${id}${start ? `?start=${start}` : ''}`;
+  }
+
+  if (host === 'vimeo.com') {
+    // /123456789 , or /123456789/abcdef for an unlisted video.
+    const match = /^\/(\d+)(?:\/([\w]+))?/.exec(parsed.pathname);
+    if (!match) return url;
+    return `https://player.vimeo.com/video/${match[1]}${match[2] ? `?h=${match[2]}` : ''}`;
+  }
+
+  if (host === 'bilibili.com') {
+    const bvid = /^\/video\/(BV[\w]+)/.exec(parsed.pathname)?.[1];
+    if (!bvid) return url;
+    const page = parsed.searchParams.get('p');
+    return `https://player.bilibili.com/player.html?bvid=${bvid}${page ? `&p=${page}` : ''}`;
+  }
+
+  return url;
+}

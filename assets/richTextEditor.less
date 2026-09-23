@@ -71,6 +71,16 @@
 .ql-editor {
   line-height: 1.8;
   padding-top: 18px;
+
+  // Quill sets no size on the video iframe, so without this it collapses to
+  // the browser default of 300x150.
+  iframe.ql-video {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+    height: 360px;
+    border: 0;
+  }
   &:before {
   }
   &:empty:before {

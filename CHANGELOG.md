@@ -3,6 +3,32 @@
 All notable changes to this project are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
+## 2.0.1 — 2026-09-23
+
+### Added
+
+- **Video embeds.** A `video` button in the toolbar opens a small dialog that
+  takes a URL. Page URLs copied from the address bar are converted to embed
+  URLs automatically for **YouTube** (including `youtu.be`, `/shorts/` and the
+  `t=` start offset), **Vimeo** (including unlisted `?h=` links) and
+  **Bilibili**; any other URL — an embed URL, a self-hosted player — is used
+  as-is. Turn the button off with `modules.video = false`, or size the iframe
+  with `modules.video = { width, height }`.
+
+### Fixed
+
+- **A saved video came back as a link.** Quill 2's own `video` format renders an
+  `<iframe>` in the editor but its `html()` returns `<a href="…">…</a>`, so
+  every embed silently degraded to a bare link the moment content was read
+  through `getSemanticHTML()` — what you saw was not what you stored. The
+  bundled `VideoBlot` overrides `html()` to emit the iframe, and leaves Quill's
+  `create`, `formats`, `sanitize` and `value` alone. Reported by
+  [@RTAndrew](https://github.com/RTAndrew) in
+  [#19](https://github.com/ludejun/quill-react-commercial/issues/19).
+- **The same `html()` interpolated the URL unescaped**, so a video URL
+  containing `">` put arbitrary markup — a `<script>` tag, for instance — into
+  the saved HTML. Attribute values are now escaped. A test covers it.
+
 ## 2.0.0 — 2026-09-23
 
 ### Breaking

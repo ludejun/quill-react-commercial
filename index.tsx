@@ -27,6 +27,7 @@ import { getI18nText, i18nConfig } from './i18n';
 import IconUndo from 'quill/assets/icons/undo.svg';
 import IconRedo from 'quill/assets/icons/redo.svg';
 import IconDivider from './assets/icons/divider.svg';
+import IconVideo from './assets/icons/video.svg';
 import 'quill/dist/quill.snow.css';
 import './assets/richTextEditor.less';
 import './assets/modules.less';
@@ -80,6 +81,7 @@ interface IModules {
   magicUrl?: boolean;
   markdown?: boolean;
   link?: boolean | Record<string, unknown>;
+  video?: boolean | { width?: string; height?: string };
 }
 interface IEditorProps {
   placeholder?: string;
@@ -128,6 +130,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       qSyntax?: any;
       codeHandler?: boolean | string;
       dividerHandler?: boolean | Record<string, unknown>;
+      videoHandler?: boolean | { i18n: keyof typeof i18nConfig; width?: string; height?: string };
     }
   >({});
   const toolbarHandlers = useRef<Record<string, unknown>>({});
@@ -146,6 +149,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
         magicUrl = true,
         markdown = true,
         link = true,
+        video = true,
         imageHandler,
       } = modules;
       if (table) {
@@ -292,6 +296,12 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
       toolbarHandlers.current.undo = () => undoHandler(quillRef.current!);
       toolbarHandlers.current.redo = () => redoHandler(quillRef.current!);
       quillModules.current.dividerHandler = { i18n };
+      if (video) {
+        quillModules.current.videoHandler = {
+          i18n,
+          ...(typeof video === 'object' ? video : {}),
+        };
+      }
     }
 
     // 设置自定义字体/大小
@@ -326,6 +336,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
     icons.undo = IconUndo;
     icons.redo = IconRedo;
     icons.divider = IconDivider;
+    icons.video = IconVideo;
   }, [modules]);
 
   useEffect(() => {
@@ -385,6 +396,7 @@ const RichTextEditor: FC<IEditorProps> = (props) => {
           modules.codeHighlight ? 'code-block' : undefined,
           modules.link !== false ? 'link' : undefined,
           'image',
+          modules.video !== false ? 'video' : undefined,
           { script: 'sub' },
           { script: 'super' },
           quillModules.current['better-table'] ? 'table' : undefined,
