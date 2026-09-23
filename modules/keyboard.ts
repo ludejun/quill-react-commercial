@@ -1,6 +1,11 @@
 import { Range } from 'quill';
+import type { KeyboardBindingThis, KeyboardContext } from '../quillTypes';
 
-export const keyboardBindsFn = (options) => {
+export interface KeyboardBindOptions {
+  onSave?: () => void;
+}
+
+export const keyboardBindsFn = (options: KeyboardBindOptions) => {
   const { onSave } = options;
   return {
     // 有序列表只能输入“1. ”才会触发，改变比如输入“30. ”会变为“1. ”开始的有序列表的行为
@@ -16,8 +21,8 @@ export const keyboardBindsFn = (options) => {
         table: false,
         'table-cell-line': false, // 在table中不触发有序列表
       },
-      handler(range: Range, context) {
-        const { prefix, line } = context;
+      handler(this: KeyboardBindingThis, range: Range, context: KeyboardContext) {
+        const { prefix } = context;
 
         const start = parseInt(prefix.replace('.', ''), 10);
         if (start !== 1) {
@@ -46,19 +51,7 @@ export const keyboardBindsFn = (options) => {
     'code backspace': {
       key: 'Backspace',
       format: ['code-block', 'list', 'blockquote'],
-      handler(
-        range: Range,
-        context: {
-          line: {
-            parent: {
-              domNode: HTMLDivElement;
-            };
-          };
-          suffix: string;
-          prefix: string;
-          offset: number;
-        },
-      ) {
+      handler(this: KeyboardBindingThis, range: Range, context: KeyboardContext) {
         if (this.quill) {
           // const [line] = this.quill.getLine(range.index);
           // const isEmpty = !line.children.head.text || line.children.head.text.trim() === '';
@@ -98,8 +91,7 @@ export const keyboardBindsFn = (options) => {
     save: {
       key: 's',
       shortKey: true,
-      handler(range: Range, context) {
-        console.log('keyboard save!');
+      handler(this: KeyboardBindingThis, _range: Range, _context: KeyboardContext) {
         if (onSave) {
           onSave();
           return false;

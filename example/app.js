@@ -2,7 +2,7 @@ const App = () => {
   const quill = React.useRef({});
   const [delta, setDelta] = React.useState('');
   const initContent = '';
-    // {"ops":[{"insert":"\n\nawef"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"awfeawef"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"awfe"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"\n\n违法未"},{"attributes":{"list":"ordered"},"insert":"\n"},{"insert":"啊违法"},{"attributes":{"list":"ordered"},"insert":"\n"}]};
+  // {"ops":[{"insert":"\n\nawef"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"awfeawef"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"awfe"},{"attributes":{"list":"ordered-3"},"insert":"\n"},{"insert":"\n\n违法未"},{"attributes":{"list":"ordered"},"insert":"\n"},{"insert":"啊违法"},{"attributes":{"list":"ordered"},"insert":"\n"}]};
   const getQuill = (quillIns) => {
     quill.current = quillIns;
   };

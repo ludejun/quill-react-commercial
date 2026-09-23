@@ -66,9 +66,7 @@ class ImageHandler extends Module {
       <p class="err-tips err-url"></p>
       `;
 
-      this.fileInput = this.imageDialog.querySelector(
-        'input.ql-image-upload[type=file]',
-      );
+      this.fileInput = this.imageDialog.querySelector('input.ql-image-upload[type=file]');
       const urlInput = this.imageDialog.querySelector('input.text-input');
       urlInput.onclick = (e) => {
         e.stopPropagation();
@@ -134,10 +132,7 @@ class ImageHandler extends Module {
   beforeUpload(file) {
     if (this.imageDialog) {
       const tips = this.imageDialog.querySelector('.err-tips.err-file');
-      const words = getI18nText(
-        ['imageDialogTypeErr', 'imageDialogSizeErr'],
-        this.options.i18n,
-      );
+      const words = getI18nText(['imageDialogTypeErr', 'imageDialogSizeErr'], this.options.i18n);
       // 判断文件的后缀，至于用户强制改变文件后缀，这里不做考虑
       if (!file.type.startsWith('image/')) {
         tips.innerText = words[0];
@@ -169,13 +164,9 @@ class ImageHandler extends Module {
     const parent = clickDom.offsetParent;
     const width = 280;
     if (parent.offsetWidth - clickDom.offsetLeft + 6 > width) {
-      return `top:${clickDom.offsetTop + 24}px;left:${
-        clickDom.offsetLeft + 6
-      }px;`;
+      return `top:${clickDom.offsetTop + 24}px;left:${clickDom.offsetLeft + 6}px;`;
     } else {
-      return `top:${clickDom.offsetTop + 24}px;left:${
-        parent.offsetWidth - width
-      }px;`;
+      return `top:${clickDom.offsetTop + 24}px;left:${parent.offsetWidth - width}px;`;
     }
   };
 

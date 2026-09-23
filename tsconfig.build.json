@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "lib",
+    "rootDir": ".",
+    "removeComments": false
+  },
+  "include": ["index.tsx", "i18n.ts", "utils.ts", "custom.d.ts", "modules/**/*.ts"],
+  "exclude": ["node_modules", "lib", "dist", "example", "tests"]
+}

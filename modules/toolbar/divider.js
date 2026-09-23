@@ -49,8 +49,7 @@ class DividerHandler extends Module {
   }
   showDividerDialog() {
     const toolbarContainer = this.toolbar.container;
-    const primaryColor =
-      localStorage.getItem('ql-divider-color') || defaultColor;
+    const primaryColor = localStorage.getItem('ql-divider-color') || defaultColor;
 
     const getItems = (color) => {
       return `${Object.keys(styleConfig(color))
@@ -65,14 +64,9 @@ class DividerHandler extends Module {
 
     if (!this.dividerDialog) {
       this.dividerDialog = document.createElement('div');
-      this.dividerDialog.classList.add(
-        'ql-divider-dialog',
-        'ql-toolbar-dialog',
-      );
+      this.dividerDialog.classList.add('ql-divider-dialog', 'ql-toolbar-dialog');
 
-      this.dividerDialog.style = this.dialogPosition(
-        toolbarContainer.querySelector('.ql-divider'),
-      );
+      this.dividerDialog.style = this.dialogPosition(toolbarContainer.querySelector('.ql-divider'));
       const { replaceDefault } = this.options;
 
       let dialogContent = `<div class="divider-default">${getItems(
@@ -102,8 +96,7 @@ class DividerHandler extends Module {
     inputHandler(colorInput, (value) => {
       if (isColor(value)) {
         localStorage.setItem('ql-divider-color', value);
-        this.dividerDialog.querySelector('.divider-default').innerHTML =
-          getItems(value);
+        this.dividerDialog.querySelector('.divider-default').innerHTML = getItems(value);
         addItemHandler(value);
       }
     });
@@ -117,13 +110,9 @@ class DividerHandler extends Module {
     const parent = clickDom.offsetParent;
     const width = 200;
     if (parent.offsetWidth - clickDom.offsetLeft + 6 > width) {
-      return `top:${clickDom.offsetTop + 24}px;left:${
-        clickDom.offsetLeft + 5
-      }px;`;
+      return `top:${clickDom.offsetTop + 24}px;left:${clickDom.offsetLeft + 5}px;`;
     } else {
-      return `top:${clickDom.offsetTop + 24}px;left:${
-        parent.offsetWidth - width
-      }px;`;
+      return `top:${clickDom.offsetTop + 24}px;left:${parent.offsetWidth - width}px;`;
     }
   };
   insertDivider(type, color) {
@@ -131,12 +120,7 @@ class DividerHandler extends Module {
     this.quill.enable(true);
     const range = this.quill.getSelection(true);
     this.quill.insertText(range.index, '\n', Quill.sources.USER);
-    this.quill.insertEmbed(
-      range.index + 1,
-      'QDivider',
-      { type, color },
-      Quill.sources.USER,
-    );
+    this.quill.insertEmbed(range.index + 1, 'QDivider', { type, color }, Quill.sources.USER);
     this.quill.setSelection(range.index + 2, Quill.sources.SILENT);
   }
 }

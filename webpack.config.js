@@ -11,39 +11,39 @@ const loaders = [
     use: {
       loader: 'babel-loader',
       options: {
-        presets: ['@babel/preset-env', '@babel/preset-react']
-      }
-    }
+        presets: ['@babel/preset-env', '@babel/preset-react'],
+      },
+    },
   },
   {
     test: /\.tsx?$/,
     exclude: /node_modules/,
     loader: 'babel-loader',
     options: {
-      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript']
-    }
+      presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+    },
   }, // 先解析ts和tsx，rule规则从下往上
   {
     test: /\.css$/,
     use: [
       {
         loader: MiniCssExtractPlugin.loader,
-        options: {}
+        options: {},
       },
-      'css-loader'
-    ]
+      'css-loader',
+    ],
   },
   {
     test: /\.less$/,
-    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader']
+    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'less-loader'],
   },
   {
     test: /\.svg$/,
     use: [
       {
-        loader: 'svg-inline-loader'
-      }
-    ]
+        loader: 'svg-inline-loader',
+      },
+    ],
   },
   {
     test: /\.(png|jpg|gif)$/,
@@ -51,10 +51,10 @@ const loaders = [
       {
         loader: 'file-loader',
         options: {
-          name: '/static/[name]-[hash].[ext]'
-        }
-      }
-    ]
+          name: '/static/[name]-[hash].[ext]',
+        },
+      },
+    ],
   },
   {
     test: /\.(woff|woff2|eot|ttf|otf)$/,
@@ -62,11 +62,11 @@ const loaders = [
       {
         loader: 'file-loader',
         options: {
-          name: '/static/[name]-[hash].[ext]'
-        }
-      }
-    ]
-  }
+          name: '/static/[name]-[hash].[ext]',
+        },
+      },
+    ],
+  },
 ];
 
 const config = {
@@ -130,7 +130,7 @@ const config = {
       amd: 'react-dom/server',
       root: 'ReactDOMServer',
     },
-  }
+  },
 };
 
 module.exports = config;

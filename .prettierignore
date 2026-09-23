@@ -1,0 +1,9 @@
+lib
+dist
+node_modules
+example/compile
+example/*.min.js
+example/*.min.css
+pnpm-lock.yaml
+modules/quill-better-table
+CHANGELOG.md

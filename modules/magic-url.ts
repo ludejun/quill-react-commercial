@@ -20,6 +20,15 @@ export type MagicUrlOptions = {
 
 export type Normalizer = (stringToNormalize: string) => string;
 
+/**
+ * `quill.getLeaf()` is typed as returning a `LeafBlot`, but only text leaves
+ * expose the `text` and `parent.domNode` this module reads.
+ */
+interface TextLeaf {
+  text?: string;
+  parent?: { domNode?: HTMLElement };
+}
+
 const defaults = {
   globalRegularExpression: /(https?:\/\/|www\.)[\w-\.]+\.[\w-\.]+(\/([\S]+)?)?/gi,
   urlRegularExpression: /(https?:\/\/|www\.)[\w-\.]+\.[\w-\.]+(\/([\S]+)?)?/gi,
@@ -50,7 +59,8 @@ export class MagicUrl {
   registerPasteListener() {
     // Preserves existing links
     this.quill.clipboard.addMatcher('A', (node, delta) => {
-      const href = node.getAttribute('href');
+      if (node.nodeType !== Node.ELEMENT_NODE) return delta;
+      const href = (node as Element).getAttribute('href');
       const attributes = delta.ops[0]?.attributes;
       if (attributes?.link != null) {
         attributes.link = href;
@@ -58,7 +68,8 @@ export class MagicUrl {
       return delta;
     });
     this.quill.clipboard.addMatcher(Node.TEXT_NODE, (node, delta): Delta => {
-      if (typeof node.data !== 'string') {
+      const textNode = node as Text;
+      if (typeof textNode.data !== 'string') {
         return undefined as unknown as Delta;
       }
       const urlRegExp = this.options.globalRegularExpression;
@@ -67,15 +78,15 @@ export class MagicUrl {
       mailRegExp.lastIndex = 0;
       const newDelta = new Delta();
       let index = 0;
-      let urlResult = urlRegExp.exec(node.data);
-      let mailResult = mailRegExp.exec(node.data);
+      let urlResult = urlRegExp.exec(textNode.data);
+      let mailResult = mailRegExp.exec(textNode.data);
       const handleMatch = (result: RegExpExecArray, regExp: RegExp, normalizer: Normalizer) => {
-        const head = node.data.substring(index, result.index); 
+        const head = textNode.data.substring(index, result.index);
         newDelta.insert(head);
         const match = result[0];
         newDelta.insert(match, { link: normalizer(match) });
         index = regExp.lastIndex;
-        return regExp.exec(node.data);
+        return regExp.exec(textNode.data);
       };
       while (urlResult !== null || mailResult !== null) {
         if (urlResult === null) {
@@ -84,18 +95,18 @@ export class MagicUrl {
           urlResult = handleMatch(urlResult, urlRegExp, this.urlNormalizer);
         } else if (mailResult.index <= urlResult.index) {
           while (urlResult !== null && urlResult.index < mailRegExp.lastIndex) {
-            urlResult = urlRegExp.exec(node.data);
+            urlResult = urlRegExp.exec(textNode.data);
           }
           mailResult = handleMatch(mailResult, mailRegExp, this.mailNormalizer);
         } else {
           while (mailResult !== null && mailResult.index < urlRegExp.lastIndex) {
-            mailResult = mailRegExp.exec(node.data);
+            mailResult = mailRegExp.exec(textNode.data);
           }
           urlResult = handleMatch(urlResult, urlRegExp, this.urlNormalizer);
         }
       }
       if (index > 0) {
-        const tail = node.data.substring(index);
+        const tail = textNode.data.substring(index);
         newDelta.insert(tail);
         if (delta) delta!.ops = newDelta.ops;
       }
@@ -127,17 +138,21 @@ export class MagicUrl {
     if (!sel) {
       return;
     }
-    const [leaf] = this.quill.getLeaf(sel.index);
-    const leafIndex = this.quill.getIndex(leaf);
-
+    const [rawLeaf] = this.quill.getLeaf(sel.index);
+    if (!rawLeaf) {
+      return;
+    }
+    // Only text leaves carry `text`; embeds (images, dividers) do not.
+    const leaf = rawLeaf as unknown as TextLeaf;
     if (!leaf.text) {
       return;
     }
+    const leafIndex = this.quill.getIndex(rawLeaf);
 
     // We only care about the leaf until the current cursor position
     const relevantLength = sel.index - leafIndex;
     const text: string = leaf.text.slice(0, relevantLength);
-    if (!text || leaf.parent.domNode.localName === 'a') {
+    if (!text || leaf.parent?.domNode?.localName === 'a') {
       return;
     }
 
