@@ -46,7 +46,8 @@ A couple of things that can look like a permission problem but aren't:
 
 ## Development setup
 
-This project uses [pnpm](https://pnpm.io/) and needs Node >= 18.
+This project uses [pnpm](https://pnpm.io/). Node >= 22 is needed to run the tests
+(jsdom 30 dropped Node 20); the package itself supports Node >= 18.
 
 ```bash
 pnpm install
@@ -136,7 +137,7 @@ gh pr create --repo ludejun/quill-react-commercial
 
 ## 本地开发
 
-本项目使用 [pnpm](https://pnpm.io/)，需要 Node >= 18。
+本项目使用 [pnpm](https://pnpm.io/)。跑测试需要 Node >= 22（jsdom 30 已不支持 Node 20）；包本身支持 Node >= 18。
 
 ```bash
 pnpm install
